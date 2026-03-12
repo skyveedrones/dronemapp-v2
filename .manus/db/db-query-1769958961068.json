@@ -1,0 +1,60 @@
+{
+  "query": "SELECT id, fileName, url FROM media ORDER BY createdAt DESC LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, fileName, url FROM media ORDER BY createdAt DESC LIMIT 10;",
+  "rows": [
+    {
+      "id": "420003",
+      "fileName": "1000000483.webp",
+      "url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/60001/media/9lZrqkbxD4kR-1000000483.webp"
+    },
+    {
+      "id": "420002",
+      "fileName": "1000000481.jpg",
+      "url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1560095/media/1000000481_wm_1769813167509.jpg"
+    },
+    {
+      "id": "420001",
+      "fileName": "1000000485.jpg",
+      "url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/60001/media/xqg0S6lQKKc--1000000485.jpg"
+    },
+    {
+      "id": "300001",
+      "fileName": "Cip 222 From Valve To Near Costco Updated.mp4",
+      "url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/30001/videos/Cip 222 From Valve To Near Costco Updated_wm_1769735254869.mp4"
+    },
+    {
+      "id": "270001",
+      "fileName": "Cip 222 Second Billboard To Valve Updated.mp4",
+      "url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/30001/videos/Cip 222 Second Billboard To Valve Updated_wm_1769726378868.mp4"
+    },
+    {
+      "id": "240001",
+      "fileName": "CIP 222 South Side Of 80 Updated.mp4",
+      "url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/30001/videos/CIP 222 South Side Of 80 Updated_wm_1769722577072.mp4"
+    },
+    {
+      "id": "210002",
+      "fileName": "Oncor Project Dirt Road 1.2.mp4",
+      "url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/30003/videos/Oncor Project Dirt Road 1.2_wm_1769718850210.mp4"
+    },
+    {
+      "id": "210001",
+      "fileName": "Oncor Project Dirt Road 1.1.mp4",
+      "url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/30003/videos/Oncor Project Dirt Road 1.1_wm_1769718904259.mp4"
+    },
+    {
+      "id": "180021",
+      "fileName": "Cip 222 Kelli Ln To First Bill Board.mp4",
+      "url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/30001/videos/Cip 222 Kelli Ln To First Bill Board_wm_1769710220638.mp4"
+    },
+    {
+      "id": "180020",
+      "fileName": "Oncor Construction Site Aerial.mp4",
+      "url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/30003/videos/Oncor Construction Site Aerial_wm_1769719082311.mp4"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfileName\turl\n420003\t1000000483.webp\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/60001/media/9lZrqkbxD4kR-1000000483.webp\n420002\t1000000481.jpg\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1560095/media/1000000481_wm_1769813167509.jpg\n420001\t1000000485.jpg\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/60001/media/xqg0S6lQKKc--1000000485.jpg\n300001\tCip 222 From Valve To Near Costco Updated.mp4\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/30001/videos/Cip 222 From Valve To Near Costco Updated_wm_1769735254869.mp4\n270001\tCip 222 Second Billboard To Valve Updated.mp4\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/30001/videos/Cip 222 Second Billboard To Valve Updated_wm_1769726378868.mp4\n240001\tCIP 222 South Side Of 80 Updated.mp4\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/30001/videos/CIP 222 South Side Of 80 Updated_wm_1769722577072.mp4\n210002\tOncor Project Dirt Road 1.2.mp4\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/30003/videos/Oncor Project Dirt Road 1.2_wm_1769718850210.mp4\n210001\tOncor Project Dirt Road 1.1.mp4\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/30003/videos/Oncor Project Dirt Road 1.1_wm_1769718904259.mp4\n180021\tCip 222 Kelli Ln To First Bill Board.mp4\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/30001/videos/Cip 222 Kelli Ln To First Bill Board_wm_1769710220638.mp4\n180020\tOncor Construction Site Aerial.mp4\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/30003/videos/Oncor Construction Site Aerial_wm_1769719082311.mp4\n",
+  "stderr": "",
+  "execution_time_ms": 345
+}

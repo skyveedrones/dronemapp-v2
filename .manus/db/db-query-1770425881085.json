@@ -1,0 +1,58 @@
+{
+  "query": "SELECT id, filename FROM media WHERE projectId = 1 ORDER BY id LIMIT 12 OFFSET 12;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, filename FROM media WHERE projectId = 1 ORDER BY id LIMIT 12 OFFSET 12;",
+  "rows": [
+    {
+      "id": "720001",
+      "filename": "Aerial Mapping View.jpg"
+    },
+    {
+      "id": "720002",
+      "filename": "Bridge Underside View 2.jpg"
+    },
+    {
+      "id": "720003",
+      "filename": "Bridge Underside View.jpg"
+    },
+    {
+      "id": "720004",
+      "filename": "Bridge View 1.jpg"
+    },
+    {
+      "id": "720005",
+      "filename": "Bridge View 2.jpg"
+    },
+    {
+      "id": "720006",
+      "filename": "Bridge View 3.jpg"
+    },
+    {
+      "id": "720007",
+      "filename": "Power Transmission Line.jpg"
+    },
+    {
+      "id": "720008",
+      "filename": "Street Intersection Aerial View 1.jpg"
+    },
+    {
+      "id": "720009",
+      "filename": "Street Intersection Aerial View 2.jpg"
+    },
+    {
+      "id": "720010",
+      "filename": "Street View 1.jpg"
+    },
+    {
+      "id": "720011",
+      "filename": "Street View 2.jpg"
+    },
+    {
+      "id": "720012",
+      "filename": "Waterline Access Cover.jpg"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfilename\n720001\tAerial Mapping View.jpg\n720002\tBridge Underside View 2.jpg\n720003\tBridge Underside View.jpg\n720004\tBridge View 1.jpg\n720005\tBridge View 2.jpg\n720006\tBridge View 3.jpg\n720007\tPower Transmission Line.jpg\n720008\tStreet Intersection Aerial View 1.jpg\n720009\tStreet Intersection Aerial View 2.jpg\n720010\tStreet View 1.jpg\n720011\tStreet View 2.jpg\n720012\tWaterline Access Cover.jpg\n",
+  "stderr": "",
+  "execution_time_ms": 358
+}

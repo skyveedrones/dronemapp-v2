@@ -1,0 +1,32 @@
+{
+  "query": "SELECT * FROM media LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT * FROM media LIMIT 1;",
+  "rows": [
+    {
+      "id": "1",
+      "projectId": "30002",
+      "userId": "1",
+      "filename": "GAIL WILSON WAY EXTENSION 1.1.jpg",
+      "fileKey": "1/media/GAIL WILSON WAY EXTENSION 1.1_wm_1769634538205.jpg",
+      "url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/media/GAIL WILSON WAY EXTENSION 1.1_wm_1769634538205.jpg",
+      "mimeType": "image/jpeg",
+      "fileSize": "1394128",
+      "mediaType": "photo",
+      "latitude": "NULL",
+      "longitude": "NULL",
+      "altitude": "NULL",
+      "capturedAt": "NULL",
+      "cameraMake": "NULL",
+      "cameraModel": "NULL",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/GAIL WILSON WAY EXTENSION 1.1_wm_1769634538205.jpg",
+      "createdAt": "2026-01-22 20:54:10",
+      "updatedAt": "2026-01-28 21:08:59",
+      "flightId": "NULL",
+      "notes": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tprojectId\tuserId\tfilename\tfileKey\turl\tmimeType\tfileSize\tmediaType\tlatitude\tlongitude\taltitude\tcapturedAt\tcameraMake\tcameraModel\tthumbnailUrl\tcreatedAt\tupdatedAt\tflightId\tnotes\n1\t30002\t1\tGAIL WILSON WAY EXTENSION 1.1.jpg\t1/media/GAIL WILSON WAY EXTENSION 1.1_wm_1769634538205.jpg\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/media/GAIL WILSON WAY EXTENSION 1.1_wm_1769634538205.jpg\timage/jpeg\t1394128\tphoto\tNULL\tNULL\tNULL\tNULL\tNULL\tNULL\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/GAIL WILSON WAY EXTENSION 1.1_wm_1769634538205.jpg\t2026-01-22 20:54:10\t2026-01-28 21:08:59\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 190
+}

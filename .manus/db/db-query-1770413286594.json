@@ -1,0 +1,14 @@
+{
+  "query": "SELECT flightId, COUNT(*) as count FROM media WHERE projectId = 1 GROUP BY flightId;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT flightId, COUNT(*) as count FROM media WHERE projectId = 1 GROUP BY flightId;",
+  "rows": [
+    {
+      "flightId": "NULL",
+      "count": "12"
+    }
+  ],
+  "messages": [],
+  "stdout": "flightId\tcount\nNULL\t12\n",
+  "stderr": "",
+  "execution_time_ms": 368
+}

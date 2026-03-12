@@ -1,0 +1,13 @@
+{
+  "query": "SELECT GROUP_CONCAT(id) as ids_to_delete FROM (SELECT id FROM media WHERE projectId = 1 ORDER BY id LIMIT 24 OFFSET 12) as subquery;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT GROUP_CONCAT(id) as ids_to_delete FROM (SELECT id FROM media WHERE projectId = 1 ORDER BY id LIMIT 24 OFFSET 12) as subquery;",
+  "rows": [
+    {
+      "ids_to_delete": "720001,720002,720003,720004,720005,720006,720007,720008,720009,720010,720011,720012,720013,720014,720015,720016,720017,720018,720019,720020,720021,720022,720023,720024"
+    }
+  ],
+  "messages": [],
+  "stdout": "ids_to_delete\n720001,720002,720003,720004,720005,720006,720007,720008,720009,720010,720011,720012,720013,720014,720015,720016,720017,720018,720019,720020,720021,720022,720023,720024\n",
+  "stderr": "",
+  "execution_time_ms": 368
+}

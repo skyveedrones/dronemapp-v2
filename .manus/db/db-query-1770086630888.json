@@ -1,0 +1,33 @@
+{
+  "query": "SELECT p.*, u.email as ownerEmail, c.name as clientName\nFROM projects p\nLEFT JOIN users u ON p.userId = u.id\nLEFT JOIN clients c ON p.clientId = c.id\nWHERE p.name LIKE '%Oncor%' OR p.name LIKE '%Switch%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT p.*, u.email as ownerEmail, c.name as clientName\nFROM projects p\nLEFT JOIN users u ON p.userId = u.id\nLEFT JOIN clients c ON p.clientId = c.id\nWHERE p.name LIKE '%Oncor%' OR p.name LIKE '%Switch%';",
+  "rows": [
+    {
+      "id": "30003",
+      "userId": "1",
+      "name": "Oncor Forney Switch",
+      "description": "Visual Documentation of site and degradation to Trinity Rd and Bois D'Arc due to construction traffic",
+      "location": "Forney, Texas",
+      "clientName": "City of Forney",
+      "status": "active",
+      "flightDate": "2026-01-16 00:00:00",
+      "coverImage": "NULL",
+      "mediaCount": "27",
+      "createdAt": "2026-01-22 17:40:51",
+      "updatedAt": "2026-02-01 13:27:06",
+      "warrantyStartDate": "NULL",
+      "warrantyEndDate": "NULL",
+      "logoUrl": "https://res.cloudinary.com/dp1fvan1x/image/upload/v1769952425/mapit/project-logos/30003/logo-XcVwcBzx3V2CBaFC4J3LD.jpg",
+      "logoKey": "mapit/project-logos/30003/logo-XcVwcBzx3V2CBaFC4J3LD",
+      "clientId": "1",
+      "dronePilot": "NULL",
+      "faaLicenseNumber": "NULL",
+      "laancAuthNumber": "NULL",
+      "ownerEmail": "clay@skyveedrones.com"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tuserId\tname\tdescription\tlocation\tclientName\tstatus\tflightDate\tcoverImage\tmediaCount\tcreatedAt\tupdatedAt\twarrantyStartDate\twarrantyEndDate\tlogoUrl\tlogoKey\tclientId\tdronePilot\tfaaLicenseNumber\tlaancAuthNumber\townerEmail\tclientName\n30003\t1\tOncor Forney Switch\tVisual Documentation of site and degradation to Trinity Rd and Bois D'Arc due to construction traffic\tForney, Texas\tOncor / City of Forney\tactive\t2026-01-16 00:00:00\tNULL\t27\t2026-01-22 17:40:51\t2026-02-01 13:27:06\tNULL\tNULL\thttps://res.cloudinary.com/dp1fvan1x/image/upload/v1769952425/mapit/project-logos/30003/logo-XcVwcBzx3V2CBaFC4J3LD.jpg\tmapit/project-logos/30003/logo-XcVwcBzx3V2CBaFC4J3LD\t1\tNULL\tNULL\tNULL\tclay@skyveedrones.com\tCity of Forney\n",
+  "stderr": "",
+  "execution_time_ms": 345
+}

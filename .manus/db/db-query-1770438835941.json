@@ -1,0 +1,9 @@
+{
+  "query": "\n-- Assign next 4 photos to flight 180002\nUPDATE media SET flightId = 180002 WHERE id IN (10005, 10006, 10007, 10008) AND projectId = 1;\n\n-- Verify\nSELECT id, filename, flightId FROM media WHERE projectId = 1 AND flightId = 180002;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute \n-- Assign next 4 photos to flight 180002\nUPDATE media SET flightId = 180002 WHERE id IN (10005, 10006, 10007, 10008) AND projectId = 1;\n\n-- Verify\nSELECT id, filename, flightId FROM media WHERE projectId = 1 AND flightId = 180002;\n",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 404
+}

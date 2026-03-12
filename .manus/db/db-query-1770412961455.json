@@ -1,0 +1,80 @@
+{
+  "query": "SELECT id, filename, projectId, flightId, url FROM media WHERE projectId = 1 LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, filename, projectId, flightId, url FROM media WHERE projectId = 1 LIMIT 10;",
+  "rows": [
+    {
+      "id": "660001",
+      "filename": "1000000491.jpg",
+      "projectId": "1",
+      "flightId": "NULL",
+      "url": "https://res.cloudinary.com/dp1fvan1x/image/upload/v1769967191/mapit/projects/90004/media/PNt8huPtrX08-1000000491.jpg"
+    },
+    {
+      "id": "660002",
+      "filename": "1000000322.jpg",
+      "projectId": "1",
+      "flightId": "NULL",
+      "url": "https://res.cloudinary.com/dp1fvan1x/image/upload/v1769967195/mapit/projects/90004/media/cYgybx7856JL-1000000322.jpg"
+    },
+    {
+      "id": "660003",
+      "filename": "1000000324.jpg",
+      "projectId": "1",
+      "flightId": "NULL",
+      "url": "https://res.cloudinary.com/dp1fvan1x/image/upload/v1769967198/mapit/projects/90004/media/VwVRplTCeRvT-1000000324.jpg"
+    },
+    {
+      "id": "660004",
+      "filename": "1000000323.jpg",
+      "projectId": "1",
+      "flightId": "NULL",
+      "url": "https://res.cloudinary.com/dp1fvan1x/image/upload/v1769967206/mapit/projects/90004/media/rXwB2HKRtaFP-1000000323.jpg"
+    },
+    {
+      "id": "660005",
+      "filename": "1000000316.jpg",
+      "projectId": "1",
+      "flightId": "NULL",
+      "url": "https://res.cloudinary.com/dp1fvan1x/image/upload/v1769967211/mapit/projects/90004/media/r48hl8wfMm2l-1000000316.jpg"
+    },
+    {
+      "id": "660006",
+      "filename": "1000000320.jpg",
+      "projectId": "1",
+      "flightId": "NULL",
+      "url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/media/1000000320_wm_1770042878972.jpg"
+    },
+    {
+      "id": "660007",
+      "filename": "1000000328.jpg",
+      "projectId": "1",
+      "flightId": "NULL",
+      "url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/90004/media/yI5pdHbjixPk-1000000328.jpg"
+    },
+    {
+      "id": "660008",
+      "filename": "1000000327.jpg",
+      "projectId": "1",
+      "flightId": "NULL",
+      "url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/90004/media/h5hN1RVNy-iN-1000000327.jpg"
+    },
+    {
+      "id": "660009",
+      "filename": "1000000329.jpg",
+      "projectId": "1",
+      "flightId": "NULL",
+      "url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/90004/media/iWKE_EmcQfyk-1000000329.jpg"
+    },
+    {
+      "id": "660010",
+      "filename": "1000000152.jpg",
+      "projectId": "1",
+      "flightId": "NULL",
+      "url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/90004/media/stDD6ZUFHpLb-1000000152.jpg"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfilename\tprojectId\tflightId\turl\n660001\t1000000491.jpg\t1\tNULL\thttps://res.cloudinary.com/dp1fvan1x/image/upload/v1769967191/mapit/projects/90004/media/PNt8huPtrX08-1000000491.jpg\n660002\t1000000322.jpg\t1\tNULL\thttps://res.cloudinary.com/dp1fvan1x/image/upload/v1769967195/mapit/projects/90004/media/cYgybx7856JL-1000000322.jpg\n660003\t1000000324.jpg\t1\tNULL\thttps://res.cloudinary.com/dp1fvan1x/image/upload/v1769967198/mapit/projects/90004/media/VwVRplTCeRvT-1000000324.jpg\n660004\t1000000323.jpg\t1\tNULL\thttps://res.cloudinary.com/dp1fvan1x/image/upload/v1769967206/mapit/projects/90004/media/rXwB2HKRtaFP-1000000323.jpg\n660005\t1000000316.jpg\t1\tNULL\thttps://res.cloudinary.com/dp1fvan1x/image/upload/v1769967211/mapit/projects/90004/media/r48hl8wfMm2l-1000000316.jpg\n660006\t1000000320.jpg\t1\tNULL\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/media/1000000320_wm_1770042878972.jpg\n660007\t1000000328.jpg\t1\tNULL\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/90004/media/yI5pdHbjixPk-1000000328.jpg\n660008\t1000000327.jpg\t1\tNULL\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/90004/media/h5hN1RVNy-iN-1000000327.jpg\n660009\t1000000329.jpg\t1\tNULL\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/90004/media/iWKE_EmcQfyk-1000000329.jpg\n660010\t1000000152.jpg\t1\tNULL\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/90004/media/stDD6ZUFHpLb-1000000152.jpg\n",
+  "stderr": "",
+  "execution_time_ms": 346
+}

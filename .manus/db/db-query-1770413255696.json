@@ -1,0 +1,70 @@
+{
+  "query": "SELECT id, filename, flightId FROM media WHERE projectId = 90004;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, filename, flightId FROM media WHERE projectId = 90004;",
+  "rows": [
+    {
+      "id": "480002",
+      "filename": "1000000491.jpg",
+      "flightId": "NULL"
+    },
+    {
+      "id": "480003",
+      "filename": "1000000322.jpg",
+      "flightId": "NULL"
+    },
+    {
+      "id": "480004",
+      "filename": "1000000324.jpg",
+      "flightId": "NULL"
+    },
+    {
+      "id": "480005",
+      "filename": "1000000323.jpg",
+      "flightId": "NULL"
+    },
+    {
+      "id": "480006",
+      "filename": "1000000316.jpg",
+      "flightId": "NULL"
+    },
+    {
+      "id": "480007",
+      "filename": "1000000320.jpg",
+      "flightId": "NULL"
+    },
+    {
+      "id": "600001",
+      "filename": "1000000328.jpg",
+      "flightId": "NULL"
+    },
+    {
+      "id": "600002",
+      "filename": "1000000327.jpg",
+      "flightId": "NULL"
+    },
+    {
+      "id": "600003",
+      "filename": "1000000329.jpg",
+      "flightId": "NULL"
+    },
+    {
+      "id": "600004",
+      "filename": "1000000152.jpg",
+      "flightId": "NULL"
+    },
+    {
+      "id": "630001",
+      "filename": "1000000308.jpg",
+      "flightId": "NULL"
+    },
+    {
+      "id": "630005",
+      "filename": "1000000325.jpg",
+      "flightId": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfilename\tflightId\n480002\t1000000491.jpg\tNULL\n480003\t1000000322.jpg\tNULL\n480004\t1000000324.jpg\tNULL\n480005\t1000000323.jpg\tNULL\n480006\t1000000316.jpg\tNULL\n480007\t1000000320.jpg\tNULL\n600001\t1000000328.jpg\tNULL\n600002\t1000000327.jpg\tNULL\n600003\t1000000329.jpg\tNULL\n600004\t1000000152.jpg\tNULL\n630001\t1000000308.jpg\tNULL\n630005\t1000000325.jpg\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 364
+}

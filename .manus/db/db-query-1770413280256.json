@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO media (projectId, flightId, userId, filename, fileKey, url, mimeType, fileSize, mediaType, latitude, longitude, altitude, capturedAt, cameraMake, cameraModel, thumbnailUrl, notes, priority)\nSELECT 1, flightId, userId, filename, fileKey, url, mimeType, fileSize, mediaType, latitude, longitude, altitude, capturedAt, cameraMake, cameraModel, thumbnailUrl, notes, priority\nFROM media WHERE projectId = 90004;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute INSERT INTO media (projectId, flightId, userId, filename, fileKey, url, mimeType, fileSize, mediaType, latitude, longitude, altitude, capturedAt, cameraMake, cameraModel, thumbnailUrl, notes, priority)\nSELECT 1, flightId, userId, filename, fileKey, url, mimeType, fileSize, mediaType, latitude, longitude, altitude, capturedAt, cameraMake, cameraModel, thumbnailUrl, notes, priority\nFROM media WHERE projectId = 90004;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 409
+}

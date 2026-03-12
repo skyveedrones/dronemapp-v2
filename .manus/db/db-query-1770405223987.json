@@ -1,0 +1,65 @@
+{
+  "query": "SELECT id, name, userId FROM projects LIMIT 5; SELECT id, name, email FROM users LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, name, userId FROM projects LIMIT 5; SELECT id, name, email FROM users LIMIT 5;",
+  "rows": [
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "userId": "1"
+    },
+    {
+      "id": "30002",
+      "name": "Gail Wilson Extension",
+      "userId": "1"
+    },
+    {
+      "id": "30003",
+      "name": "Oncor Forney Switch",
+      "userId": "1"
+    },
+    {
+      "id": "60001",
+      "name": "Construction Site in Forney",
+      "userId": "1560095"
+    },
+    {
+      "id": "90004",
+      "name": "Demonstration Project 1",
+      "userId": "1"
+    },
+    {
+      "id": "id",
+      "name": "name",
+      "userId": "email"
+    },
+    {
+      "id": "1",
+      "name": "Clay Bechtol",
+      "userId": "clay@skyveedrones.com"
+    },
+    {
+      "id": "1320002",
+      "name": "skyveedrone",
+      "userId": "skyveedrone@yahoo.com"
+    },
+    {
+      "id": "1560095",
+      "name": "Clay",
+      "userId": "claybechtol@gmail.com"
+    },
+    {
+      "id": "2460221",
+      "name": "Tracey Bechtol",
+      "userId": "traceybechtol@gmail.com"
+    },
+    {
+      "id": "2460334",
+      "name": "clay",
+      "userId": "clay@urbanwoodsco.com"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tuserId\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t1\n30002\tGail Wilson Extension\t1\n30003\tOncor Forney Switch\t1\n60001\tConstruction Site in Forney\t1560095\n90004\tDemonstration Project 1\t1\nid\tname\temail\n1\tClay Bechtol\tclay@skyveedrones.com\n1320002\tskyveedrone\tskyveedrone@yahoo.com\n1560095\tClay\tclaybechtol@gmail.com\n2460221\tTracey Bechtol\ttraceybechtol@gmail.com\n2460334\tclay\tclay@urbanwoodsco.com\n",
+  "stderr": "",
+  "execution_time_ms": 416
+}

@@ -1,0 +1,37 @@
+{
+  "query": "SELECT p.id, p.name, m.id as media_id, m.filename, m.latitude, m.longitude, m.altitude\nFROM projects p\nJOIN users u ON p.userId = u.id\nLEFT JOIN media m ON p.id = m.projectId\nWHERE u.email = 'claybechtol@gmail.com'\n  AND (m.latitude IS NOT NULL AND m.longitude IS NOT NULL OR m.id IS NULL)\nORDER BY p.id, m.id\nLIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT p.id, p.name, m.id as media_id, m.filename, m.latitude, m.longitude, m.altitude\nFROM projects p\nJOIN users u ON p.userId = u.id\nLEFT JOIN media m ON p.id = m.projectId\nWHERE u.email = 'claybechtol@gmail.com'\n  AND (m.latitude IS NOT NULL AND m.longitude IS NOT NULL OR m.id IS NULL)\nORDER BY p.id, m.id\nLIMIT 20;",
+  "rows": [
+    {
+      "id": "60001",
+      "name": "Construction Site in Forney",
+      "media_id": "420001",
+      "filename": "1000000485.jpg",
+      "latitude": "32.7417000",
+      "longitude": "-96.4109290",
+      "altitude": "NULL"
+    },
+    {
+      "id": "60001",
+      "name": "Construction Site in Forney",
+      "media_id": "420002",
+      "filename": "1000000481.jpg",
+      "latitude": "32.7456190",
+      "longitude": "-96.4173300",
+      "altitude": "NULL"
+    },
+    {
+      "id": "60001",
+      "name": "Construction Site in Forney",
+      "media_id": "420003",
+      "filename": "1000000483.webp",
+      "latitude": "32.7434320",
+      "longitude": "-96.4230440",
+      "altitude": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tmedia_id\tfilename\tlatitude\tlongitude\taltitude\n60001\tConstruction Site in Forney\t420001\t1000000485.jpg\t32.7417000\t-96.4109290\tNULL\n60001\tConstruction Site in Forney\t420002\t1000000481.jpg\t32.7456190\t-96.4173300\tNULL\n60001\tConstruction Site in Forney\t420003\t1000000483.webp\t32.7434320\t-96.4230440\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 351
+}

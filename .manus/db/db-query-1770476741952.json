@@ -1,0 +1,16 @@
+{
+  "query": "\nSELECT id, name, projectId, mediaCount FROM flights WHERE name = 'NYC Aerial Survey' ORDER BY id DESC LIMIT 1;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute \nSELECT id, name, projectId, mediaCount FROM flights WHERE name = 'NYC Aerial Survey' ORDER BY id DESC LIMIT 1;\n",
+  "rows": [
+    {
+      "id": "210002",
+      "name": "NYC Aerial Survey",
+      "projectId": "1",
+      "mediaCount": "5"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tprojectId\tmediaCount\n210002\tNYC Aerial Survey\t1\t5\n",
+  "stderr": "",
+  "execution_time_ms": 348
+}

@@ -1,0 +1,1 @@
+ALTER TABLE `client_users` MODIFY COLUMN `role` enum('viewer','user','admin') NOT NULL DEFAULT 'viewer';

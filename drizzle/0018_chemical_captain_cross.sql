@@ -1,0 +1,1 @@
+ALTER TABLE `media` ADD `priority` enum('none','low','high') DEFAULT 'none' NOT NULL;

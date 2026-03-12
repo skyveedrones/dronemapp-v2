@@ -1,0 +1,25 @@
+{
+  "query": "SELECT id, name, description FROM flights WHERE projectId = 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, name, description FROM flights WHERE projectId = 1;",
+  "rows": [
+    {
+      "id": "180001",
+      "name": "Downtown Survey Flight",
+      "description": "High-altitude survey of downtown area"
+    },
+    {
+      "id": "180002",
+      "name": "Park Mapping Mission",
+      "description": "Detailed mapping of city park"
+    },
+    {
+      "id": "180003",
+      "name": "Infrastructure Inspection",
+      "description": "Bridge and road condition assessment"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tdescription\n180001\tDowntown Survey Flight\tHigh-altitude survey of downtown area\n180002\tPark Mapping Mission\tDetailed mapping of city park\n180003\tInfrastructure Inspection\tBridge and road condition assessment\n",
+  "stderr": "",
+  "execution_time_ms": 363
+}

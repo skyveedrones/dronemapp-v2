@@ -1,0 +1,34 @@
+{
+  "query": "SELECT id, name, userId, status FROM projects ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, name, userId, status FROM projects ORDER BY id;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Downtown Construction Site Survey",
+      "userId": "1",
+      "status": "active"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "userId": "1",
+      "status": "completed"
+    },
+    {
+      "id": "30002",
+      "name": "Gail Wilson Extension",
+      "userId": "1",
+      "status": "active"
+    },
+    {
+      "id": "30003",
+      "name": "Oncor Forney Switch",
+      "userId": "1",
+      "status": "active"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tuserId\tstatus\n1\tDowntown Construction Site Survey\t1\tactive\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t1\tcompleted\n30002\tGail Wilson Extension\t1\tactive\n30003\tOncor Forney Switch\t1\tactive\n",
+  "stderr": "",
+  "execution_time_ms": 364
+}
