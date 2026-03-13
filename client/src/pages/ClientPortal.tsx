@@ -49,8 +49,7 @@ export default function ClientPortal() {
           <CardHeader>
             <CardTitle>No Client Access</CardTitle>
             <CardDescription>
-              You don't have access to any client portals yet. Please contact your administrator
-              to request access.
+              You don't have access to any client portals yet. Please contact SkyVee MAPit administrator to request access.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -64,10 +63,13 @@ export default function ClientPortal() {
     );
   }
 
-  // For now, show the first client's portal (can be extended to support multiple clients)
+  // For now, show the first client's portal
   const clientAccess = portalData.clients[0];
   const client = clientAccess.client;
   const projects = clientAccess.projects;
+
+  // Check if the user is a client or an admin/webmaster
+  const isClientOnly = user?.role === "client";
 
   return (
     <div className="min-h-screen bg-background">
@@ -89,7 +91,7 @@ export default function ClientPortal() {
             <span className="text-sm text-muted-foreground">{user?.name}</span>
             <Button variant="outline" size="sm" onClick={() => setLocation("/portal/manage-user")}>
               <Settings className="mr-2 h-4 w-4" />
-              Manage User
+              Settings
             </Button>
             <Button variant="ghost" size="sm" onClick={() => logout()}>
               <LogOut className="mr-2 h-4 w-4" />
@@ -101,8 +103,15 @@ export default function ClientPortal() {
 
       {/* Main Content */}
       <main className="container py-8">
-        <BackToDashboard />
-        <div className="mb-8">
+        
+        {/* PHASE 2 SECURITY: Only show BackToDashboard if user is a Webmaster/Admin */}
+        {!isClientOnly && (
+          <div className="mb-4">
+            <BackToDashboard />
+          </div>
+        )}
+
+        <div className="mb-8 mt-4">
           <h2 className="text-2xl font-bold mb-2">Your Projects</h2>
           <p className="text-muted-foreground">
             View all projects assigned to {client.name}. Click on a project to view details, media, and maps.
@@ -115,8 +124,7 @@ export default function ClientPortal() {
               <FolderOpen className="h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium mb-2">No Projects Yet</h3>
               <p className="text-muted-foreground text-center max-w-md">
-                No projects have been assigned to your account yet. Please contact your project manager
-                for more information.
+                No projects have been assigned to your account yet. Please contact SkyVee MAPit for more information.
               </p>
             </CardContent>
           </Card>
