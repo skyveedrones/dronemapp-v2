@@ -1,13 +1,17 @@
 /**
  * TEMPORARY STARTUP DIAGNOSTIC — DELETE AFTER USE
  * ================================================
- * Runs once on server boot, logs results to console, then removes itself.
- * Results appear in the Manus Platform server logs.
+ * Runs once on server boot, emails results to clay@skyveedrones.com,
+ * and logs to console. Delete this file and its import in index.ts
+ * after the email is received and reviewed.
  */
 
+import { Resend } from 'resend';
 import { getDb } from "../db";
 import { projects, clients } from "../../drizzle/schema";
 import { eq, sql } from "drizzle-orm";
+
+const OWNER_EMAIL = 'clay@skyveedrones.com';
 
 export async function runStartupDiagnostic(): Promise<void> {
   console.log("\n[DIAG] ========== STARTUP DIAGNOSTIC BEGIN ==========");
@@ -32,9 +36,6 @@ export async function runStartupDiagnostic(): Promise<void> {
       SELECT role, COUNT(*) AS count FROM users GROUP BY role ORDER BY count DESC
     `);
 
-    console.log("[DIAG] USERS SUMMARY:", JSON.stringify(userSummary));
-    console.log("[DIAG] ROLE BREAKDOWN:", JSON.stringify(roleSummary));
-
     // ── 2. Duplicate email check ──────────────────────────────────────────
     const duplicates = await db.execute(sql`
       SELECT email, COUNT(*) AS count
@@ -45,17 +46,13 @@ export async function runStartupDiagnostic(): Promise<void> {
       ORDER BY count DESC
     `);
 
-    if ((duplicates as any[]).length === 0) {
-      console.log("[DIAG] DUPLICATE EMAILS: none found ✅");
-    } else {
-      console.log("[DIAG] DUPLICATE EMAILS FOUND:", JSON.stringify(duplicates));
-      for (const row of (duplicates as any[])) {
-        const records = await db.execute(sql`
-          SELECT id, openId, name, email, role, loginMethod, createdAt
-          FROM users WHERE email = ${row.email} ORDER BY createdAt ASC
-        `);
-        console.log(`[DIAG] DUPLICATE DETAIL (${row.email}):`, JSON.stringify(records));
-      }
+    const duplicateDetails: Record<string, unknown[]> = {};
+    for (const row of (duplicates as any[])) {
+      const records = await db.execute(sql`
+        SELECT id, openId, name, email, role, loginMethod, createdAt
+        FROM users WHERE email = ${row.email} ORDER BY createdAt ASC
+      `);
+      duplicateDetails[row.email] = records as unknown[];
     }
 
     // ── 3. Migration dry-run (ownerId: 1) ─────────────────────────────────
@@ -92,16 +89,58 @@ export async function runStartupDiagnostic(): Promise<void> {
       projects: gp.map(p => ({ id: p.id, name: p.name, status: p.status })),
     }));
 
-    console.log("[DIAG] MIGRATION DRY-RUN:", JSON.stringify({
-      ownerId: OWNER_ID,
-      totalProjects: allProjects.length,
-      legacyToMigrate: legacy.length,
-      alreadyLinked: linked.length,
-      noClientName: noName.length,
-      existingClients,
-      uniqueClientNames: Object.keys(groups).length,
-      plannedActions: planned,
-    }, null, 2));
+    // ── 4. Assemble full report ───────────────────────────────────────────
+    const report = {
+      generatedAt: new Date().toISOString(),
+      usersSummary: {
+        ...(userSummary as any),
+        roleBreakdown: roleSummary,
+      },
+      duplicateEmailCheck: {
+        duplicatesFound: (duplicates as any[]).length,
+        duplicates,
+        duplicateDetails,
+      },
+      migrationDryRun: {
+        ownerId: OWNER_ID,
+        totalProjects: allProjects.length,
+        legacyToMigrate: legacy.length,
+        alreadyLinked: linked.length,
+        noClientName: noName.length,
+        existingClients,
+        uniqueClientNames: Object.keys(groups).length,
+        plannedActions: planned,
+      },
+    };
+
+    const reportJson = JSON.stringify(report, null, 2);
+    console.log("[DIAG] REPORT:", reportJson);
+
+    // ── 5. Email the report ───────────────────────────────────────────────
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const { error } = await resend.emails.send({
+      from: 'Mapit <noreply@skyveedrones.com>',
+      to: [OWNER_EMAIL],
+      subject: 'Database Diagnostic Results — dronemapp-v2',
+      html: `
+        <h2>Database Diagnostic Results</h2>
+        <p>Generated at: ${report.generatedAt}</p>
+        <h3>Users Summary</h3>
+        <pre>${JSON.stringify(report.usersSummary, null, 2)}</pre>
+        <h3>Duplicate Email Check</h3>
+        <pre>${JSON.stringify(report.duplicateEmailCheck, null, 2)}</pre>
+        <h3>Migration Dry-Run (ownerId: 1)</h3>
+        <pre>${JSON.stringify(report.migrationDryRun, null, 2)}</pre>
+        <hr>
+        <p><em>This is a one-time diagnostic email. The route will be deleted after review.</em></p>
+      `,
+    });
+
+    if (error) {
+      console.log("[DIAG] EMAIL ERROR:", error.message);
+    } else {
+      console.log(`[DIAG] Email sent successfully to ${OWNER_EMAIL}`);
+    }
 
   } catch (err: any) {
     console.log("[DIAG] ERROR:", err?.message || String(err));

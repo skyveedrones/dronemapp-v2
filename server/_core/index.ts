@@ -13,7 +13,6 @@ import { handleStripeWebhook } from "../stripe-webhook";
 import { initializeVersion, getVersionJson } from "../version";
 import { initializeRedisClient, createPerUserRateLimiter, createUploadRateLimiter, createConcurrentRequestsLimiter, closeRedisClient } from "./rateLimiter";
 import emailRouter from "../routes/email";
-import adminDiagnosticRouter from "../routes/admin-diagnostic"; // TEMP — delete after use
 import { runStartupDiagnostic } from "../routes/startup-diagnostic"; // TEMP — delete after use
 
 function isPortAvailable(port: number): Promise<boolean> {
@@ -38,9 +37,6 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   const app = express();
   const server = createServer(app);
-
-  // !! TEMP: diagnostic route — ABSOLUTE FIRST, before ALL other middleware !!
-  app.use("/api", adminDiagnosticRouter);
 
   // Trust proxy for accurate rate limiting behind reverse proxy (Manus deployment)
   app.set('trust proxy', 1);
