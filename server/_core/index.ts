@@ -13,6 +13,7 @@ import { handleStripeWebhook } from "../stripe-webhook";
 import { initializeVersion, getVersionJson } from "../version";
 import { initializeRedisClient, createPerUserRateLimiter, createUploadRateLimiter, createConcurrentRequestsLimiter, closeRedisClient } from "./rateLimiter";
 import emailRouter from "../routes/email";
+import adminDiagnosticRouter from "../routes/admin-diagnostic"; // TEMP — delete after use
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -82,6 +83,8 @@ async function startServer() {
   
   // Email/lead capture routes
   app.use("/api", emailRouter);
+  // TEMP diagnostic route — delete after use
+  app.use("/api", adminDiagnosticRouter);
 
   // Version endpoint - returns current deployed version
   app.get("/api/version", (req, res) => {
