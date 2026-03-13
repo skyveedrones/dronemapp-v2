@@ -46,6 +46,9 @@ async function startServer() {
 
   // Stripe webhook endpoint - must be registered BEFORE express.json() for raw body
   app.post("/api/stripe/webhook", express.raw({ type: 'application/json' }), handleStripeWebhook);
+
+  // TEMP diagnostic route — registered first to prevent express.static catch-all from swallowing it
+  app.use("/api", adminDiagnosticRouter);
   
   // Configure body parser with larger size limit for file uploads (1.5GB for base64 encoded 1GB files)
   app.use(express.json({ limit: "1500mb" }));
@@ -83,8 +86,7 @@ async function startServer() {
   
   // Email/lead capture routes
   app.use("/api", emailRouter);
-  // TEMP diagnostic route — delete after use
-  app.use("/api", adminDiagnosticRouter);
+
 
   // Version endpoint - returns current deployed version
   app.get("/api/version", (req, res) => {
