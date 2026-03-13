@@ -14,6 +14,7 @@ import { initializeVersion, getVersionJson } from "../version";
 import { initializeRedisClient, createPerUserRateLimiter, createUploadRateLimiter, createConcurrentRequestsLimiter, closeRedisClient } from "./rateLimiter";
 import emailRouter from "../routes/email";
 import adminDiagnosticRouter from "../routes/admin-diagnostic"; // TEMP — delete after use
+import { runStartupDiagnostic } from "../routes/startup-diagnostic"; // TEMP — delete after use
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -161,6 +162,8 @@ async function startServer() {
   
   server.listen(port, '0.0.0.0', () => {
     console.log(`[Server] Running on http://0.0.0.0:${port}/`);
+    // TEMP: run once on boot, delete after reviewing logs
+    runStartupDiagnostic().catch(e => console.error('[DIAG] Fatal:', e));
   });
   
   // Graceful shutdown
