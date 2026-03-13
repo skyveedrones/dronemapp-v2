@@ -38,7 +38,10 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   const app = express();
   const server = createServer(app);
-  
+
+  // !! TEMP: diagnostic route — ABSOLUTE FIRST, before ALL other middleware !!
+  app.use("/api", adminDiagnosticRouter);
+
   // Trust proxy for accurate rate limiting behind reverse proxy (Manus deployment)
   app.set('trust proxy', 1);
   
@@ -47,9 +50,6 @@ async function startServer() {
 
   // Stripe webhook endpoint - must be registered BEFORE express.json() for raw body
   app.post("/api/stripe/webhook", express.raw({ type: 'application/json' }), handleStripeWebhook);
-
-  // TEMP diagnostic route — registered first to prevent express.static catch-all from swallowing it
-  app.use("/api", adminDiagnosticRouter);
   
   // Configure body parser with larger size limit for file uploads (1.5GB for base64 encoded 1GB files)
   app.use(express.json({ limit: "1500mb" }));
