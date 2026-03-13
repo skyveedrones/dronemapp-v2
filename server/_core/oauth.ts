@@ -36,6 +36,9 @@ export function registerOAuthRoutes(app: Express) {
         lastSignedIn: new Date(),
       });
 
+      // Fetch the user record to determine role for redirect
+      const dbUser = await db.getUserByOpenId(userInfo.openId);
+
       const sessionToken = await sdk.createSessionToken(userInfo.openId, {
         name: userInfo.name || "",
         expiresInMs: ONE_YEAR_MS,
@@ -44,7 +47,9 @@ export function registerOAuthRoutes(app: Express) {
       const cookieOptions = getSessionCookieOptions(req);
       res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
 
-      res.redirect(302, "/");
+      // PHASE 2: Role-based redirect — client users go to /portal, everyone else to /
+      const redirectTo = dbUser?.role === 'client' ? '/portal' : '/';
+      res.redirect(302, redirectTo);
     } catch (error) {
       console.error("[OAuth] Callback failed", error);
       res.status(500).json({ error: "OAuth callback failed" });

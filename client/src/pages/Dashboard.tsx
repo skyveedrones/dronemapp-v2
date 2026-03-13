@@ -74,12 +74,23 @@ export default function Dashboard() {
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const [exportFormat, setExportFormat] = useState<'csv' | 'pdf'>('csv');
 
-
   // Fetch projects
   const { data: projects, isLoading: projectsLoading } = trpc.project.list.useQuery();
   
   // Fetch shared projects
   const { data: sharedProjects } = trpc.sharing.getSharedWithMe.useQuery();
+
+  // PHASE 2 FALLBACK GUARD: Redirect client-role users away from the admin dashboard
+  // Placed after all hooks to comply with React's rules of hooks
+  useEffect(() => {
+    if (user?.role === 'client') {
+      setLocation('/portal');
+    }
+  }, [user, setLocation]);
+
+  if (user?.role === 'client') {
+    return null;
+  }
 
 
 

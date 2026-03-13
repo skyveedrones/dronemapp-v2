@@ -43,13 +43,19 @@ import DemoProject from "./pages/DemoProject";
 import Welcome from "./pages/Welcome";
 
 /**
+ * Admin-only routes that client users must not access
+ */
+const ADMIN_ONLY_PATHS = ["/", "/dashboard", "/clients", "/users", "/billing", "/settings"];
+
+/**
  * Protected Route Component
- * Redirects to login if user is not authenticated
+ * Redirects to login if user is not authenticated.
+ * PHASE 2: Redirects client-role users away from admin-only routes to /portal.
  * Allows unauthenticated access to demo project (ID: 1)
  */
 function ProtectedRoute({ component: Component, isDemoRoute = false }: { component: React.ComponentType; isDemoRoute?: boolean }) {
-  const { isAuthenticated, loading } = useAuth();
-  const [, setLocation] = useLocation();
+  const { user, isAuthenticated, loading } = useAuth();
+  const [location, setLocation] = useLocation();
 
   // Skip authentication check for demo routes
   if (isDemoRoute) {
@@ -61,6 +67,18 @@ function ProtectedRoute({ component: Component, isDemoRoute = false }: { compone
       window.location.href = getLoginUrl();
     }
   }, [loading, isAuthenticated, setLocation]);
+
+  // PHASE 2: Redirect client users away from admin-only routes
+  useEffect(() => {
+    if (!loading && isAuthenticated && user?.role === 'client') {
+      const isAdminRoute = ADMIN_ONLY_PATHS.some(
+        (p) => location === p || location.startsWith(p + '/')
+      );
+      if (isAdminRoute) {
+        setLocation('/portal');
+      }
+    }
+  }, [loading, isAuthenticated, user, location, setLocation]);
 
   if (loading) {
     return (
@@ -74,6 +92,11 @@ function ProtectedRoute({ component: Component, isDemoRoute = false }: { compone
   }
 
   if (!isAuthenticated) {
+    return null;
+  }
+
+  // While client redirect is pending, render nothing to avoid flash
+  if (user?.role === 'client' && ADMIN_ONLY_PATHS.some((p) => location === p || location.startsWith(p + '/'))) {
     return null;
   }
 
