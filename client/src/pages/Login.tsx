@@ -70,7 +70,6 @@ export default function Login() {
               alt="MAPit"
               className="h-8 w-auto"
             />
-            <span className="text-xl font-bold hidden sm:inline">MAPit</span>
           </div>
           <Button 
             onClick={handleLogin} 
