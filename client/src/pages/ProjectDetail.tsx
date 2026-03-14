@@ -4,6 +4,7 @@
  */
 
 import { useAuth } from "@/_core/hooks/useAuth";
+import { uploadProjectOverlay } from "@/app/actions/overlay";
 import { useClientAccess } from "@/hooks/useClientAccess";
 import { BackToDashboard } from "@/components/BackToDashboard";
 import { DeleteProjectDialog } from "@/components/DeleteProjectDialog";
@@ -551,6 +552,7 @@ export default function ProjectDetail() {
                   projectId={project.id}
                   projectName={project.name}
                   isDemoProject={isDemoProject}
+                  overlays={overlays}
                 />
               )}
             </motion.div>

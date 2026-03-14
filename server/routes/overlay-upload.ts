@@ -6,9 +6,12 @@
  *   - file: PDF, PNG, or JPG file
  *   - projectId: number
  *
- * Uploads the file to the Manus storage proxy, then inserts a row
- * into project_overlays with default corner coordinates derived from
- * the project's GPS bounding box (or [0,0] if no media exists yet).
+ * If the file is a PDF, it is rendered to a high-resolution PNG using
+ * poppler's pdftoppm (first page only) so that Mapbox can display it
+ * as a raster image source.  PNG/JPG files are stored as-is.
+ *
+ * The resulting image URL and GPS-derived corner coordinates are saved
+ * to the project_overlays table.
  */
 import { Router, Request, Response } from "express";
 import { getDb } from "../db";
@@ -17,6 +20,13 @@ import { eq, and } from "drizzle-orm";
 import { storagePut } from "../storage";
 import { nanoid } from "nanoid";
 import { sdk } from "../_core/sdk";
+import { execFile } from "child_process";
+import { promisify } from "util";
+import fs from "fs";
+import os from "os";
+import path from "path";
+
+const execFileAsync = promisify(execFile);
 
 const router = Router();
 
@@ -85,6 +95,36 @@ function parseMultipart(
   });
 }
 
+// ── Convert PDF buffer to PNG buffer using pdftoppm ──────────────────────
+async function pdfToPng(pdfBuffer: Buffer): Promise<Buffer> {
+  const tmpDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "overlay-"));
+  const pdfPath = path.join(tmpDir, "input.pdf");
+  const outPrefix = path.join(tmpDir, "page");
+
+  try {
+    await fs.promises.writeFile(pdfPath, pdfBuffer);
+
+    // Render first page at 300 DPI as PNG
+    await execFileAsync("pdftoppm", [
+      "-png",
+      "-r", "300",
+      "-f", "1",
+      "-l", "1",
+      "-singlefile",
+      pdfPath,
+      outPrefix,
+    ]);
+
+    // pdftoppm with -singlefile writes <prefix>.png
+    const pngPath = outPrefix + ".png";
+    const pngBuffer = await fs.promises.readFile(pngPath);
+    return pngBuffer;
+  } finally {
+    // Clean up temp files
+    await fs.promises.rm(tmpDir, { recursive: true, force: true }).catch(() => {});
+  }
+}
+
 // ── Default 4-corner coordinates centred on project GPS data ───────────────
 async function getDefaultCoordinates(
   projectId: number
@@ -110,12 +150,16 @@ async function getDefaultCoordinates(
   const minLng = Math.min(...lngs);
   const maxLng = Math.max(...lngs);
 
+  // Add 10% padding so the overlay extends slightly beyond the markers
+  const latPad = (maxLat - minLat) * 0.10 || 0.001;
+  const lngPad = (maxLng - minLng) * 0.10 || 0.001;
+
   // Mapbox expects [lng, lat] corner order: TL, TR, BR, BL
   return [
-    [minLng, maxLat],
-    [maxLng, maxLat],
-    [maxLng, minLat],
-    [minLng, minLat],
+    [minLng - lngPad, maxLat + latPad],
+    [maxLng + lngPad, maxLat + latPad],
+    [maxLng + lngPad, minLat - latPad],
+    [minLng - lngPad, minLat - latPad],
   ];
 }
 
@@ -167,10 +211,27 @@ router.post("/overlay/upload", async (req: Request, res: Response) => {
       return res.status(403).json({ error: "You do not own this project" });
     }
 
+    // ── Convert PDF to PNG if needed ─────────────────────────────────────
+    let uploadBuffer: Buffer = file.buffer;
+    let uploadMimetype: string = file.mimetype;
+    let uploadExt: string = file.originalname.split(".").pop()?.toLowerCase() || "bin";
+
+    if (file.mimetype === "application/pdf") {
+      console.log("[Overlay Upload] Converting PDF to PNG...");
+      try {
+        uploadBuffer = await pdfToPng(file.buffer);
+        uploadMimetype = "image/png";
+        uploadExt = "png";
+        console.log("[Overlay Upload] PDF converted to PNG successfully, size:", uploadBuffer.length);
+      } catch (convErr) {
+        console.error("[Overlay Upload] PDF conversion failed:", convErr);
+        return res.status(500).json({ error: "Failed to convert PDF to image. Please upload a PNG or JPG instead." });
+      }
+    }
+
     // Upload file to storage
-    const ext = file.originalname.split(".").pop()?.toLowerCase() || "bin";
-    const storageKey = `overlays/${user.id}/${projectId}/${nanoid(10)}.${ext}`;
-    const { url: fileUrl } = await storagePut(storageKey, file.buffer, file.mimetype);
+    const storageKey = `overlays/${user.id}/${projectId}/${nanoid(10)}.${uploadExt}`;
+    const { url: fileUrl } = await storagePut(storageKey, uploadBuffer, uploadMimetype);
 
     // Get existing overlay count for version numbering
     const existingOverlays = await db
@@ -202,6 +263,7 @@ router.post("/overlay/upload", async (req: Request, res: Response) => {
       .limit(1)
       .offset(versionNumber - 1);
 
+    console.log("[Overlay Upload] Success — overlay saved:", inserted?.id, "fileUrl:", fileUrl);
     return res.json({ success: true, overlay: inserted });
   } catch (err) {
     console.error("[Overlay Upload] Error:", err);

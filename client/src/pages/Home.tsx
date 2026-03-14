@@ -10,7 +10,7 @@
 
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useTheme } from "@/contexts/ThemeContext";
-import { getLoginUrl } from "@/const";
+import { getLoginUrl, getPortalLoginUrl } from "@/const";
 import { Button } from "@/components/ui/button";
 import { AppDownloadDialog } from "@/components/AppDownloadDialog";
 import { trackEvent } from "@/lib/analytics";
@@ -219,6 +219,14 @@ export default function Home() {
                 >
                   {loading ? "Loading..." : "Sign In"}
                 </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="px-4 py-2 text-gray-300 hover:text-white transition-all font-medium text-xs"
+                  onClick={() => { window.location.href = getPortalLoginUrl(); }}
+                >
+                  Client Portal
+                </Button>
               </>
             )}
 
@@ -292,17 +300,30 @@ export default function Home() {
                   </Button>
                 </>
               ) : (
-                <Button
-                  size="sm"
-                  className="w-full border border-slate-200 dark:border-white/20 text-slate-900 dark:text-white rounded-full font-bold mt-2 hover:bg-slate-100 dark:hover:bg-white/5"
-                  onClick={() => {
-                    handleLogin();
-                    setMobileMenuOpen(false);
-                  }}
-                  disabled={loading}
-                >
-                  {loading ? "Loading..." : "Sign In"}
-                </Button>
+                <>
+                  <Button
+                    size="sm"
+                    className="w-full border border-slate-200 dark:border-white/20 text-slate-900 dark:text-white rounded-full font-bold mt-2 hover:bg-slate-100 dark:hover:bg-white/5"
+                    onClick={() => {
+                      handleLogin();
+                      setMobileMenuOpen(false);
+                    }}
+                    disabled={loading}
+                  >
+                    {loading ? "Loading..." : "Sign In"}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="w-full text-gray-300 hover:text-white font-medium text-xs mt-1"
+                    onClick={() => {
+                      window.location.href = getPortalLoginUrl();
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Client Portal
+                  </Button>
+                </>
               )}
             </div>
           </motion.div>

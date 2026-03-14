@@ -18,16 +18,26 @@ export interface EmbeddedProjectMapHandle {
   panToMedia: (latitude: number, longitude: number, mediaId?: string) => void;
 }
 
+interface OverlayData {
+  id: number;
+  fileUrl: string;
+  coordinates: string | unknown;
+  opacity?: string | number;
+  isActive?: number;
+}
+
 interface EmbeddedProjectMapProps {
   projectId: number;
   projectName: string;
   flightId?: number;
   isDemoProject?: boolean;
+  overlays?: OverlayData[];
 }
 
 export const EmbeddedProjectMap = forwardRef<EmbeddedProjectMapHandle, EmbeddedProjectMapProps>(
   (props, ref) => {
-    const { projectId, projectName, flightId, isDemoProject = false } = props;
+    const { projectId, projectName, flightId, isDemoProject = false, overlays = [] } = props;
+    const groundOverlaysRef = useRef<google.maps.GroundOverlay[]>([]);
     const mapRef = useRef<google.maps.Map | null>(null);
     const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
     const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
@@ -241,7 +251,34 @@ export const EmbeddedProjectMap = forwardRef<EmbeddedProjectMapHandle, EmbeddedP
         markers: markersRef.current,
         map,
       });
-    }, [mediaWithGPS]);
+
+      // Render ground overlays (uploaded plan images)
+      groundOverlaysRef.current.forEach((go) => go.setMap(null));
+      groundOverlaysRef.current = [];
+      if (overlays && overlays.length > 0) {
+        for (const ov of overlays) {
+          if (!ov.isActive) continue;
+          try {
+            const coords = typeof ov.coordinates === 'string' ? JSON.parse(ov.coordinates) : ov.coordinates;
+            // coords is [[lng,lat],[lng,lat],[lng,lat],[lng,lat]] in TL,TR,BR,BL order
+            if (!coords || coords.length < 4) continue;
+            const sw = new google.maps.LatLng(coords[3][1], coords[3][0]); // BL
+            const ne = new google.maps.LatLng(coords[1][1], coords[1][0]); // TR
+            const bounds = new google.maps.LatLngBounds(sw, ne);
+            const opacity = typeof ov.opacity === 'string' ? parseFloat(ov.opacity) : (ov.opacity ?? 0.5);
+            const groundOverlay = new google.maps.GroundOverlay(ov.fileUrl, bounds, {
+              opacity: opacity,
+              clickable: false,
+            });
+            groundOverlay.setMap(map);
+            groundOverlaysRef.current.push(groundOverlay);
+            console.log('[Map Overlay] Rendered overlay', ov.id, 'url:', ov.fileUrl);
+          } catch (err) {
+            console.error('[Map Overlay] Failed to render overlay', ov.id, err);
+          }
+        }
+      }
+    }, [mediaWithGPS, overlays]);
 
     // Handle video opening
     useCallback(() => {
