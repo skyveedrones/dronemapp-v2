@@ -13,6 +13,7 @@ import { handleStripeWebhook } from "../stripe-webhook";
 import { initializeVersion, getVersionJson } from "../version";
 import { initializeRedisClient, createPerUserRateLimiter, createUploadRateLimiter, createConcurrentRequestsLimiter, closeRedisClient } from "./rateLimiter";
 import emailRouter from "../routes/email";
+import overlayUploadRouter from "../routes/overlay-upload";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -82,6 +83,9 @@ async function startServer() {
   
   // Email/lead capture routes
   app.use("/api", emailRouter);
+
+  // Project Map Overlay upload routes
+  app.use("/api", overlayUploadRouter);
 
 
   // Version endpoint - returns current deployed version

@@ -6,13 +6,17 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { getLoginUrl } from "@/const";
+import { getLoginUrl, getPortalLoginUrl } from "@/const";
 import { CheckCircle2, Shield, Zap, Map, Upload, FileText, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Login() {
   const handleLogin = () => {
     window.location.href = getLoginUrl();
+  };
+
+  const handlePortalLogin = () => {
+    window.location.href = getPortalLoginUrl();
   };
 
   const features = [
@@ -167,6 +171,16 @@ export default function Login() {
                     <Zap className="w-5 h-5 mr-2" />
                     Continue to Login
                     <ArrowRight className="w-5 h-5 ml-2" />
+                  </Button>
+
+                  <Button
+                    onClick={handlePortalLogin}
+                    size="lg"
+                    variant="outline"
+                    className="w-full text-lg h-12 border-primary/40 text-primary hover:bg-primary/10 font-semibold"
+                  >
+                    <Map className="w-5 h-5 mr-2" />
+                    Client Portal Login
                   </Button>
 
                   <div className="relative py-2">

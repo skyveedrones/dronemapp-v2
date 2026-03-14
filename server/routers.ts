@@ -6,7 +6,7 @@ import { nanoid } from "nanoid";
 import { z } from "zod";
 import { PLAN_LIMITS } from "../shared/planLimits";
 import { getDb } from "./db";
-import { media, clientUsers } from "../drizzle/schema";
+import { media, clientUsers, projectOverlays } from "../drizzle/schema";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
@@ -608,30 +608,36 @@ export const appRouter = router({
     get: protectedProcedure
       .input(z.object({ id: z.number() }))
       .query(async ({ ctx, input }) => {
+        // Helper: fetch overlays for a project
+        const fetchOverlays = async (projectId: number) => {
+          const db = await getDb();
+          if (!db) return [];
+          return db.select().from(projectOverlays).where(eq(projectOverlays.projectId, projectId));
+        };
+
         // Allow public access to demo project (ID: 1)
         if (input.id === 1) {
           const demoProject = await getProjectById(1);
           if (demoProject) {
+            const overlays = await fetchOverlays(demoProject.id);
             let logoUrl = demoProject.logoUrl;
-            return { ...demoProject, logoUrl, accessRole: 'demo' as const, isDemoProject: true };
+            return { ...demoProject, logoUrl, overlays, accessRole: 'demo' as const, isDemoProject: true };
           }
         }
         // First check if user is owner
         const ownedProject = await getUserProject(input.id, ctx.user.id);
         if (ownedProject) {
-          // For Cloudinary URLs (res.cloudinary.com), use directly
-          // For old S3 URLs, they won't work anymore so just use what's stored
+          const overlays = await fetchOverlays(ownedProject.id);
           let logoUrl = ownedProject.logoUrl;
-          // No need to generate signed URLs - Cloudinary URLs are public
-          return { ...ownedProject, logoUrl, accessRole: 'owner' as const };
+          return { ...ownedProject, logoUrl, overlays, accessRole: 'owner' as const };
         }
         
         // Check if user is a collaborator
         const sharedProject = await getProjectWithAccess(input.id, ctx.user.id);
         if (sharedProject) {
-          // For Cloudinary URLs, use directly - no signed URL needed
+          const overlays = await fetchOverlays(sharedProject.id);
           let logoUrl = sharedProject.logoUrl;
-          return { ...sharedProject, logoUrl };
+          return { ...sharedProject, logoUrl, overlays };
         }
         
         // Check if user is a client user with access to this project
@@ -639,8 +645,9 @@ export const appRouter = router({
         if (hasClientAccess) {
           const project = await getProjectById(input.id);
           if (project) {
+            const overlays = await fetchOverlays(project.id);
             let logoUrl = project.logoUrl;
-            return { ...project, logoUrl, accessRole: 'client' as const };
+            return { ...project, logoUrl, overlays, accessRole: 'client' as const };
           }
         }
         

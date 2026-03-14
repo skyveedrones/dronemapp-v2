@@ -32,7 +32,7 @@ const Features = () => {
       link: "/features/gps-data-export"
     },
     {
-      title: "PDF Map Overlay",
+      title: "Project Map Overlay",
       desc: "Overlay construction plans and blueprints on your maps with precise positioning.",
       icon: <Layers className="w-6 h-6 text-primary" />,
       image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/feature-pdf-overlay-dsC9P8JfjwrJGcb8zt4UXm.webp",

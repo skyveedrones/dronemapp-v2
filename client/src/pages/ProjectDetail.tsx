@@ -414,7 +414,7 @@ export default function ProjectDetail() {
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={handleOverlayClick}>
                         <Layers className="h-4 w-4 mr-2 text-orange-500" />
-                        Site Overlay
+                        Project Map Overlay
                       </DropdownMenuItem>
                       {/* Hidden file input for overlay upload */}
                       <input

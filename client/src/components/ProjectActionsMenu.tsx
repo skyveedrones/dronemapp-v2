@@ -31,7 +31,7 @@ export const ProjectActionsMenu = ({ projectId }: { projectId: number }) => {
         onClick={() => fileInputRef.current?.click()}
         className="bg-[#00df9a] text-black px-6 py-2 rounded-lg font-bold hover:bg-[#00bf82] transition shadow-lg"
       >
-        UPLOAD PDF OVERLAY
+        UPLOAD PROJECT MAP OVERLAY
       </button>
 
       {/* Hidden input to handle the Windows file picker */}

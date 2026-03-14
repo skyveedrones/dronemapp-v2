@@ -76,7 +76,7 @@ const features = [
   },
   {
     icon: Layers,
-    title: "PDF Map Overlay",
+    title: "Project Map Overlay",
     description:
       "Overlay construction plans on your maps with precise corner positioning.",
     image: "/images/feature-overlay-new.jpg",

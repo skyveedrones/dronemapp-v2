@@ -28,7 +28,7 @@ const PLAN_FEATURES = {
       "Up to 25 projects",
       "Up to 1,000 media files",
       "Advanced GPS export (KML, CSV, GeoJSON, GPX)",
-      "PDF map overlay",
+      "Project Map Overlay",
       "Email support",
     ],
   },

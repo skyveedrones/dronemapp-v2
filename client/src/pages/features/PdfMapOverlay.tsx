@@ -1,5 +1,5 @@
 /**
- * PDF Map Overlay Feature Page
+ * Project Map Overlay Feature Page
  * Allows users to overlay construction plans on maps
  */
 
@@ -159,7 +159,7 @@ export default function PdfMapOverlay() {
             >
               <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm mb-6">
                 <Layers className="h-4 w-4" />
-                PDF Map Overlay
+                Project Map Overlay
               </motion.div>
               
               <motion.h1
@@ -200,7 +200,7 @@ export default function PdfMapOverlay() {
               <div className="aspect-video rounded-xl overflow-hidden shadow-2xl">
                 <img
                   src="/images/feature-overlay-new.jpg"
-                  alt="PDF Map Overlay - Blueprint overlay on aerial imagery"
+                  alt="Project Map Overlay - Blueprint overlay on aerial imagery"
                   className="w-full h-full object-cover"
                 />
               </div>
