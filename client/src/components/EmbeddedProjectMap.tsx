@@ -88,18 +88,34 @@ export const EmbeddedProjectMap = forwardRef<EmbeddedProjectMapHandle, EmbeddedP
       ) || [];
     }, [mediaList]);
 
-    // Calculate center point from all GPS coordinates
+    // Calculate center point from all GPS coordinates or overlay bounds
     const getCenter = useCallback(() => {
-      if (mediaWithGPS.length === 0) {
-        return { lat: 32.7767, lng: -96.797 }; // Default to Dallas
+      if (mediaWithGPS.length > 0) {
+        const sumLat = mediaWithGPS.reduce((sum, m) => sum + parseFloat(m.latitude!), 0);
+        const sumLng = mediaWithGPS.reduce((sum, m) => sum + parseFloat(m.longitude!), 0);
+        return {
+          lat: sumLat / mediaWithGPS.length,
+          lng: sumLng / mediaWithGPS.length,
+        };
       }
-      const sumLat = mediaWithGPS.reduce((sum, m) => sum + parseFloat(m.latitude!), 0);
-      const sumLng = mediaWithGPS.reduce((sum, m) => sum + parseFloat(m.longitude!), 0);
-      return {
-        lat: sumLat / mediaWithGPS.length,
-        lng: sumLng / mediaWithGPS.length,
-      };
-    }, [mediaWithGPS]);
+      // If no GPS media but overlays exist, center on the first overlay
+      if (overlays && overlays.length > 0) {
+        try {
+          const coords = typeof overlays[0].coordinates === 'string'
+            ? JSON.parse(overlays[0].coordinates)
+            : overlays[0].coordinates;
+          if (coords && coords.length >= 4) {
+            // coords is [[lng,lat],[lng,lat],[lng,lat],[lng,lat]] in TL,TR,BR,BL
+            const avgLat = (coords[0][1] + coords[2][1]) / 2;
+            const avgLng = (coords[0][0] + coords[1][0]) / 2;
+            return { lat: avgLat, lng: avgLng };
+          }
+        } catch (e) {
+          console.error('[Map] Failed to parse overlay coordinates for centering', e);
+        }
+      }
+      return { lat: 32.7767, lng: -96.797 }; // Default to Dallas
+    }, [mediaWithGPS, overlays]);
 
     // Handle map ready - add markers and flight path
     const handleMapReady = useCallback((map: google.maps.Map) => {
@@ -347,7 +363,7 @@ export const EmbeddedProjectMap = forwardRef<EmbeddedProjectMapHandle, EmbeddedP
           </div>
         </CardHeader>
         <CardContent>
-          {mediaWithGPS.length === 0 ? (
+          {mediaWithGPS.length === 0 && (!overlays || overlays.length === 0) ? (
             <div className="w-full h-[500px] rounded-lg bg-muted/50 border border-border flex flex-col items-center justify-center text-muted-foreground">
               <Navigation className="h-12 w-12 mb-3 opacity-50" />
               <p className="font-medium">No GPS Data Available</p>
@@ -362,10 +378,17 @@ export const EmbeddedProjectMap = forwardRef<EmbeddedProjectMapHandle, EmbeddedP
                   initialZoom={14}
                   onMapReady={handleMapReady}
                 />
-                <div className="absolute bottom-2 left-2 bg-background/90 backdrop-blur-sm rounded px-2 py-1 text-xs text-muted-foreground">
-                  <span className="text-primary font-medium">{mediaWithGPS.length}</span> GPS points • 
-                  <span className="text-emerald-500 ml-1">—</span> Flight path
-                </div>
+                {mediaWithGPS.length > 0 && (
+                  <div className="absolute bottom-2 left-2 bg-background/90 backdrop-blur-sm rounded px-2 py-1 text-xs text-muted-foreground">
+                    <span className="text-primary font-medium">{mediaWithGPS.length}</span> GPS points • 
+                    <span className="text-emerald-500 ml-1">—</span> Flight path
+                  </div>
+                )}
+                {overlays && overlays.length > 0 && (
+                  <div className="absolute bottom-2 right-2 bg-background/90 backdrop-blur-sm rounded px-2 py-1 text-xs text-muted-foreground">
+                    <span className="text-primary font-medium">{overlays.length}</span> overlay{overlays.length !== 1 ? 's' : ''}
+                  </div>
+                )}
               </div>
               <div className="mt-3 p-3 bg-muted/50 rounded-lg border border-border">
                 <p className="text-sm text-muted-foreground">

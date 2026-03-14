@@ -138,13 +138,14 @@ async function getDefaultCoordinates(
     .where(and(eq(media.projectId, projectId)))
     .limit(200);
 
-  const valid = rows.filter((r) => r.lat != null && r.lng != null) as { lat: number; lng: number }[];
+  const valid = rows.filter((r) => r.lat != null && r.lng != null);
   if (valid.length === 0) {
     return [[-97.1, 32.8], [-97.0, 32.8], [-97.0, 32.7], [-97.1, 32.7]];
   }
 
-  const lats = valid.map((r) => r.lat);
-  const lngs = valid.map((r) => r.lng);
+  // Drizzle returns decimal columns as strings — parse to float
+  const lats = valid.map((r) => parseFloat(String(r.lat)));
+  const lngs = valid.map((r) => parseFloat(String(r.lng)));
   const minLat = Math.min(...lats);
   const maxLat = Math.max(...lats);
   const minLng = Math.min(...lngs);
