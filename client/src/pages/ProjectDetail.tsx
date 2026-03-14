@@ -135,39 +135,40 @@ export default function ProjectDetail() {
   const [warrantyReminderDialogOpen, setWarrantyReminderDialogOpen] = useState(false);
   const [logoDialogOpen, setLogoDialogOpen] = useState(false);
   const [sampleReportDialogOpen, setSampleReportDialogOpen] = useState(false);
+  const [comparisonMode, setComparisonMode] = useState(false);
 
-  // Fetch project details - use public demo procedures if accessing demo project
-  const { data: project, isLoading, error } = isDemoProject
-    ? trpc.project.getDemo.useQuery(
-        { id: projectId },
-        { enabled: projectId > 0 }
-      )
-    : trpc.project.get.useQuery(
-        { id: projectId },
-        { enabled: projectId > 0 }
-      );
+  // Fetch project details - always call both hooks, enable only the correct one
+  const demoProjectQuery = trpc.project.getDemo.useQuery(
+    { id: projectId },
+    { enabled: isDemoProject && projectId > 0 }
+  );
+  const normalProjectQuery = trpc.project.get.useQuery(
+    { id: projectId },
+    { enabled: !isDemoProject && projectId > 0 }
+  );
+  const { data: project, isLoading, error } = isDemoProject ? demoProjectQuery : normalProjectQuery;
 
-  // Fetch media list to determine if we show gallery or empty state
-  const { data: mediaList } = isDemoProject
-    ? trpc.media.listDemo.useQuery(
-        { projectId },
-        { enabled: projectId > 0 }
-      )
-    : trpc.media.list.useQuery(
-        { projectId },
-        { enabled: projectId > 0 }
-      );
+  // Fetch media list - always call both hooks, enable only the correct one
+  const demoMediaQuery = trpc.media.listDemo.useQuery(
+    { projectId },
+    { enabled: isDemoProject && projectId > 0 }
+  );
+  const normalMediaQuery = trpc.media.list.useQuery(
+    { projectId },
+    { enabled: !isDemoProject && projectId > 0 }
+  );
+  const { data: mediaList } = isDemoProject ? demoMediaQuery : normalMediaQuery;
 
-  // Fetch flights for this project
-  const { data: flights } = isDemoProject
-    ? trpc.flight.listDemo.useQuery(
-        { projectId },
-        { enabled: projectId > 0 }
-      )
-    : trpc.flight.list.useQuery(
-        { projectId },
-        { enabled: projectId > 0 }
-      );
+  // Fetch flights - always call both hooks, enable only the correct one
+  const demoFlightQuery = trpc.flight.listDemo.useQuery(
+    { projectId },
+    { enabled: isDemoProject && projectId > 0 }
+  );
+  const normalFlightQuery = trpc.flight.list.useQuery(
+    { projectId },
+    { enabled: !isDemoProject && projectId > 0 }
+  );
+  const { data: flights } = isDemoProject ? demoFlightQuery : normalFlightQuery;
 
   // Overlay upload logic
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -274,9 +275,6 @@ export default function ProjectDetail() {
   // For display purposes: show badge if user is client-only
   const isOwner = !isClientOnly;
 
-
-  // Comparison Mode toggle state
-  const [comparisonMode, setComparisonMode] = useState(false);
 
   // Helper: get overlays from project (if available)
   const overlays = project.overlays || [];
