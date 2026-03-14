@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { trpc } from "@/lib/trpc";
 import { Media } from "../../../drizzle/schema";
 import { Expand, MapPin, Navigation, X } from "lucide-react";
-import { useCallback, useMemo, useRef, useState, forwardRef, useImperativeHandle } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, forwardRef, useImperativeHandle } from "react";
 import { Link } from "wouter";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 
@@ -38,6 +38,7 @@ export const EmbeddedProjectMap = forwardRef<EmbeddedProjectMapHandle, EmbeddedP
   (props, ref) => {
     const { projectId, projectName, flightId, isDemoProject = false, overlays = [] } = props;
     const groundOverlaysRef = useRef<google.maps.GroundOverlay[]>([]);
+    const [mapReady, setMapReady] = useState(false);
     const mapRef = useRef<google.maps.Map | null>(null);
     const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
     const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
@@ -103,6 +104,7 @@ export const EmbeddedProjectMap = forwardRef<EmbeddedProjectMapHandle, EmbeddedP
     // Handle map ready - add markers and flight path
     const handleMapReady = useCallback((map: google.maps.Map) => {
       mapRef.current = map;
+      setMapReady(true);
 
       // Clear existing marker clusterer
       if (markerClustererRef.current) {
@@ -252,33 +254,42 @@ export const EmbeddedProjectMap = forwardRef<EmbeddedProjectMapHandle, EmbeddedP
         map,
       });
 
-      // Render ground overlays (uploaded plan images)
+    }, [mediaWithGPS]);
+
+    // Render ground overlays in a separate effect so they update when overlays data arrives
+    useEffect(() => {
+      if (!mapReady) return;
+      const map = mapRef.current;
+      if (!map) return;
+
+      // Clear existing ground overlays
       groundOverlaysRef.current.forEach((go) => go.setMap(null));
       groundOverlaysRef.current = [];
-      if (overlays && overlays.length > 0) {
-        for (const ov of overlays) {
-          if (!ov.isActive) continue;
-          try {
-            const coords = typeof ov.coordinates === 'string' ? JSON.parse(ov.coordinates) : ov.coordinates;
-            // coords is [[lng,lat],[lng,lat],[lng,lat],[lng,lat]] in TL,TR,BR,BL order
-            if (!coords || coords.length < 4) continue;
-            const sw = new google.maps.LatLng(coords[3][1], coords[3][0]); // BL
-            const ne = new google.maps.LatLng(coords[1][1], coords[1][0]); // TR
-            const bounds = new google.maps.LatLngBounds(sw, ne);
-            const opacity = typeof ov.opacity === 'string' ? parseFloat(ov.opacity) : (ov.opacity ?? 0.5);
-            const groundOverlay = new google.maps.GroundOverlay(ov.fileUrl, bounds, {
-              opacity: opacity,
-              clickable: false,
-            });
-            groundOverlay.setMap(map);
-            groundOverlaysRef.current.push(groundOverlay);
-            console.log('[Map Overlay] Rendered overlay', ov.id, 'url:', ov.fileUrl);
-          } catch (err) {
-            console.error('[Map Overlay] Failed to render overlay', ov.id, err);
-          }
+
+      if (!overlays || overlays.length === 0) return;
+
+      for (const ov of overlays) {
+        if (!ov.isActive) continue;
+        try {
+          const coords = typeof ov.coordinates === 'string' ? JSON.parse(ov.coordinates) : ov.coordinates;
+          // coords is [[lng,lat],[lng,lat],[lng,lat],[lng,lat]] in TL,TR,BR,BL order
+          if (!coords || coords.length < 4) continue;
+          const sw = new google.maps.LatLng(coords[3][1], coords[3][0]); // BL
+          const ne = new google.maps.LatLng(coords[1][1], coords[1][0]); // TR
+          const bounds = new google.maps.LatLngBounds(sw, ne);
+          const opacity = typeof ov.opacity === 'string' ? parseFloat(ov.opacity) : (ov.opacity ?? 0.5);
+          const groundOverlay = new google.maps.GroundOverlay(ov.fileUrl, bounds, {
+            opacity: opacity,
+            clickable: false,
+          });
+          groundOverlay.setMap(map);
+          groundOverlaysRef.current.push(groundOverlay);
+          console.log('[Map Overlay] Rendered overlay', ov.id, 'url:', ov.fileUrl);
+        } catch (err) {
+          console.error('[Map Overlay] Failed to render overlay', ov.id, err);
         }
       }
-    }, [mediaWithGPS, overlays]);
+    }, [overlays, mapReady]);
 
     // Handle video opening
     useCallback(() => {
