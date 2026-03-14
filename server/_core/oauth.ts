@@ -47,8 +47,19 @@ export function registerOAuthRoutes(app: Express) {
       const cookieOptions = getSessionCookieOptions(req);
       res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
 
-      // PHASE 2: Role-based redirect — client users go to /portal, everyone else to /
-      const redirectTo = dbUser?.role === 'client' ? '/portal' : '/';
+      // Parse optional dest field from state payload (set by getPortalLoginUrl)
+      let destFromState: string | null = null;
+      try {
+        const decoded = Buffer.from(state, 'base64').toString('utf8');
+        const parsed = JSON.parse(decoded);
+        if (parsed && typeof parsed.dest === 'string' && parsed.dest.startsWith('/')) {
+          destFromState = parsed.dest;
+        }
+      } catch {
+        // state is a plain base64 string (legacy getLoginUrl) — ignore
+      }
+      // Priority: explicit dest in state > role-based default
+      const redirectTo = destFromState ?? (dbUser?.role === 'client' ? '/portal' : '/');
       res.redirect(302, redirectTo);
     } catch (error) {
       console.error("[OAuth] Callback failed", error);
