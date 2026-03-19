@@ -1,0 +1,28 @@
+{
+  "query": "\n-- Assign 4 photos with GPS to Downtown Survey Flight (180001)\nUPDATE media SET flightId = 180001 WHERE id IN (10002, 10004, 10005, 10003) AND projectId = 1;\n\n-- Assign 4 photos (mixed GPS) to Park Mapping Mission (180002)\nUPDATE media SET flightId = 180002 WHERE id IN (10006, 10007, 10008, 10009) AND projectId = 1;\n\n-- Assign 3 photos (no GPS) to Infrastructure Inspection (180003)\nUPDATE media SET flightId = 180003 WHERE id IN (10001, 10010, 10011) AND projectId = 1;\n\n-- Update media counts for each flight\nUPDATE flights SET mediaCount = 4 WHERE id = 180001;\nUPDATE flights SET mediaCount = 4 WHERE id = 180002;\nUPDATE flights SET mediaCount = 3 WHERE id = 180003;\n\n-- Verify the distribution\nSELECT f.id, f.name, f.mediaCount, COUNT(m.id) as actual_count\nFROM flights f\nLEFT JOIN media m ON f.id = m.flightId\nWHERE f.projectId = 1\nGROUP BY f.id, f.name, f.mediaCount\nORDER BY f.id;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute \n-- Assign 4 photos with GPS to Downtown Survey Flight (180001)\nUPDATE media SET flightId = 180001 WHERE id IN (10002, 10004, 10005, 10003) AND projectId = 1;\n\n-- Assign 4 photos (mixed GPS) to Park Mapping Mission (180002)\nUPDATE media SET flightId = 180002 WHERE id IN (10006, 10007, 10008, 10009) AND projectId = 1;\n\n-- Assign 3 photos (no GPS) to Infrastructure Inspection (180003)\nUPDATE media SET flightId = 180003 WHERE id IN (10001, 10010, 10011) AND projectId = 1;\n\n-- Update media counts for each flight\nUPDATE flights SET mediaCount = 4 WHERE id = 180001;\nUPDATE flights SET mediaCount = 4 WHERE id = 180002;\nUPDATE flights SET mediaCount = 3 WHERE id = 180003;\n\n-- Verify the distribution\nSELECT f.id, f.name, f.mediaCount, COUNT(m.id) as actual_count\nFROM flights f\nLEFT JOIN media m ON f.id = m.flightId\nWHERE f.projectId = 1\nGROUP BY f.id, f.name, f.mediaCount\nORDER BY f.id;\n",
+  "rows": [
+    {
+      "id": "180001",
+      "name": "Downtown Survey Flight",
+      "mediaCount": "4",
+      "actual_count": "11"
+    },
+    {
+      "id": "180002",
+      "name": "Park Mapping Mission",
+      "mediaCount": "4",
+      "actual_count": "0"
+    },
+    {
+      "id": "180003",
+      "name": "Infrastructure Inspection",
+      "mediaCount": "3",
+      "actual_count": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tmediaCount\tactual_count\n180001\tDowntown Survey Flight\t4\t11\n180002\tPark Mapping Mission\t4\t0\n180003\tInfrastructure Inspection\t3\t0\n",
+  "stderr": "",
+  "execution_time_ms": 681
+}

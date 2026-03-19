@@ -1,0 +1,15 @@
+{
+  "query": "SELECT \n  COUNT(*) as total_files,\n  SUM(CASE WHEN url LIKE '%cloudinary%' THEN 1 ELSE 0 END) as cloudinary_files,\n  SUM(CASE WHEN url LIKE '%cloudfront%' OR url LIKE '%amazonaws%' THEN 1 ELSE 0 END) as s3_files\nFROM media;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT \n  COUNT(*) as total_files,\n  SUM(CASE WHEN url LIKE '%cloudinary%' THEN 1 ELSE 0 END) as cloudinary_files,\n  SUM(CASE WHEN url LIKE '%cloudfront%' OR url LIKE '%amazonaws%' THEN 1 ELSE 0 END) as s3_files\nFROM media;",
+  "rows": [
+    {
+      "total_files": "68",
+      "cloudinary_files": "0",
+      "s3_files": "68"
+    }
+  ],
+  "messages": [],
+  "stdout": "total_files\tcloudinary_files\ts3_files\n68\t0\t68\n",
+  "stderr": "",
+  "execution_time_ms": 352
+}

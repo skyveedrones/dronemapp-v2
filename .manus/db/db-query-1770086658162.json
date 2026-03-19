@@ -1,0 +1,50 @@
+{
+  "query": "SELECT cpa.*, p.name as projectName, u.email as userEmail\nFROM client_project_assignments cpa\nJOIN projects p ON cpa.projectId = p.id\nJOIN users u ON cpa.userId = u.id\nWHERE u.email = 'traceybechtol@gmail.com';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT cpa.*, p.name as projectName, u.email as userEmail\nFROM client_project_assignments cpa\nJOIN projects p ON cpa.projectId = p.id\nJOIN users u ON cpa.userId = u.id\nWHERE u.email = 'traceybechtol@gmail.com';",
+  "rows": [
+    {
+      "id": "30001",
+      "clientId": "1",
+      "userId": "2460221",
+      "projectId": "90004",
+      "assignedBy": "1",
+      "assignedAt": "2026-02-03 02:38:05",
+      "projectName": "Demonstration Project 1",
+      "userEmail": "traceybechtol@gmail.com"
+    },
+    {
+      "id": "30002",
+      "clientId": "1",
+      "userId": "2460221",
+      "projectId": "30001",
+      "assignedBy": "1",
+      "assignedAt": "2026-02-03 02:38:05",
+      "projectName": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "userEmail": "traceybechtol@gmail.com"
+    },
+    {
+      "id": "30003",
+      "clientId": "1",
+      "userId": "2460221",
+      "projectId": "30002",
+      "assignedBy": "1",
+      "assignedAt": "2026-02-03 02:38:05",
+      "projectName": "Gail Wilson Extension",
+      "userEmail": "traceybechtol@gmail.com"
+    },
+    {
+      "id": "30004",
+      "clientId": "1",
+      "userId": "2460221",
+      "projectId": "30003",
+      "assignedBy": "1",
+      "assignedAt": "2026-02-03 02:38:05",
+      "projectName": "Oncor Forney Switch",
+      "userEmail": "traceybechtol@gmail.com"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tclientId\tuserId\tprojectId\tassignedBy\tassignedAt\tprojectName\tuserEmail\n30001\t1\t2460221\t90004\t1\t2026-02-03 02:38:05\tDemonstration Project 1\ttraceybechtol@gmail.com\n30002\t1\t2460221\t30001\t1\t2026-02-03 02:38:05\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\ttraceybechtol@gmail.com\n30003\t1\t2460221\t30002\t1\t2026-02-03 02:38:05\tGail Wilson Extension\ttraceybechtol@gmail.com\n30004\t1\t2460221\t30003\t1\t2026-02-03 02:38:05\tOncor Forney Switch\ttraceybechtol@gmail.com\n",
+  "stderr": "",
+  "execution_time_ms": 342
+}

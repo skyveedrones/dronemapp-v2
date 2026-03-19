@@ -1,0 +1,28 @@
+{
+  "query": "SELECT id, email, role, organization FROM users WHERE email IN ('clay@skyveedrones.com', 'tbechtol@forneytx.gov') LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, email, role, organization FROM users WHERE email IN ('clay@skyveedrones.com', 'tbechtol@forneytx.gov') LIMIT 5;",
+  "rows": [
+    {
+      "id": "1",
+      "email": "clay@skyveedrones.com",
+      "role": "admin",
+      "organization": "NULL"
+    },
+    {
+      "id": "4560004",
+      "email": "TBechtol@forneytx.gov",
+      "role": "admin",
+      "organization": "City of Forney"
+    },
+    {
+      "id": "11430004",
+      "email": "clay@skyveedrones.com",
+      "role": "user",
+      "organization": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\trole\torganization\n1\tclay@skyveedrones.com\tadmin\tNULL\n4560004\tTBechtol@forneytx.gov\tadmin\tCity of Forney\n11430004\tclay@skyveedrones.com\tuser\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 134
+}

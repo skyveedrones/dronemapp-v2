@@ -1,0 +1,13 @@
+{
+  "query": "SELECT id FROM users WHERE email = 'demo@mapit.local';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id FROM users WHERE email = 'demo@mapit.local';",
+  "rows": [
+    {
+      "id": "5160178"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\n5160178\n",
+  "stderr": "",
+  "execution_time_ms": 368
+}

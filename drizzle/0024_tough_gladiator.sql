@@ -1,0 +1,1 @@
+ALTER TABLE `project_collaborators` MODIFY COLUMN `role` enum('viewer','editor','vendor') NOT NULL DEFAULT 'viewer';

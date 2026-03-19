@@ -1,0 +1,23 @@
+Mapbox Debug Findings - 2026-03-15
+
+1. ACCESS TOKEN: Working correctly. VITE_MAPBOX_TOKEN is set and Mapbox API returns 200/204 status codes.
+   Token visible in network logs: pk.eyJ1Ijoic2t5dmVlZHJvbmVzIi...
+   
+2. CONTAINER HEIGHT/WIDTH: Working. Map renders in the Project Map section with satellite tiles visible.
+
+3. CSS IMPORT: Present at line 15 of MapboxProjectMap.tsx: import "mapbox-gl/dist/mapbox-gl.css"
+
+4. CONTAINER ID MATCH: Using useRef (mapContainerRef) passed directly to container prop - correct pattern.
+
+5. BROWSER CONSOLE: No 401/403 errors. No WebGL errors. GPS markers log correctly: "[GPS Markers] Total GPS media: 19 Mapped: 19"
+
+6. NETWORK: All Mapbox tile requests return 200. Events API returns 204.
+
+CONCLUSION: The map IS rendering correctly on the demo project page. Satellite tiles, 5 GPS markers, 
+and flight path (green line) are all visible. The user may be seeing a blank map on a different page 
+or under specific conditions (e.g., no GPS data, different project).
+
+Potential issues to check:
+- ProjectMap.tsx (fullscreen /project/:id/map) - may have different initialization
+- GPSEditDialog - uses its own Mapbox instance
+- Projects with no GPS data may show a blank-looking dark map (satellite view of default Dallas location)

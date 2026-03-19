@@ -1,0 +1,25 @@
+{
+  "query": "\nSELECT p.id, p.name, COUNT(m.id) as media_count \nFROM projects p \nLEFT JOIN media m ON p.id = m.projectId \nWHERE p.name LIKE '%Forney%' OR p.name LIKE '%CIP222%'\nGROUP BY p.id, p.name\nORDER BY media_count DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute \nSELECT p.id, p.name, COUNT(m.id) as media_count \nFROM projects p \nLEFT JOIN media m ON p.id = m.projectId \nWHERE p.name LIKE '%Forney%' OR p.name LIKE '%CIP222%'\nGROUP BY p.id, p.name\nORDER BY media_count DESC;\n",
+  "rows": [
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_count": "33"
+    },
+    {
+      "id": "30003",
+      "name": "Oncor Forney Switch",
+      "media_count": "13"
+    },
+    {
+      "id": "60001",
+      "name": "Construction Site in Forney",
+      "media_count": "4"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tmedia_count\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t33\n30003\tOncor Forney Switch\t13\n60001\tConstruction Site in Forney\t4\n",
+  "stderr": "",
+  "execution_time_ms": 61
+}

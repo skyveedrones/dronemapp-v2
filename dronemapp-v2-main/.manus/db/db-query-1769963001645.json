@@ -1,0 +1,70 @@
+{
+  "query": "SELECT * FROM client_invitations LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT * FROM client_invitations LIMIT 5;",
+  "rows": [
+    {
+      "id": "1",
+      "clientId": "1",
+      "invitedBy": "1",
+      "email": "tbechtol@fornytx.gov",
+      "token": "y25qhVFbcVKCPwx9MNtqLqvShjGM-JhO",
+      "role": "viewer",
+      "status": "revoked",
+      "expiresAt": "2026-02-05 23:55:42",
+      "acceptedAt": "NULL",
+      "createdAt": "2026-01-29 23:55:41"
+    },
+    {
+      "id": "2",
+      "clientId": "1",
+      "invitedBy": "1",
+      "email": "claybechtol@gmail.com",
+      "token": "RXCiwJKqUoeMWQUBlq_ZeUxfrTuUDRz6",
+      "role": "viewer",
+      "status": "revoked",
+      "expiresAt": "2026-02-05 23:57:53",
+      "acceptedAt": "NULL",
+      "createdAt": "2026-01-29 23:57:53"
+    },
+    {
+      "id": "3",
+      "clientId": "1",
+      "invitedBy": "1",
+      "email": "tbechtol@forneytx.gov",
+      "token": "hgFdhENHU-een8vKieZSEwth9yfdwEA9",
+      "role": "viewer",
+      "status": "revoked",
+      "expiresAt": "2026-02-06 00:01:24",
+      "acceptedAt": "NULL",
+      "createdAt": "2026-01-30 00:01:24"
+    },
+    {
+      "id": "4",
+      "clientId": "1",
+      "invitedBy": "1",
+      "email": "clay@skyveedrones.com",
+      "token": "F0qCjiu3D83DdZNqRA_il84TbLmzjKcJ",
+      "role": "viewer",
+      "status": "revoked",
+      "expiresAt": "2026-02-06 00:10:41",
+      "acceptedAt": "NULL",
+      "createdAt": "2026-01-30 00:10:41"
+    },
+    {
+      "id": "30001",
+      "clientId": "1",
+      "invitedBy": "1",
+      "email": "tbechtol@forneytx.gov",
+      "token": "XKcaFcdIhMQSsc15b2XkRtdh1FDnHpkn",
+      "role": "viewer",
+      "status": "revoked",
+      "expiresAt": "2026-02-06 14:21:45",
+      "acceptedAt": "NULL",
+      "createdAt": "2026-01-30 14:21:45"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tclientId\tinvitedBy\temail\ttoken\trole\tstatus\texpiresAt\tacceptedAt\tcreatedAt\n1\t1\t1\ttbechtol@fornytx.gov\ty25qhVFbcVKCPwx9MNtqLqvShjGM-JhO\tviewer\trevoked\t2026-02-05 23:55:42\tNULL\t2026-01-29 23:55:41\n2\t1\t1\tclaybechtol@gmail.com\tRXCiwJKqUoeMWQUBlq_ZeUxfrTuUDRz6\tviewer\trevoked\t2026-02-05 23:57:53\tNULL\t2026-01-29 23:57:53\n3\t1\t1\ttbechtol@forneytx.gov\thgFdhENHU-een8vKieZSEwth9yfdwEA9\tviewer\trevoked\t2026-02-06 00:01:24\tNULL\t2026-01-30 00:01:24\n4\t1\t1\tclay@skyveedrones.com\tF0qCjiu3D83DdZNqRA_il84TbLmzjKcJ\tviewer\trevoked\t2026-02-06 00:10:41\tNULL\t2026-01-30 00:10:41\n30001\t1\t1\ttbechtol@forneytx.gov\tXKcaFcdIhMQSsc15b2XkRtdh1FDnHpkn\tviewer\trevoked\t2026-02-06 14:21:45\tNULL\t2026-01-30 14:21:45\n",
+  "stderr": "",
+  "execution_time_ms": 420
+}

@@ -1,0 +1,302 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Aurora Borealis Theme - Inspired by northern lights with green spectrum */
+/* Colors: Spearmint #117660, Forest Green #09323B, Lime Green #04B16F, Neon Green #14E114 */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Orbitron', system-ui, sans-serif;
+  
+  /* Aurora color palette custom properties */
+  --color-spearmint: oklch(0.507 0.093 173.06);
+  --color-forest: oklch(0.294 0.046 215.89);
+  --color-lime: oklch(0.670 0.156 158.01);
+  --color-neon: oklch(0.790 0.264 142.58);
+}
+
+:root {
+  /* Lime Green as primary - vibrant aurora accent */
+  --primary: oklch(0.670 0.156 158.01);
+  --primary-foreground: oklch(1 0 0);
+  --sidebar-primary: oklch(0.670 0.156 158.01);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  
+  /* Chart colors - aurora spectrum from neon to forest */
+  --chart-1: oklch(0.790 0.264 142.58);
+  --chart-2: oklch(0.670 0.156 158.01);
+  --chart-3: oklch(0.507 0.093 173.06);
+  --chart-4: oklch(0.400 0.070 180);
+  --chart-5: oklch(0.294 0.046 215.89);
+  
+  --radius: 0.5rem;
+  
+  /* Light theme base - Clean and bright with green accents */
+  --background: oklch(0.99 0 0);
+  --foreground: oklch(0.15 0 0);
+  --card: oklch(0.98 0 0);
+  --card-foreground: oklch(0.15 0 0);
+  --popover: oklch(0.98 0 0);
+  --popover-foreground: oklch(0.15 0 0);
+  --secondary: oklch(0.95 0.01 215);
+  --secondary-foreground: oklch(0.20 0 0);
+  --muted: oklch(0.93 0.01 215);
+  --muted-foreground: oklch(0.50 0 0);
+  --accent: oklch(0.507 0.093 173.06);
+  --accent-foreground: oklch(1 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.88 0.01 215);
+  --input: oklch(0.95 0.01 215);
+  --ring: oklch(0.670 0.156 158.01);
+  --sidebar: oklch(0.98 0 0 / 0.95);
+  --sidebar-foreground: oklch(0.15 0 0);
+  --sidebar-accent: oklch(0.95 0.01 215);
+  --sidebar-accent-foreground: oklch(0.15 0 0);
+  --sidebar-border: oklch(0.88 0.01 215);
+  --sidebar-ring: oklch(0.670 0.156 158.01);
+}
+
+.dark {
+  /* Lime Green as primary */
+  --primary: oklch(0.670 0.156 158.01);
+  --primary-foreground: oklch(1 0 0);
+  --sidebar-primary: oklch(0.670 0.156 158.01);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  
+  /* Dark theme - Forest Green base */
+  --background: oklch(0.12 0.02 215);
+  --foreground: oklch(0.98 0 0);
+  --card: oklch(0.18 0.025 215);
+  --card-foreground: oklch(0.98 0 0);
+  --popover: oklch(0.18 0.025 215);
+  --popover-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.25 0.03 215);
+  --secondary-foreground: oklch(0.95 0 0);
+  --muted: oklch(0.30 0.025 215);
+  --muted-foreground: oklch(0.70 0 0);
+  --accent: oklch(0.507 0.093 173.06);
+  --accent-foreground: oklch(1 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.35 0.03 215);
+  --input: oklch(0.25 0.025 215);
+  --ring: oklch(0.670 0.156 158.01);
+  --chart-1: oklch(0.790 0.264 142.58);
+  --chart-2: oklch(0.670 0.156 158.01);
+  --chart-3: oklch(0.507 0.093 173.06);
+  --chart-4: oklch(0.400 0.070 180);
+  --chart-5: oklch(0.294 0.046 215.89);
+  --sidebar: oklch(0.14 0.02 215 / 0.85);
+  --sidebar-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.22 0.025 215);
+  --sidebar-accent-foreground: oklch(0.98 0 0);
+  --sidebar-border: oklch(0.35 0.03 215);
+  --sidebar-ring: oklch(0.670 0.156 158.01);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-transparent text-foreground;
+    font-family: var(--font-sans);
+  }
+  html {
+    @apply bg-background;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [type="button"]:not(:disabled),
+  [type="submit"]:not(:disabled),
+  [type="reset"]:not(:disabled),
+  a[href],
+  select:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled) {
+    @apply cursor-pointer;
+  }
+  
+  /* Display font for headings */
+  h1, h2, h3 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer components {
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .flex {
+    min-height: 0;
+    min-width: 0;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+      max-width: 1280px;
+    }
+  }
+  
+  /* Glowing card effect - using Lime Green */
+  .glow-card {
+    @apply relative overflow-hidden rounded-lg border border-border bg-card transition-all duration-300;
+  }
+  
+  .glow-card::before {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+    background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), oklch(0.670 0.156 158.01 / 0.15), transparent 40%);
+  }
+  
+  .glow-card:hover::before {
+    @apply opacity-100;
+  }
+  
+  .glow-card:hover {
+    @apply border-primary/50;
+    box-shadow: 0 0 20px oklch(0.670 0.156 158.01 / 0.2);
+  }
+  
+  /* Grid pattern background - using Lime Green */
+  .grid-pattern {
+    background-image: 
+      linear-gradient(oklch(0.670 0.156 158.01 / 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(0.670 0.156 158.01 / 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+  
+  /* Aurora gradient effect */
+  .aurora-gradient {
+    background: linear-gradient(
+      135deg,
+      oklch(0.294 0.046 215.89) 0%,
+      oklch(0.507 0.093 173.06) 50%,
+      oklch(0.670 0.156 158.01) 100%
+    );
+  }
+  
+  /* Neon glow text */
+  .neon-text {
+    color: oklch(0.790 0.264 142.58);
+    text-shadow: 0 0 10px oklch(0.790 0.264 142.58 / 0.5),
+                 0 0 20px oklch(0.790 0.264 142.58 / 0.3),
+                 0 0 30px oklch(0.790 0.264 142.58 / 0.2);
+  }
+  
+  /* Topographic pattern - using Lime Green */
+  .topo-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 10 Q70 30 50 50 Q30 70 50 90' fill='none' stroke='rgba(4,177,111,0.05)' stroke-width='0.5'/%3E%3Cpath d='M30 20 Q50 40 30 60 Q10 80 30 100' fill='none' stroke='rgba(4,177,111,0.03)' stroke-width='0.5'/%3E%3Cpath d='M70 0 Q90 20 70 40 Q50 60 70 80' fill='none' stroke='rgba(4,177,111,0.04)' stroke-width='0.5'/%3E%3C/svg%3E");
+  }
+  
+  /* Logo color adaptation for light/dark mode */
+  /* In light mode: invert the white text to black, keep green marker */
+  :root img[src*="mapit-logo"] {
+    filter: invert(1) hue-rotate(180deg);
+  }
+  
+  /* In dark mode: keep original white text and green marker */
+  .dark img[src*="mapit-logo"] {
+    filter: none;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar - using Forest Green tones */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: oklch(0.14 0.02 215);
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.35 0.03 215);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.507 0.093 173.06);
+}
+
+/* ── CyberDivider ── */
+.cyber-divider-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+  overflow: hidden;
+}
+
+.cyber-divider-line {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent 0%, #10b981 50%, transparent 100%);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 1.5s ease-in-out;
+}
+
+.cyber-divider-line.ignite {
+  transform: scaleX(1);
+  box-shadow: 0 0 15px 2px rgba(16, 185, 129, 0.5);
+}

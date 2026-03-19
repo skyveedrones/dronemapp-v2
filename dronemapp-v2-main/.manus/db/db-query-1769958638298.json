@@ -1,0 +1,14 @@
+{
+  "query": "SELECT name, config FROM project_templates WHERE name = 'Water Line Mapping';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT name, config FROM project_templates WHERE name = 'Water Line Mapping';",
+  "rows": [
+    {
+      "name": "Water Line Mapping",
+      "config": "{\"clientName\": \"City of Forney\", \"dronePilot\": \"Edward Clay Bechtol\", \"faaLicenseNumber\": \"5205636\", \"logoKey\": \"mapit/project-logos/30001/logo-Z_HBYQUWpAoO4acGmZWwK\", \"logoUrl\": \"https://res.cloudinary.com/dp1fvan1x/image/upload/v1769952734/mapit/project-logos/30001/logo-Z_HBYQUWpAoO4acGmZWwK.jpg\"}"
+    }
+  ],
+  "messages": [],
+  "stdout": "name\tconfig\nWater Line Mapping\t{\"clientName\": \"City of Forney\", \"dronePilot\": \"Edward Clay Bechtol\", \"faaLicenseNumber\": \"5205636\", \"logoKey\": \"mapit/project-logos/30001/logo-Z_HBYQUWpAoO4acGmZWwK\", \"logoUrl\": \"https://res.cloudinary.com/dp1fvan1x/image/upload/v1769952734/mapit/project-logos/30001/logo-Z_HBYQUWpAoO4acGmZWwK.jpg\"}\n",
+  "stderr": "",
+  "execution_time_ms": 442
+}

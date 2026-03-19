@@ -1,0 +1,18 @@
+{
+  "query": "SELECT p.id, p.name, p.clientId, c.name as clientName, cu.userId, u.email\nFROM projects p\nLEFT JOIN clients c ON p.clientId = c.id\nLEFT JOIN client_users cu ON c.id = cu.clientId\nLEFT JOIN users u ON cu.userId = u.id\nWHERE (p.name LIKE '%Oncor%' OR p.name LIKE '%Switch%')\nAND u.email = 'traceybechtol@gmail.com';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT p.id, p.name, p.clientId, c.name as clientName, cu.userId, u.email\nFROM projects p\nLEFT JOIN clients c ON p.clientId = c.id\nLEFT JOIN client_users cu ON c.id = cu.clientId\nLEFT JOIN users u ON cu.userId = u.id\nWHERE (p.name LIKE '%Oncor%' OR p.name LIKE '%Switch%')\nAND u.email = 'traceybechtol@gmail.com';",
+  "rows": [
+    {
+      "id": "30003",
+      "name": "Oncor Forney Switch",
+      "clientId": "1",
+      "clientName": "City of Forney",
+      "userId": "2460221",
+      "email": "traceybechtol@gmail.com"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tclientId\tclientName\tuserId\temail\n30003\tOncor Forney Switch\t1\tCity of Forney\t2460221\ttraceybechtol@gmail.com\n",
+  "stderr": "",
+  "execution_time_ms": 345
+}

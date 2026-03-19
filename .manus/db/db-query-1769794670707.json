@@ -1,0 +1,150 @@
+{
+  "query": "SELECT id, filename, flightId, projectId, createdAt FROM media WHERE projectId = 30001 ORDER BY createdAt DESC LIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, filename, flightId, projectId, createdAt FROM media WHERE projectId = 30001 ORDER BY createdAt DESC LIMIT 20;",
+  "rows": [
+    {
+      "id": "360003",
+      "filename": "1000000329.jpg",
+      "flightId": "30001",
+      "projectId": "30001",
+      "createdAt": "2026-01-30 17:33:45"
+    },
+    {
+      "id": "360002",
+      "filename": "1000000328.jpg",
+      "flightId": "30001",
+      "projectId": "30001",
+      "createdAt": "2026-01-30 17:33:24"
+    },
+    {
+      "id": "360001",
+      "filename": "1000000326.jpg",
+      "flightId": "30001",
+      "projectId": "30001",
+      "createdAt": "2026-01-30 17:32:59"
+    },
+    {
+      "id": "300001",
+      "filename": "Cip 222 From Valve To Near Costco Updated.mp4",
+      "flightId": "NULL",
+      "projectId": "30001",
+      "createdAt": "2026-01-30 00:22:16"
+    },
+    {
+      "id": "270001",
+      "filename": "Cip 222 Second Billboard To Valve Updated.mp4",
+      "flightId": "NULL",
+      "projectId": "30001",
+      "createdAt": "2026-01-29 22:19:50"
+    },
+    {
+      "id": "240001",
+      "filename": "CIP 222 South Side Of 80 Updated.mp4",
+      "flightId": "NULL",
+      "projectId": "30001",
+      "createdAt": "2026-01-29 21:30:02"
+    },
+    {
+      "id": "180021",
+      "filename": "Cip 222 Kelli Ln To First Bill Board.mp4",
+      "flightId": "NULL",
+      "projectId": "30001",
+      "createdAt": "2026-01-29 18:08:39"
+    },
+    {
+      "id": "150009",
+      "filename": "CIP 222 Lovers Ln to Buffalo Creek.mp4",
+      "flightId": "NULL",
+      "projectId": "30001",
+      "createdAt": "2026-01-29 16:34:02"
+    },
+    {
+      "id": "90001",
+      "filename": "DJI_20251226144858_0200_D_SKYVEE.JPG",
+      "flightId": "NULL",
+      "projectId": "30001",
+      "createdAt": "2026-01-29 03:41:13"
+    },
+    {
+      "id": "30040",
+      "filename": "Screenshot oof CIP 222 Overlay.png",
+      "flightId": "NULL",
+      "projectId": "30001",
+      "createdAt": "2026-01-23 04:39:30"
+    },
+    {
+      "id": "30039",
+      "filename": "DJI_20251226145212_0206_D_SKYVEE.MP4_20260109_132822.057.jpg",
+      "flightId": "NULL",
+      "projectId": "30001",
+      "createdAt": "2026-01-23 04:39:29"
+    },
+    {
+      "id": "30038",
+      "filename": "DJI_20251226145033_0203_D_SKYVEE.JPG",
+      "flightId": "NULL",
+      "projectId": "30001",
+      "createdAt": "2026-01-23 04:39:21"
+    },
+    {
+      "id": "30037",
+      "filename": "DJI_20251226143200_0196_D_SKYVEE.JPG",
+      "flightId": "NULL",
+      "projectId": "30001",
+      "createdAt": "2026-01-23 04:36:47"
+    },
+    {
+      "id": "30036",
+      "filename": "DJI_20251226143142_0194_D_SKYVEE.JPG",
+      "flightId": "NULL",
+      "projectId": "30001",
+      "createdAt": "2026-01-23 04:36:37"
+    },
+    {
+      "id": "30035",
+      "filename": "DJI_20251226141814_0193_D_SKYVEE.JPG",
+      "flightId": "NULL",
+      "projectId": "30001",
+      "createdAt": "2026-01-23 04:36:28"
+    },
+    {
+      "id": "30033",
+      "filename": "DJI_20251226141647_0191_D_SKYVEE.JPG",
+      "flightId": "NULL",
+      "projectId": "30001",
+      "createdAt": "2026-01-23 04:36:08"
+    },
+    {
+      "id": "30031",
+      "filename": "DJI_20251226135932_0184_D_SKYVEE.JPG",
+      "flightId": "NULL",
+      "projectId": "30001",
+      "createdAt": "2026-01-23 04:35:05"
+    },
+    {
+      "id": "30030",
+      "filename": "DJI_20251226133609_0182_D_SKYVEE.JPG",
+      "flightId": "NULL",
+      "projectId": "30001",
+      "createdAt": "2026-01-23 04:34:56"
+    },
+    {
+      "id": "30029",
+      "filename": "DJI_20251226132115_0181_D_SKYVEE.JPG",
+      "flightId": "NULL",
+      "projectId": "30001",
+      "createdAt": "2026-01-23 04:34:47"
+    },
+    {
+      "id": "30028",
+      "filename": "DJI_20251226132105_0180_D_SKYVEE.JPG",
+      "flightId": "NULL",
+      "projectId": "30001",
+      "createdAt": "2026-01-23 04:34:41"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfilename\tflightId\tprojectId\tcreatedAt\n360003\t1000000329.jpg\t30001\t30001\t2026-01-30 17:33:45\n360002\t1000000328.jpg\t30001\t30001\t2026-01-30 17:33:24\n360001\t1000000326.jpg\t30001\t30001\t2026-01-30 17:32:59\n300001\tCip 222 From Valve To Near Costco Updated.mp4\tNULL\t30001\t2026-01-30 00:22:16\n270001\tCip 222 Second Billboard To Valve Updated.mp4\tNULL\t30001\t2026-01-29 22:19:50\n240001\tCIP 222 South Side Of 80 Updated.mp4\tNULL\t30001\t2026-01-29 21:30:02\n180021\tCip 222 Kelli Ln To First Bill Board.mp4\tNULL\t30001\t2026-01-29 18:08:39\n150009\tCIP 222 Lovers Ln to Buffalo Creek.mp4\tNULL\t30001\t2026-01-29 16:34:02\n90001\tDJI_20251226144858_0200_D_SKYVEE.JPG\tNULL\t30001\t2026-01-29 03:41:13\n30040\tScreenshot oof CIP 222 Overlay.png\tNULL\t30001\t2026-01-23 04:39:30\n30039\tDJI_20251226145212_0206_D_SKYVEE.MP4_20260109_132822.057.jpg\tNULL\t30001\t2026-01-23 04:39:29\n30038\tDJI_20251226145033_0203_D_SKYVEE.JPG\tNULL\t30001\t2026-01-23 04:39:21\n30037\tDJI_20251226143200_0196_D_SKYVEE.JPG\tNULL\t30001\t2026-01-23 04:36:47\n30036\tDJI_20251226143142_0194_D_SKYVEE.JPG\tNULL\t30001\t2026-01-23 04:36:37\n30035\tDJI_20251226141814_0193_D_SKYVEE.JPG\tNULL\t30001\t2026-01-23 04:36:28\n30033\tDJI_20251226141647_0191_D_SKYVEE.JPG\tNULL\t30001\t2026-01-23 04:36:08\n30031\tDJI_20251226135932_0184_D_SKYVEE.JPG\tNULL\t30001\t2026-01-23 04:35:05\n30030\tDJI_20251226133609_0182_D_SKYVEE.JPG\tNULL\t30001\t2026-01-23 04:34:56\n30029\tDJI_20251226132115_0181_D_SKYVEE.JPG\tNULL\t30001\t2026-01-23 04:34:47\n30028\tDJI_20251226132105_0180_D_SKYVEE.JPG\tNULL\t30001\t2026-01-23 04:34:41\n",
+  "stderr": "",
+  "execution_time_ms": 497
+}

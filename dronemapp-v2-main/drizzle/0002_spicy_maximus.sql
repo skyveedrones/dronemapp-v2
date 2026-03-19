@@ -1,0 +1,21 @@
+CREATE TABLE `media` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`projectId` int NOT NULL,
+	`userId` int NOT NULL,
+	`filename` varchar(255) NOT NULL,
+	`fileKey` varchar(500) NOT NULL,
+	`url` varchar(500) NOT NULL,
+	`mimeType` varchar(100) NOT NULL,
+	`fileSize` int NOT NULL,
+	`mediaType` enum('photo','video') NOT NULL,
+	`latitude` decimal(10,7),
+	`longitude` decimal(10,7),
+	`altitude` decimal(10,2),
+	`capturedAt` timestamp,
+	`cameraMake` varchar(100),
+	`cameraModel` varchar(100),
+	`thumbnailUrl` varchar(500),
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `media_id` PRIMARY KEY(`id`)
+);

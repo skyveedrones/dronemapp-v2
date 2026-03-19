@@ -1,0 +1,170 @@
+{
+  "query": "SELECT id, name FROM clients WHERE LOWER(name) LIKE '%test%' OR LOWER(name) LIKE '%demo%' LIMIT 50;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, name FROM clients WHERE LOWER(name) LIKE '%test%' OR LOWER(name) LIKE '%demo%' LIMIT 50;",
+  "rows": [
+    {
+      "id": "4710013",
+      "name": "Logo Test Client"
+    },
+    {
+      "id": "4710014",
+      "name": "Test Client for Copy"
+    },
+    {
+      "id": "4710015",
+      "name": "Template Test Client"
+    },
+    {
+      "id": "4710016",
+      "name": "URL Format Test"
+    },
+    {
+      "id": "4710017",
+      "name": "Logo Test Client"
+    },
+    {
+      "id": "4710018",
+      "name": "Test Client for Copy"
+    },
+    {
+      "id": "4710019",
+      "name": "Template Test Client"
+    },
+    {
+      "id": "4710020",
+      "name": "URL Format Test"
+    },
+    {
+      "id": "4710021",
+      "name": "Logo Test Client"
+    },
+    {
+      "id": "4710022",
+      "name": "Test Client for Copy"
+    },
+    {
+      "id": "4710023",
+      "name": "Template Test Client"
+    },
+    {
+      "id": "4710024",
+      "name": "URL Format Test"
+    },
+    {
+      "id": "4710025",
+      "name": "Logo Test Client"
+    },
+    {
+      "id": "4710026",
+      "name": "Test Client for Copy"
+    },
+    {
+      "id": "4710027",
+      "name": "Template Test Client"
+    },
+    {
+      "id": "4710028",
+      "name": "URL Format Test"
+    },
+    {
+      "id": "4740005",
+      "name": "Logo Test Client"
+    },
+    {
+      "id": "4740006",
+      "name": "Test Client for Copy"
+    },
+    {
+      "id": "4740007",
+      "name": "Template Test Client"
+    },
+    {
+      "id": "4740008",
+      "name": "URL Format Test"
+    },
+    {
+      "id": "4740009",
+      "name": "Logo Test Client"
+    },
+    {
+      "id": "4740010",
+      "name": "Test Client for Copy"
+    },
+    {
+      "id": "4740011",
+      "name": "Template Test Client"
+    },
+    {
+      "id": "4740012",
+      "name": "URL Format Test"
+    },
+    {
+      "id": "4740013",
+      "name": "Logo Test Client"
+    },
+    {
+      "id": "4740014",
+      "name": "Test Client for Copy"
+    },
+    {
+      "id": "4740015",
+      "name": "Template Test Client"
+    },
+    {
+      "id": "4740016",
+      "name": "URL Format Test"
+    },
+    {
+      "id": "4740017",
+      "name": "Logo Test Client"
+    },
+    {
+      "id": "4740018",
+      "name": "Test Client for Copy"
+    },
+    {
+      "id": "4740019",
+      "name": "Template Test Client"
+    },
+    {
+      "id": "4740020",
+      "name": "URL Format Test"
+    },
+    {
+      "id": "4740021",
+      "name": "Logo Test Client"
+    },
+    {
+      "id": "4740022",
+      "name": "Test Client for Copy"
+    },
+    {
+      "id": "4740023",
+      "name": "Template Test Client"
+    },
+    {
+      "id": "4740024",
+      "name": "URL Format Test"
+    },
+    {
+      "id": "4740025",
+      "name": "Logo Test Client"
+    },
+    {
+      "id": "4740026",
+      "name": "Test Client for Copy"
+    },
+    {
+      "id": "4740027",
+      "name": "Template Test Client"
+    },
+    {
+      "id": "4740028",
+      "name": "URL Format Test"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\n4710013\tLogo Test Client\n4710014\tTest Client for Copy\n4710015\tTemplate Test Client\n4710016\tURL Format Test\n4710017\tLogo Test Client\n4710018\tTest Client for Copy\n4710019\tTemplate Test Client\n4710020\tURL Format Test\n4710021\tLogo Test Client\n4710022\tTest Client for Copy\n4710023\tTemplate Test Client\n4710024\tURL Format Test\n4710025\tLogo Test Client\n4710026\tTest Client for Copy\n4710027\tTemplate Test Client\n4710028\tURL Format Test\n4740005\tLogo Test Client\n4740006\tTest Client for Copy\n4740007\tTemplate Test Client\n4740008\tURL Format Test\n4740009\tLogo Test Client\n4740010\tTest Client for Copy\n4740011\tTemplate Test Client\n4740012\tURL Format Test\n4740013\tLogo Test Client\n4740014\tTest Client for Copy\n4740015\tTemplate Test Client\n4740016\tURL Format Test\n4740017\tLogo Test Client\n4740018\tTest Client for Copy\n4740019\tTemplate Test Client\n4740020\tURL Format Test\n4740021\tLogo Test Client\n4740022\tTest Client for Copy\n4740023\tTemplate Test Client\n4740024\tURL Format Test\n4740025\tLogo Test Client\n4740026\tTest Client for Copy\n4740027\tTemplate Test Client\n4740028\tURL Format Test\n",
+  "stderr": "",
+  "execution_time_ms": 49
+}

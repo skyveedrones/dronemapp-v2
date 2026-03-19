@@ -1,0 +1,46 @@
+{
+  "query": "SELECT id, filename, mediaType, thumbnailUrl FROM media WHERE projectId = 1 ORDER BY id DESC LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, filename, mediaType, thumbnailUrl FROM media WHERE projectId = 1 ORDER BY id DESC LIMIT 10;",
+  "rows": [
+    {
+      "id": "150006",
+      "filename": "drone-footage-with-thumb.mp4",
+      "mediaType": "video",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/1/thumbnails/W0aF0cRexDVI-thumb.jpg"
+    },
+    {
+      "id": "150005",
+      "filename": "drone-footage.mp4",
+      "mediaType": "video",
+      "thumbnailUrl": "https://storage.example.com/projects/1/thumbnails/12345-thumb.jpg"
+    },
+    {
+      "id": "150004",
+      "filename": "drone-footage-with-thumb.mp4",
+      "mediaType": "video",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/1/thumbnails/lGgzjSIhz-WU-thumb.jpg"
+    },
+    {
+      "id": "150003",
+      "filename": "drone-footage.mp4",
+      "mediaType": "video",
+      "thumbnailUrl": "https://storage.example.com/projects/1/thumbnails/12345-thumb.jpg"
+    },
+    {
+      "id": "150002",
+      "filename": "drone-footage.mp4",
+      "mediaType": "video",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/1/thumbnails/XnipKacr8cnu-thumb.jpg"
+    },
+    {
+      "id": "150001",
+      "filename": "drone-footage.mp4",
+      "mediaType": "video",
+      "thumbnailUrl": "https://storage.example.com/projects/1/thumbnails/12345-thumb.jpg"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfilename\tmediaType\tthumbnailUrl\n150006\tdrone-footage-with-thumb.mp4\tvideo\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/1/thumbnails/W0aF0cRexDVI-thumb.jpg\n150005\tdrone-footage.mp4\tvideo\thttps://storage.example.com/projects/1/thumbnails/12345-thumb.jpg\n150004\tdrone-footage-with-thumb.mp4\tvideo\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/1/thumbnails/lGgzjSIhz-WU-thumb.jpg\n150003\tdrone-footage.mp4\tvideo\thttps://storage.example.com/projects/1/thumbnails/12345-thumb.jpg\n150002\tdrone-footage.mp4\tvideo\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/1/thumbnails/XnipKacr8cnu-thumb.jpg\n150001\tdrone-footage.mp4\tvideo\thttps://storage.example.com/projects/1/thumbnails/12345-thumb.jpg\n",
+  "stderr": "",
+  "execution_time_ms": 391
+}

@@ -1,0 +1,28 @@
+{
+  "query": "SELECT id, filename, url, thumbnailUrl FROM media WHERE projectId = 1 LIMIT 3;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, filename, url, thumbnailUrl FROM media WHERE projectId = 1 LIMIT 3;",
+  "rows": [
+    {
+      "id": "690001",
+      "filename": "1000000491.jpg",
+      "url": "https://res.cloudinary.com/dp1fvan1x/image/upload/v1769967191/mapit/projects/90004/media/PNt8huPtrX08-1000000491.jpg",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/90004/thumbnails/X74ZBWgVdxBl-thumb.jpg"
+    },
+    {
+      "id": "690002",
+      "filename": "1000000322.jpg",
+      "url": "https://res.cloudinary.com/dp1fvan1x/image/upload/v1769967195/mapit/projects/90004/media/cYgybx7856JL-1000000322.jpg",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/90004/thumbnails/rFu4U74Ob1ah-thumb.jpg"
+    },
+    {
+      "id": "690003",
+      "filename": "1000000324.jpg",
+      "url": "https://res.cloudinary.com/dp1fvan1x/image/upload/v1769967198/mapit/projects/90004/media/VwVRplTCeRvT-1000000324.jpg",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/90004/thumbnails/x-YP-acl85dH-thumb.jpg"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfilename\turl\tthumbnailUrl\n690001\t1000000491.jpg\thttps://res.cloudinary.com/dp1fvan1x/image/upload/v1769967191/mapit/projects/90004/media/PNt8huPtrX08-1000000491.jpg\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/90004/thumbnails/X74ZBWgVdxBl-thumb.jpg\n690002\t1000000322.jpg\thttps://res.cloudinary.com/dp1fvan1x/image/upload/v1769967195/mapit/projects/90004/media/cYgybx7856JL-1000000322.jpg\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/90004/thumbnails/rFu4U74Ob1ah-thumb.jpg\n690003\t1000000324.jpg\thttps://res.cloudinary.com/dp1fvan1x/image/upload/v1769967198/mapit/projects/90004/media/VwVRplTCeRvT-1000000324.jpg\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/projects/90004/thumbnails/x-YP-acl85dH-thumb.jpg\n",
+  "stderr": "",
+  "execution_time_ms": 409
+}

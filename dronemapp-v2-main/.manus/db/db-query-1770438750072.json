@@ -1,0 +1,65 @@
+{
+  "query": "\nSELECT id, filename, flightId \nFROM media \nWHERE projectId = 1 \nORDER BY flightId, id;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute \nSELECT id, filename, flightId \nFROM media \nWHERE projectId = 1 \nORDER BY flightId, id;\n",
+  "rows": [
+    {
+      "id": "690001",
+      "filename": "1000000491.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690003",
+      "filename": "1000000324.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690004",
+      "filename": "1000000323.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690005",
+      "filename": "1000000316.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690006",
+      "filename": "1000000320.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690007",
+      "filename": "1000000328.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690008",
+      "filename": "1000000327.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690009",
+      "filename": "1000000329.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690010",
+      "filename": "1000000152.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690011",
+      "filename": "1000000308.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690012",
+      "filename": "1000000325.jpg",
+      "flightId": "180001"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfilename\tflightId\n690001\t1000000491.jpg\t180001\n690003\t1000000324.jpg\t180001\n690004\t1000000323.jpg\t180001\n690005\t1000000316.jpg\t180001\n690006\t1000000320.jpg\t180001\n690007\t1000000328.jpg\t180001\n690008\t1000000327.jpg\t180001\n690009\t1000000329.jpg\t180001\n690010\t1000000152.jpg\t180001\n690011\t1000000308.jpg\t180001\n690012\t1000000325.jpg\t180001\n",
+  "stderr": "",
+  "execution_time_ms": 410
+}

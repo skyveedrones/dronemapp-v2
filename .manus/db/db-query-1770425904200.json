@@ -1,0 +1,14 @@
+{
+  "query": "SELECT COUNT(*) as total_media, GROUP_CONCAT(filename SEPARATOR ', ') as filenames FROM media WHERE projectId = 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT COUNT(*) as total_media, GROUP_CONCAT(filename SEPARATOR ', ') as filenames FROM media WHERE projectId = 1;",
+  "rows": [
+    {
+      "total_media": "12",
+      "filenames": "1000000491.jpg, 1000000322.jpg, 1000000324.jpg, 1000000323.jpg, 1000000316.jpg, 1000000320.jpg, 1000000328.jpg, 1000000327.jpg, 1000000329.jpg, 1000000152.jpg, 1000000308.jpg, 1000000325.jpg"
+    }
+  ],
+  "messages": [],
+  "stdout": "total_media\tfilenames\n12\t1000000491.jpg, 1000000322.jpg, 1000000324.jpg, 1000000323.jpg, 1000000316.jpg, 1000000320.jpg, 1000000328.jpg, 1000000327.jpg, 1000000329.jpg, 1000000152.jpg, 1000000308.jpg, 1000000325.jpg\n",
+  "stderr": "",
+  "execution_time_ms": 365
+}

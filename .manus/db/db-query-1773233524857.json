@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE users SET role = 'admin', organization = (SELECT organization FROM users WHERE email = 'clay@skyveedrones.com' LIMIT 1) WHERE email = 'tbechtol@forneytx.gov';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute UPDATE users SET role = 'admin', organization = (SELECT organization FROM users WHERE email = 'clay@skyveedrones.com' LIMIT 1) WHERE email = 'tbechtol@forneytx.gov';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 73
+}

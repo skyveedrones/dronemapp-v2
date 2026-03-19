@@ -1,0 +1,35 @@
+{
+  "query": "\nSELECT id, name, mediaCount FROM flights WHERE projectId = 1 ORDER BY id;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute \nSELECT id, name, mediaCount FROM flights WHERE projectId = 1 ORDER BY id;\n",
+  "rows": [
+    {
+      "id": "180001",
+      "name": "Downtown Survey Flight",
+      "mediaCount": "4"
+    },
+    {
+      "id": "180002",
+      "name": "Park Mapping Mission",
+      "mediaCount": "4"
+    },
+    {
+      "id": "180003",
+      "name": "Infrastructure Inspection",
+      "mediaCount": "3"
+    },
+    {
+      "id": "210001",
+      "name": "Test",
+      "mediaCount": "0"
+    },
+    {
+      "id": "210002",
+      "name": "NYC Aerial Survey",
+      "mediaCount": "5"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tmediaCount\n180001\tDowntown Survey Flight\t4\n180002\tPark Mapping Mission\t4\n180003\tInfrastructure Inspection\t3\n210001\tTest\t0\n210002\tNYC Aerial Survey\t5\n",
+  "stderr": "",
+  "execution_time_ms": 353
+}

@@ -1,0 +1,20 @@
+{
+  "query": "\n-- Get all media from demo project\nSELECT id, filename, mediaType, flightId, latitude, longitude \nFROM media \nWHERE projectId = 1 \nORDER BY id;\n\n-- Get all flights from demo project\nSELECT id, name, description, createdAt \nFROM flight \nWHERE projectId = 1 \nORDER BY id;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute \n-- Get all media from demo project\nSELECT id, filename, mediaType, flightId, latitude, longitude \nFROM media \nWHERE projectId = 1 \nORDER BY id;\n\n-- Get all flights from demo project\nSELECT id, name, description, createdAt \nFROM flight \nWHERE projectId = 1 \nORDER BY id;\n",
+  "returncode": 1,
+  "logs": [
+    "id\tfilename\tmediaType\tflightId\tlatitude\tlongitude",
+    "690001\t1000000491.jpg\tphoto\t180001\tNULL\tNULL",
+    "690003\t1000000324.jpg\tphoto\t180001\t32.7401150\t-96.3520660",
+    "690004\t1000000323.jpg\tphoto\t180001\t32.7395980\t-96.3515390",
+    "690005\t1000000316.jpg\tphoto\t180001\t32.7414970\t-96.3507530",
+    "690006\t1000000320.jpg\tphoto\t180001\t32.7392650\t-96.3517330",
+    "690007\t1000000328.jpg\tphoto\t180001\tNULL\tNULL",
+    "690008\t1000000327.jpg\tphoto\t180001\tNULL\tNULL",
+    "690009\t1000000329.jpg\tphoto\t180001\tNULL\tNULL",
+    "690010\t1000000152.jpg\tphoto\t180001\tNULL\tNULL",
+    "690011\t1000000308.jpg\tphoto\t180001\tNULL\tNULL",
+    "690012\t1000000325.jpg\tphoto\t180001\tNULL\tNULL",
+    "ERROR 1146 (42S02) at line 9: Table 'fis5wf2naftjtm6fu3byqb.flight' doesn't exist"
+  ]
+}

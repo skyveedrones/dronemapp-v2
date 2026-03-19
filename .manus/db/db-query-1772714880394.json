@@ -1,0 +1,45 @@
+{
+  "query": "SELECT id, filename, latitude, longitude, altitude FROM media WHERE latitude IS NOT NULL AND longitude IS NOT NULL ORDER BY id DESC LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, filename, latitude, longitude, altitude FROM media WHERE latitude IS NOT NULL AND longitude IS NOT NULL ORDER BY id DESC LIMIT 5;",
+  "rows": [
+    {
+      "id": "1350005",
+      "filename": "DJI_20260302134726_0277_D_SKYVEE.JPG",
+      "latitude": "32.9714036",
+      "longitude": "96.6480638",
+      "altitude": "172.74"
+    },
+    {
+      "id": "1230001",
+      "filename": "DJI_20260302133353_0268_D_SKYVEE.JPG",
+      "latitude": "32.9750664",
+      "longitude": "-96.6480577",
+      "altitude": "153.75"
+    },
+    {
+      "id": "1170016",
+      "filename": "DJI_20260302134130_0271_D_SKYVEE_result.JPG",
+      "latitude": "32.9739640",
+      "longitude": "-96.6480250",
+      "altitude": "171.34"
+    },
+    {
+      "id": "1170014",
+      "filename": "DJI_20260302134528_0275_D_SKYVEE.JPG",
+      "latitude": "32.9719317",
+      "longitude": "-96.6480876",
+      "altitude": "171.94"
+    },
+    {
+      "id": "1170013",
+      "filename": "DJI_20260302134500_0274_D_SKYVEE.JPG",
+      "latitude": "32.9720245",
+      "longitude": "-96.6480945",
+      "altitude": "171.84"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfilename\tlatitude\tlongitude\taltitude\n1350005\tDJI_20260302134726_0277_D_SKYVEE.JPG\t32.9714036\t96.6480638\t172.74\n1230001\tDJI_20260302133353_0268_D_SKYVEE.JPG\t32.9750664\t-96.6480577\t153.75\n1170016\tDJI_20260302134130_0271_D_SKYVEE_result.JPG\t32.9739640\t-96.6480250\t171.34\n1170014\tDJI_20260302134528_0275_D_SKYVEE.JPG\t32.9719317\t-96.6480876\t171.94\n1170013\tDJI_20260302134500_0274_D_SKYVEE.JPG\t32.9720245\t-96.6480945\t171.84\n",
+  "stderr": "",
+  "execution_time_ms": 91
+}

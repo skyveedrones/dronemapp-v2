@@ -1,0 +1,190 @@
+{
+  "query": "SELECT p.id, p.name, \n       m.id as media_id, m.filename, m.latitude, m.longitude, m.altitude\nFROM projects p\nLEFT JOIN media m ON p.id = m.projectId\nWHERE p.name LIKE '%Forney%' OR p.name LIKE '%Construction%'\nORDER BY p.id, m.id\nLIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT p.id, p.name, \n       m.id as media_id, m.filename, m.latitude, m.longitude, m.altitude\nFROM projects p\nLEFT JOIN media m ON p.id = m.projectId\nWHERE p.name LIKE '%Forney%' OR p.name LIKE '%Construction%'\nORDER BY p.id, m.id\nLIMIT 20;",
+  "rows": [
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30013",
+      "filename": "C103 View.jpg",
+      "latitude": "32.7645920",
+      "longitude": "-96.4829700",
+      "altitude": "NULL"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30014",
+      "filename": "CIP 222 View to Lovers Ln from West - Copy (2).jpg",
+      "latitude": "NULL",
+      "longitude": "NULL",
+      "altitude": "NULL"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30015",
+      "filename": "CIP 222 View to Lovers Ln from West.jpg",
+      "latitude": "NULL",
+      "longitude": "NULL",
+      "altitude": "NULL"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30016",
+      "filename": "CIP 222 View Towards Kelli Dr from West.jpg",
+      "latitude": "NULL",
+      "longitude": "NULL",
+      "altitude": "NULL"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30017",
+      "filename": "DJI_20251226121747_0147_D_SKYVEE.JPG",
+      "latitude": "32.7604795",
+      "longitude": "-96.4778351",
+      "altitude": "146.56"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30018",
+      "filename": "DJI_20251226121856_0148_D_SKYVEE.JPG",
+      "latitude": "32.7604732",
+      "longitude": "-96.4778745",
+      "altitude": "146.96"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30019",
+      "filename": "DJI_20251226121938_0149_D_SKYVEE.JPG",
+      "latitude": "32.7604645",
+      "longitude": "-96.4778663",
+      "altitude": "147.26"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30020",
+      "filename": "DJI_20251226122024_0151_D_SKYVEE.JPG",
+      "latitude": "32.7604655",
+      "longitude": "-96.4778620",
+      "altitude": "152.46"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30021",
+      "filename": "DJI_20251226122136_0153_D_SKYVEE.JPG",
+      "latitude": "32.7605237",
+      "longitude": "-96.4780025",
+      "altitude": "148.16"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30022",
+      "filename": "DJI_20251226122202_0154_D_SKYVEE.JPG",
+      "latitude": "32.7605238",
+      "longitude": "-96.4780034",
+      "altitude": "154.66"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30023",
+      "filename": "DJI_20251226122327_0155_D_SKYVEE.JPG",
+      "latitude": "32.7607916",
+      "longitude": "-96.4785824",
+      "altitude": "146.86"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30024",
+      "filename": "DJI_20251226122336_0156_D_SKYVEE.JPG",
+      "latitude": "32.7607918",
+      "longitude": "-96.4785824",
+      "altitude": "164.46"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30025",
+      "filename": "DJI_20251226122721_0157_D_SKYVEE.JPG",
+      "latitude": "32.7604179",
+      "longitude": "-96.4776476",
+      "altitude": "172.96"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30026",
+      "filename": "DJI_20251226124445_0163_D_SKYVEE.JPG",
+      "latitude": "32.7623033",
+      "longitude": "-96.4805936",
+      "altitude": "140.38"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30027",
+      "filename": "DJI_20251226130859_0172_D_SKYVEE.JPG",
+      "latitude": "32.7642788",
+      "longitude": "-96.4824022",
+      "altitude": "141.04"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30028",
+      "filename": "DJI_20251226132105_0180_D_SKYVEE.JPG",
+      "latitude": "32.7648950",
+      "longitude": "-96.4832293",
+      "altitude": "142.84"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30029",
+      "filename": "DJI_20251226132115_0181_D_SKYVEE.JPG",
+      "latitude": "32.7648954",
+      "longitude": "-96.4832292",
+      "altitude": "142.84"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30030",
+      "filename": "DJI_20251226133609_0182_D_SKYVEE.JPG",
+      "latitude": "32.7653507",
+      "longitude": "-96.4836748",
+      "altitude": "145.58"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30031",
+      "filename": "DJI_20251226135932_0184_D_SKYVEE.JPG",
+      "latitude": "32.7656415",
+      "longitude": "-96.4839404",
+      "altitude": "140.93"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "media_id": "30033",
+      "filename": "DJI_20251226141647_0191_D_SKYVEE.JPG",
+      "latitude": "32.7679949",
+      "longitude": "-96.4863072",
+      "altitude": "147.34"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tmedia_id\tfilename\tlatitude\tlongitude\taltitude\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30013\tC103 View.jpg\t32.7645920\t-96.4829700\tNULL\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30014\tCIP 222 View to Lovers Ln from West - Copy (2).jpg\tNULL\tNULL\tNULL\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30015\tCIP 222 View to Lovers Ln from West.jpg\tNULL\tNULL\tNULL\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30016\tCIP 222 View Towards Kelli Dr from West.jpg\tNULL\tNULL\tNULL\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30017\tDJI_20251226121747_0147_D_SKYVEE.JPG\t32.7604795\t-96.4778351\t146.56\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30018\tDJI_20251226121856_0148_D_SKYVEE.JPG\t32.7604732\t-96.4778745\t146.96\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30019\tDJI_20251226121938_0149_D_SKYVEE.JPG\t32.7604645\t-96.4778663\t147.26\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30020\tDJI_20251226122024_0151_D_SKYVEE.JPG\t32.7604655\t-96.4778620\t152.46\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30021\tDJI_20251226122136_0153_D_SKYVEE.JPG\t32.7605237\t-96.4780025\t148.16\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30022\tDJI_20251226122202_0154_D_SKYVEE.JPG\t32.7605238\t-96.4780034\t154.66\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30023\tDJI_20251226122327_0155_D_SKYVEE.JPG\t32.7607916\t-96.4785824\t146.86\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30024\tDJI_20251226122336_0156_D_SKYVEE.JPG\t32.7607918\t-96.4785824\t164.46\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30025\tDJI_20251226122721_0157_D_SKYVEE.JPG\t32.7604179\t-96.4776476\t172.96\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30026\tDJI_20251226124445_0163_D_SKYVEE.JPG\t32.7623033\t-96.4805936\t140.38\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30027\tDJI_20251226130859_0172_D_SKYVEE.JPG\t32.7642788\t-96.4824022\t141.04\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30028\tDJI_20251226132105_0180_D_SKYVEE.JPG\t32.7648950\t-96.4832293\t142.84\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30029\tDJI_20251226132115_0181_D_SKYVEE.JPG\t32.7648954\t-96.4832292\t142.84\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30030\tDJI_20251226133609_0182_D_SKYVEE.JPG\t32.7653507\t-96.4836748\t145.58\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30031\tDJI_20251226135932_0184_D_SKYVEE.JPG\t32.7656415\t-96.4839404\t140.93\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\t30033\tDJI_20251226141647_0191_D_SKYVEE.JPG\t32.7679949\t-96.4863072\t147.34\n",
+  "stderr": "",
+  "execution_time_ms": 357
+}

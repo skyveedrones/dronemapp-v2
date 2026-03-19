@@ -1,0 +1,30 @@
+{
+  "query": "SELECT id, name FROM clients ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, name FROM clients ORDER BY id;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "City of Forney"
+    },
+    {
+      "id": "30001",
+      "name": "Campo Del Sol "
+    },
+    {
+      "id": "330001",
+      "name": "City of Garland Texas"
+    },
+    {
+      "id": "4560004",
+      "name": "Forney TX Municipal"
+    },
+    {
+      "id": "4590005",
+      "name": "SkyVee Aerial Drone Services"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\n1\tCity of Forney\n30001\tCampo Del Sol \n330001\tCity of Garland Texas\n4560004\tForney TX Municipal\n4590005\tSkyVee Aerial Drone Services\n",
+  "stderr": "",
+  "execution_time_ms": 50
+}

@@ -1,0 +1,68 @@
+{
+  "query": "\n-- Check media assignments\nSELECT id, filename, flightId \nFROM media \nWHERE projectId = 1 AND flightId = 180001\nORDER BY id;\n\n-- Check all media for comparison\nSELECT COUNT(*) as total_media, \n       SUM(CASE WHEN flightId = 180001 THEN 1 ELSE 0 END) as flight_180001,\n       SUM(CASE WHEN flightId = 180002 THEN 1 ELSE 0 END) as flight_180002,\n       SUM(CASE WHEN flightId = 180003 THEN 1 ELSE 0 END) as flight_180003,\n       SUM(CASE WHEN flightId IS NULL THEN 1 ELSE 0 END) as unassigned\nFROM media \nWHERE projectId = 1;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute \n-- Check media assignments\nSELECT id, filename, flightId \nFROM media \nWHERE projectId = 1 AND flightId = 180001\nORDER BY id;\n\n-- Check all media for comparison\nSELECT COUNT(*) as total_media, \n       SUM(CASE WHEN flightId = 180001 THEN 1 ELSE 0 END) as flight_180001,\n       SUM(CASE WHEN flightId = 180002 THEN 1 ELSE 0 END) as flight_180002,\n       SUM(CASE WHEN flightId = 180003 THEN 1 ELSE 0 END) as flight_180003,\n       SUM(CASE WHEN flightId IS NULL THEN 1 ELSE 0 END) as unassigned\nFROM media \nWHERE projectId = 1;\n",
+  "rows": [
+    {
+      "id": "690001",
+      "filename": "1000000491.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690003",
+      "filename": "1000000324.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690004",
+      "filename": "1000000323.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690005",
+      "filename": "1000000316.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690006",
+      "filename": "1000000320.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690007",
+      "filename": "1000000328.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690008",
+      "filename": "1000000327.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690009",
+      "filename": "1000000329.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690010",
+      "filename": "1000000152.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690011",
+      "filename": "1000000308.jpg",
+      "flightId": "180001"
+    },
+    {
+      "id": "690012",
+      "filename": "1000000325.jpg",
+      "flightId": "180001"
+    }
+  ],
+  "messages": [
+    "total_media\tflight_180001\tflight_180002\tflight_180003\tunassigned",
+    "11\t11\t0\t0\t0"
+  ],
+  "stdout": "id\tfilename\tflightId\n690001\t1000000491.jpg\t180001\n690003\t1000000324.jpg\t180001\n690004\t1000000323.jpg\t180001\n690005\t1000000316.jpg\t180001\n690006\t1000000320.jpg\t180001\n690007\t1000000328.jpg\t180001\n690008\t1000000327.jpg\t180001\n690009\t1000000329.jpg\t180001\n690010\t1000000152.jpg\t180001\n690011\t1000000308.jpg\t180001\n690012\t1000000325.jpg\t180001\ntotal_media\tflight_180001\tflight_180002\tflight_180003\tunassigned\n11\t11\t0\t0\t0\n",
+  "stderr": "",
+  "execution_time_ms": 484
+}

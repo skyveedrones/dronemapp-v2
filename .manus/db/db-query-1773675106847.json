@@ -1,0 +1,50 @@
+{
+  "query": "SELECT id, name FROM projects ORDER BY id DESC LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, name FROM projects ORDER BY id DESC LIMIT 10;",
+  "rows": [
+    {
+      "id": "960001",
+      "name": "Force-Repaint Test"
+    },
+    {
+      "id": "750001",
+      "name": "Ranch Road Aerial Inspection March 05, 2026"
+    },
+    {
+      "id": "540001",
+      "name": "HOLFORD ROAD RECONSTRUCTION"
+    },
+    {
+      "id": "420001",
+      "name": "CIP 252 Bowie & York Waterline Replacement"
+    },
+    {
+      "id": "90004",
+      "name": "Demonstration Project 1"
+    },
+    {
+      "id": "60001",
+      "name": "Construction Site in Forney"
+    },
+    {
+      "id": "30003",
+      "name": "Oncor Forney Switch"
+    },
+    {
+      "id": "30002",
+      "name": "Gail Wilson Extension"
+    },
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping"
+    },
+    {
+      "id": "1",
+      "name": "City Park Redevelopment"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\n960001\tForce-Repaint Test\n750001\tRanch Road Aerial Inspection March 05, 2026\n540001\tHOLFORD ROAD RECONSTRUCTION\n420001\tCIP 252 Bowie & York Waterline Replacement\n90004\tDemonstration Project 1\n60001\tConstruction Site in Forney\n30003\tOncor Forney Switch\n30002\tGail Wilson Extension\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\n1\tCity Park Redevelopment\n",
+  "stderr": "",
+  "execution_time_ms": 57
+}

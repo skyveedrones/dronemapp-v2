@@ -1,0 +1,32 @@
+Mapbox Verification - 2026-03-15
+
+VISUAL CONFIRMATION:
+- Project Detail page (/project/1): Mapbox satellite map renders correctly
+- 5 GPS markers visible (numbered 1-5 in green circles)
+- Flight path (green line) connecting markers is visible
+- Map controls (fullscreen, zoom in/out, compass) all present
+- Mapbox attribution (© Mapbox, © OpenStreetMap, © Maxar) visible
+- No blank container - satellite tiles fully loaded
+
+NETWORK:
+- All Mapbox tile requests return 200
+- Events API returns 204
+- No 401/403 errors
+
+TOKEN:
+- VITE_MAPBOX_TOKEN is set and working (pk.eyJ1Ijoic2t5dmVlZHJvbmVzIi...)
+
+CSS:
+- mapbox-gl/dist/mapbox-gl.css imported in all 3 components:
+  - MapboxProjectMap.tsx (line 15)
+  - ProjectMap.tsx (line 12)
+  - GPSEditDialog.tsx (line 21)
+
+CONTAINER:
+- All components use useRef pattern with mapContainerRef
+- MapboxProjectMap: className={`w-full ${heightClass}`} (default h-[600px])
+- ProjectMap: className="w-full h-full" inside flex-1 container
+- GPSEditDialog: className="w-full h-full"
+
+CONCLUSION: The Mapbox map IS working correctly. All 4 areas checked out fine.
+The user may have been seeing a stale cached version before the latest checkpoint was deployed.

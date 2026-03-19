@@ -1,0 +1,8 @@
+{
+  "query": "\n-- Get all media from demo project\nSELECT id, filename, mediaType, flightId, gpsLatitude, gpsLongitude \nFROM media \nWHERE projectId = 1 \nORDER BY id;\n\n-- Get all flights from demo project\nSELECT id, name, description, createdAt \nFROM flight \nWHERE projectId = 1 \nORDER BY id;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute \n-- Get all media from demo project\nSELECT id, filename, mediaType, flightId, gpsLatitude, gpsLongitude \nFROM media \nWHERE projectId = 1 \nORDER BY id;\n\n-- Get all flights from demo project\nSELECT id, name, description, createdAt \nFROM flight \nWHERE projectId = 1 \nORDER BY id;\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 3: Unknown column 'gpslatitude' in 'field list'"
+  ]
+}

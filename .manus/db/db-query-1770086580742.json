@@ -1,0 +1,21 @@
+{
+  "query": "SELECT cu.*, u.email, u.name, u.role as userRole, c.name as clientName \nFROM client_users cu\nJOIN users u ON cu.userId = u.id\nJOIN clients c ON cu.clientId = c.id\nWHERE u.email = 'traceybechtol@gmail.com';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT cu.*, u.email, u.name, u.role as userRole, c.name as clientName \nFROM client_users cu\nJOIN users u ON cu.userId = u.id\nJOIN clients c ON cu.clientId = c.id\nWHERE u.email = 'traceybechtol@gmail.com';",
+  "rows": [
+    {
+      "id": "150001",
+      "clientId": "1",
+      "userId": "2460221",
+      "role": "admin",
+      "createdAt": "2026-02-03 02:37:10",
+      "email": "traceybechtol@gmail.com",
+      "name": "Tracey Bechtol",
+      "userRole": "user",
+      "clientName": "City of Forney"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tclientId\tuserId\trole\tcreatedAt\temail\tname\tuserRole\tclientName\n150001\t1\t2460221\tadmin\t2026-02-03 02:37:10\ttraceybechtol@gmail.com\tTracey Bechtol\tuser\tCity of Forney\n",
+  "stderr": "",
+  "execution_time_ms": 354
+}

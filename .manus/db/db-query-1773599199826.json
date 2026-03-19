@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE projects SET\n  name = 'City Park Redevelopment',\n  description = 'DEMO PROJECT — 40-acre public park orthomosaic survey. 142 drone images stitched into a 2D high-res map. Pre-loaded with utility PDF overlay (sewer/water lines) and engineering CAD (planned structures). Measurement annotations mark the New Playground (4,500 sq ft) and Parking Expansion zones.',\n  location = 'Riverside City Park, 1200 Park Blvd, Garland, TX 75040',\n  clientName = 'City of Garland — Parks & Recreation Dept.',\n  status = 'active',\n  dronePilot = 'MAPIT Demo Pilot',\n  faaLicenseNumber = 'FA3XXXXXXX',\n  laancAuthNumber = 'LAANC-DEMO-2024'\nWHERE id = 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute UPDATE projects SET\n  name = 'City Park Redevelopment',\n  description = 'DEMO PROJECT — 40-acre public park orthomosaic survey. 142 drone images stitched into a 2D high-res map. Pre-loaded with utility PDF overlay (sewer/water lines) and engineering CAD (planned structures). Measurement annotations mark the New Playground (4,500 sq ft) and Parking Expansion zones.',\n  location = 'Riverside City Park, 1200 Park Blvd, Garland, TX 75040',\n  clientName = 'City of Garland — Parks & Recreation Dept.',\n  status = 'active',\n  dronePilot = 'MAPIT Demo Pilot',\n  faaLicenseNumber = 'FA3XXXXXXX',\n  laancAuthNumber = 'LAANC-DEMO-2024'\nWHERE id = 1;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 759
+}

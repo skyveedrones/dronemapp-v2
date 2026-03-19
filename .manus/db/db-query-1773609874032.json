@@ -1,0 +1,9 @@
+{
+  "query": "DELETE FROM client_project_assignments WHERE clientId IN (4650005,4650006,4650007,4650008,4650009,4650010,4650011,4650012,4680005,4680006,4680007,4680008,4680009,4680010,4680011,4680012,4680013,4680014,4680015);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute DELETE FROM client_project_assignments WHERE clientId IN (4650005,4650006,4650007,4650008,4650009,4650010,4650011,4650012,4680005,4680006,4680007,4680008,4680009,4680010,4680011,4680012,4680013,4680014,4680015);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 49
+}

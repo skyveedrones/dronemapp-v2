@@ -1,0 +1,20 @@
+{
+  "query": "SELECT cpa.*, p.name as projectName, p.id as projectId, u.email as userEmail\nFROM client_project_assignments cpa\nJOIN projects p ON cpa.projectId = p.id\nJOIN users u ON cpa.userId = u.id\nWHERE u.email = 'traceybechtol@gmail.com'\nAND (p.name LIKE '%Oncor%' OR p.name LIKE '%Switch%');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT cpa.*, p.name as projectName, p.id as projectId, u.email as userEmail\nFROM client_project_assignments cpa\nJOIN projects p ON cpa.projectId = p.id\nJOIN users u ON cpa.userId = u.id\nWHERE u.email = 'traceybechtol@gmail.com'\nAND (p.name LIKE '%Oncor%' OR p.name LIKE '%Switch%');",
+  "rows": [
+    {
+      "id": "30004",
+      "clientId": "1",
+      "userId": "2460221",
+      "projectId": "30003",
+      "assignedBy": "1",
+      "assignedAt": "2026-02-03 02:38:05",
+      "projectName": "Oncor Forney Switch",
+      "userEmail": "traceybechtol@gmail.com"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tclientId\tuserId\tprojectId\tassignedBy\tassignedAt\tprojectName\tprojectId\tuserEmail\n30004\t1\t2460221\t30003\t1\t2026-02-03 02:38:05\tOncor Forney Switch\t30003\ttraceybechtol@gmail.com\n",
+  "stderr": "",
+  "execution_time_ms": 356
+}

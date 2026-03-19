@@ -1,0 +1,1 @@
+ALTER TABLE `projects` ADD `isPinned` boolean DEFAULT false NOT NULL;

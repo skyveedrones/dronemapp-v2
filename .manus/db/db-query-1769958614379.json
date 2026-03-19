@@ -1,0 +1,45 @@
+{
+  "query": "SELECT id, name, clientName, logoUrl, logoKey FROM projects WHERE clientName LIKE '%Forney%' LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, name, clientName, logoUrl, logoKey FROM projects WHERE clientName LIKE '%Forney%' LIMIT 5;",
+  "rows": [
+    {
+      "id": "30001",
+      "name": "City of Forney - CIP222 18\" Water Line Loop GIS Mapping",
+      "clientName": "City of Forney",
+      "logoUrl": "https://res.cloudinary.com/dp1fvan1x/image/upload/v1769952734/mapit/project-logos/30001/logo-Z_HBYQUWpAoO4acGmZWwK.jpg",
+      "logoKey": "mapit/project-logos/30001/logo-Z_HBYQUWpAoO4acGmZWwK"
+    },
+    {
+      "id": "30002",
+      "name": "Gail Wilson Extension",
+      "clientName": "City of Forney",
+      "logoUrl": "https://res.cloudinary.com/dp1fvan1x/image/upload/v1769952770/mapit/project-logos/30002/logo-btKTUo9rtiaaHv7SZFwnr.jpg",
+      "logoKey": "mapit/project-logos/30002/logo-btKTUo9rtiaaHv7SZFwnr"
+    },
+    {
+      "id": "30003",
+      "name": "Oncor Forney Switch",
+      "clientName": "Oncor / City of Forney",
+      "logoUrl": "https://res.cloudinary.com/dp1fvan1x/image/upload/v1769952425/mapit/project-logos/30003/logo-XcVwcBzx3V2CBaFC4J3LD.jpg",
+      "logoKey": "mapit/project-logos/30003/logo-XcVwcBzx3V2CBaFC4J3LD"
+    },
+    {
+      "id": "90001",
+      "name": "Demo Template 1",
+      "clientName": "City of Forney",
+      "logoUrl": "https://res.cloudinary.com/dp1fvan1x/image/upload/v1769957352/mapit/project-logos/90001/logo-I84bB7q0teQJkZ9oekF1a.jpg",
+      "logoKey": "mapit/project-logos/90001/logo-I84bB7q0teQJkZ9oekF1a"
+    },
+    {
+      "id": "90003",
+      "name": "GIS Mapping Public Works",
+      "clientName": "City of Forney",
+      "logoUrl": "NULL",
+      "logoKey": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tclientName\tlogoUrl\tlogoKey\n30001\tCity of Forney - CIP222 18\" Water Line Loop GIS Mapping\tCity of Forney\thttps://res.cloudinary.com/dp1fvan1x/image/upload/v1769952734/mapit/project-logos/30001/logo-Z_HBYQUWpAoO4acGmZWwK.jpg\tmapit/project-logos/30001/logo-Z_HBYQUWpAoO4acGmZWwK\n30002\tGail Wilson Extension\tCity of Forney\thttps://res.cloudinary.com/dp1fvan1x/image/upload/v1769952770/mapit/project-logos/30002/logo-btKTUo9rtiaaHv7SZFwnr.jpg\tmapit/project-logos/30002/logo-btKTUo9rtiaaHv7SZFwnr\n30003\tOncor Forney Switch\tOncor / City of Forney\thttps://res.cloudinary.com/dp1fvan1x/image/upload/v1769952425/mapit/project-logos/30003/logo-XcVwcBzx3V2CBaFC4J3LD.jpg\tmapit/project-logos/30003/logo-XcVwcBzx3V2CBaFC4J3LD\n90001\tDemo Template 1\tCity of Forney\thttps://res.cloudinary.com/dp1fvan1x/image/upload/v1769957352/mapit/project-logos/90001/logo-I84bB7q0teQJkZ9oekF1a.jpg\tmapit/project-logos/90001/logo-I84bB7q0teQJkZ9oekF1a\n90003\tGIS Mapping Public Works\tCity of Forney\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 398
+}

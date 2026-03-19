@@ -1,0 +1,100 @@
+{
+  "query": "SELECT id, filename, \n  CASE WHEN thumbnailUrl IS NULL THEN 'NULL' \n       WHEN thumbnailUrl = '' THEN 'EMPTY' \n       ELSE 'HAS_VALUE' END as thumbnail_status,\n  thumbnailUrl\nFROM media \nWHERE projectId = (SELECT id FROM projects WHERE name LIKE '%CIP222%' LIMIT 1)\nORDER BY id\nLIMIT 15;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, filename, \n  CASE WHEN thumbnailUrl IS NULL THEN 'NULL' \n       WHEN thumbnailUrl = '' THEN 'EMPTY' \n       ELSE 'HAS_VALUE' END as thumbnail_status,\n  thumbnailUrl\nFROM media \nWHERE projectId = (SELECT id FROM projects WHERE name LIKE '%CIP222%' LIMIT 1)\nORDER BY id\nLIMIT 15;",
+  "rows": [
+    {
+      "id": "30013",
+      "filename": "C103 View.jpg",
+      "thumbnail_status": "HAS_VALUE",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/C103 View_wm_1769649742652.jpg"
+    },
+    {
+      "id": "30014",
+      "filename": "CIP 222 View to Lovers Ln from West - Copy (2).jpg",
+      "thumbnail_status": "HAS_VALUE",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/CIP 222 View to Lovers Ln from West - Copy (2)_wm_1769649742002.jpg"
+    },
+    {
+      "id": "30015",
+      "filename": "CIP 222 View to Lovers Ln from West.jpg",
+      "thumbnail_status": "HAS_VALUE",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/CIP 222 View to Lovers Ln from West_wm_1769649741178.jpg"
+    },
+    {
+      "id": "30016",
+      "filename": "CIP 222 View Towards Kelli Dr from West.jpg",
+      "thumbnail_status": "HAS_VALUE",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/CIP 222 View Towards Kelli Dr from West_wm_1769649740291.jpg"
+    },
+    {
+      "id": "30017",
+      "filename": "DJI_20251226121747_0147_D_SKYVEE.JPG",
+      "thumbnail_status": "HAS_VALUE",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226121747_0147_D_SKYVEE_wm_1769649607032.JPG"
+    },
+    {
+      "id": "30018",
+      "filename": "DJI_20251226121856_0148_D_SKYVEE.JPG",
+      "thumbnail_status": "HAS_VALUE",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226121856_0148_D_SKYVEE_wm_1769649602987.JPG"
+    },
+    {
+      "id": "30019",
+      "filename": "DJI_20251226121938_0149_D_SKYVEE.JPG",
+      "thumbnail_status": "HAS_VALUE",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226121938_0149_D_SKYVEE_wm_1769649599061.JPG"
+    },
+    {
+      "id": "30020",
+      "filename": "DJI_20251226122024_0151_D_SKYVEE.JPG",
+      "thumbnail_status": "HAS_VALUE",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226122024_0151_D_SKYVEE_wm_1769649595135.JPG"
+    },
+    {
+      "id": "30021",
+      "filename": "DJI_20251226122136_0153_D_SKYVEE.JPG",
+      "thumbnail_status": "HAS_VALUE",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226122136_0153_D_SKYVEE_wm_1769649590719.JPG"
+    },
+    {
+      "id": "30022",
+      "filename": "DJI_20251226122202_0154_D_SKYVEE.JPG",
+      "thumbnail_status": "HAS_VALUE",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226122202_0154_D_SKYVEE_wm_1769649587008.JPG"
+    },
+    {
+      "id": "30023",
+      "filename": "DJI_20251226122327_0155_D_SKYVEE.JPG",
+      "thumbnail_status": "HAS_VALUE",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226122327_0155_D_SKYVEE_wm_1769649582312.JPG"
+    },
+    {
+      "id": "30024",
+      "filename": "DJI_20251226122336_0156_D_SKYVEE.JPG",
+      "thumbnail_status": "HAS_VALUE",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226122336_0156_D_SKYVEE_wm_1769649578847.JPG"
+    },
+    {
+      "id": "30025",
+      "filename": "DJI_20251226122721_0157_D_SKYVEE.JPG",
+      "thumbnail_status": "HAS_VALUE",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226122721_0157_D_SKYVEE_wm_1769649575271.JPG"
+    },
+    {
+      "id": "30026",
+      "filename": "DJI_20251226124445_0163_D_SKYVEE.JPG",
+      "thumbnail_status": "HAS_VALUE",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226124445_0163_D_SKYVEE_wm_1769649570147.JPG"
+    },
+    {
+      "id": "30027",
+      "filename": "DJI_20251226130859_0172_D_SKYVEE.JPG",
+      "thumbnail_status": "HAS_VALUE",
+      "thumbnailUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226130859_0172_D_SKYVEE_wm_1769649565346.JPG"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfilename\tthumbnail_status\tthumbnailUrl\n30013\tC103 View.jpg\tHAS_VALUE\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/C103 View_wm_1769649742652.jpg\n30014\tCIP 222 View to Lovers Ln from West - Copy (2).jpg\tHAS_VALUE\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/CIP 222 View to Lovers Ln from West - Copy (2)_wm_1769649742002.jpg\n30015\tCIP 222 View to Lovers Ln from West.jpg\tHAS_VALUE\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/CIP 222 View to Lovers Ln from West_wm_1769649741178.jpg\n30016\tCIP 222 View Towards Kelli Dr from West.jpg\tHAS_VALUE\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/CIP 222 View Towards Kelli Dr from West_wm_1769649740291.jpg\n30017\tDJI_20251226121747_0147_D_SKYVEE.JPG\tHAS_VALUE\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226121747_0147_D_SKYVEE_wm_1769649607032.JPG\n30018\tDJI_20251226121856_0148_D_SKYVEE.JPG\tHAS_VALUE\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226121856_0148_D_SKYVEE_wm_1769649602987.JPG\n30019\tDJI_20251226121938_0149_D_SKYVEE.JPG\tHAS_VALUE\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226121938_0149_D_SKYVEE_wm_1769649599061.JPG\n30020\tDJI_20251226122024_0151_D_SKYVEE.JPG\tHAS_VALUE\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226122024_0151_D_SKYVEE_wm_1769649595135.JPG\n30021\tDJI_20251226122136_0153_D_SKYVEE.JPG\tHAS_VALUE\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226122136_0153_D_SKYVEE_wm_1769649590719.JPG\n30022\tDJI_20251226122202_0154_D_SKYVEE.JPG\tHAS_VALUE\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226122202_0154_D_SKYVEE_wm_1769649587008.JPG\n30023\tDJI_20251226122327_0155_D_SKYVEE.JPG\tHAS_VALUE\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226122327_0155_D_SKYVEE_wm_1769649582312.JPG\n30024\tDJI_20251226122336_0156_D_SKYVEE.JPG\tHAS_VALUE\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226122336_0156_D_SKYVEE_wm_1769649578847.JPG\n30025\tDJI_20251226122721_0157_D_SKYVEE.JPG\tHAS_VALUE\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226122721_0157_D_SKYVEE_wm_1769649575271.JPG\n30026\tDJI_20251226124445_0163_D_SKYVEE.JPG\tHAS_VALUE\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226124445_0163_D_SKYVEE_wm_1769649570147.JPG\n30027\tDJI_20251226130859_0172_D_SKYVEE.JPG\tHAS_VALUE\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663204719166/FiS5WF2NaftJTm6fu3BYQb/1/thumbnails/DJI_20251226130859_0172_D_SKYVEE_wm_1769649565346.JPG\n",
+  "stderr": "",
+  "execution_time_ms": 61
+}

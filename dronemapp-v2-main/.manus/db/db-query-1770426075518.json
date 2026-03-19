@@ -1,0 +1,82 @@
+{
+  "query": "SELECT id, filename, latitude, longitude FROM media WHERE projectId = 1 ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, filename, latitude, longitude FROM media WHERE projectId = 1 ORDER BY id;",
+  "rows": [
+    {
+      "id": "690001",
+      "filename": "1000000491.jpg",
+      "latitude": "NULL",
+      "longitude": "NULL"
+    },
+    {
+      "id": "690002",
+      "filename": "1000000322.jpg",
+      "latitude": "32.7395850",
+      "longitude": "-96.3519400"
+    },
+    {
+      "id": "690003",
+      "filename": "1000000324.jpg",
+      "latitude": "32.7401150",
+      "longitude": "-96.3520660"
+    },
+    {
+      "id": "690004",
+      "filename": "1000000323.jpg",
+      "latitude": "32.7395980",
+      "longitude": "-96.3515390"
+    },
+    {
+      "id": "690005",
+      "filename": "1000000316.jpg",
+      "latitude": "32.7414970",
+      "longitude": "-96.3507530"
+    },
+    {
+      "id": "690006",
+      "filename": "1000000320.jpg",
+      "latitude": "32.7392650",
+      "longitude": "-96.3517330"
+    },
+    {
+      "id": "690007",
+      "filename": "1000000328.jpg",
+      "latitude": "NULL",
+      "longitude": "NULL"
+    },
+    {
+      "id": "690008",
+      "filename": "1000000327.jpg",
+      "latitude": "NULL",
+      "longitude": "NULL"
+    },
+    {
+      "id": "690009",
+      "filename": "1000000329.jpg",
+      "latitude": "NULL",
+      "longitude": "NULL"
+    },
+    {
+      "id": "690010",
+      "filename": "1000000152.jpg",
+      "latitude": "NULL",
+      "longitude": "NULL"
+    },
+    {
+      "id": "690011",
+      "filename": "1000000308.jpg",
+      "latitude": "NULL",
+      "longitude": "NULL"
+    },
+    {
+      "id": "690012",
+      "filename": "1000000325.jpg",
+      "latitude": "NULL",
+      "longitude": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfilename\tlatitude\tlongitude\n690001\t1000000491.jpg\tNULL\tNULL\n690002\t1000000322.jpg\t32.7395850\t-96.3519400\n690003\t1000000324.jpg\t32.7401150\t-96.3520660\n690004\t1000000323.jpg\t32.7395980\t-96.3515390\n690005\t1000000316.jpg\t32.7414970\t-96.3507530\n690006\t1000000320.jpg\t32.7392650\t-96.3517330\n690007\t1000000328.jpg\tNULL\tNULL\n690008\t1000000327.jpg\tNULL\tNULL\n690009\t1000000329.jpg\tNULL\tNULL\n690010\t1000000152.jpg\tNULL\tNULL\n690011\t1000000308.jpg\tNULL\tNULL\n690012\t1000000325.jpg\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 356
+}

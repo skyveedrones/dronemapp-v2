@@ -1,0 +1,17 @@
+{
+  "query": "SELECT cu.userId, u.email, cu.clientId, c.name, cu.role FROM client_users cu JOIN users u ON cu.userId = u.id JOIN clients c ON cu.clientId = c.id WHERE u.email = 'tbechtol@forneytx.gov';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT cu.userId, u.email, cu.clientId, c.name, cu.role FROM client_users cu JOIN users u ON cu.userId = u.id JOIN clients c ON cu.clientId = c.id WHERE u.email = 'tbechtol@forneytx.gov';",
+  "rows": [
+    {
+      "userId": "4560004",
+      "email": "TBechtol@forneytx.gov",
+      "clientId": "1",
+      "name": "City of Forney",
+      "role": "user"
+    }
+  ],
+  "messages": [],
+  "stdout": "userId\temail\tclientId\tname\trole\n4560004\tTBechtol@forneytx.gov\t1\tCity of Forney\tuser\n",
+  "stderr": "",
+  "execution_time_ms": 76
+}

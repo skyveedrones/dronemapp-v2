@@ -1,0 +1,18 @@
+{
+  "query": "SELECT id, email FROM users WHERE email = 'tbechtol@forneytx.gov';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, email FROM users WHERE email = 'tbechtol@forneytx.gov';",
+  "rows": [
+    {
+      "id": "2670001",
+      "email": "TBechtol@forneytx.gov"
+    },
+    {
+      "id": "4560004",
+      "email": "TBechtol@forneytx.gov"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\n2670001\tTBechtol@forneytx.gov\n4560004\tTBechtol@forneytx.gov\n",
+  "stderr": "",
+  "execution_time_ms": 60
+}

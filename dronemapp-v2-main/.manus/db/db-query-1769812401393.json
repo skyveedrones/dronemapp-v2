@@ -1,0 +1,90 @@
+{
+  "query": "SELECT m.id, m.filename, m.latitude, m.longitude, m.altitude, m.projectId\nFROM media m\nJOIN projects p ON p.id = m.projectId\nWHERE (p.name LIKE '%Forney%' OR p.name LIKE '%Construction%')\n  AND m.latitude IS NOT NULL\n  AND m.longitude IS NOT NULL\nLIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT m.id, m.filename, m.latitude, m.longitude, m.altitude, m.projectId\nFROM media m\nJOIN projects p ON p.id = m.projectId\nWHERE (p.name LIKE '%Forney%' OR p.name LIKE '%Construction%')\n  AND m.latitude IS NOT NULL\n  AND m.longitude IS NOT NULL\nLIMIT 10;",
+  "rows": [
+    {
+      "id": "30013",
+      "filename": "C103 View.jpg",
+      "latitude": "32.7645920",
+      "longitude": "-96.4829700",
+      "altitude": "NULL",
+      "projectId": "30001"
+    },
+    {
+      "id": "30017",
+      "filename": "DJI_20251226121747_0147_D_SKYVEE.JPG",
+      "latitude": "32.7604795",
+      "longitude": "-96.4778351",
+      "altitude": "146.56",
+      "projectId": "30001"
+    },
+    {
+      "id": "30018",
+      "filename": "DJI_20251226121856_0148_D_SKYVEE.JPG",
+      "latitude": "32.7604732",
+      "longitude": "-96.4778745",
+      "altitude": "146.96",
+      "projectId": "30001"
+    },
+    {
+      "id": "30019",
+      "filename": "DJI_20251226121938_0149_D_SKYVEE.JPG",
+      "latitude": "32.7604645",
+      "longitude": "-96.4778663",
+      "altitude": "147.26",
+      "projectId": "30001"
+    },
+    {
+      "id": "30020",
+      "filename": "DJI_20251226122024_0151_D_SKYVEE.JPG",
+      "latitude": "32.7604655",
+      "longitude": "-96.4778620",
+      "altitude": "152.46",
+      "projectId": "30001"
+    },
+    {
+      "id": "30021",
+      "filename": "DJI_20251226122136_0153_D_SKYVEE.JPG",
+      "latitude": "32.7605237",
+      "longitude": "-96.4780025",
+      "altitude": "148.16",
+      "projectId": "30001"
+    },
+    {
+      "id": "30022",
+      "filename": "DJI_20251226122202_0154_D_SKYVEE.JPG",
+      "latitude": "32.7605238",
+      "longitude": "-96.4780034",
+      "altitude": "154.66",
+      "projectId": "30001"
+    },
+    {
+      "id": "30023",
+      "filename": "DJI_20251226122327_0155_D_SKYVEE.JPG",
+      "latitude": "32.7607916",
+      "longitude": "-96.4785824",
+      "altitude": "146.86",
+      "projectId": "30001"
+    },
+    {
+      "id": "30024",
+      "filename": "DJI_20251226122336_0156_D_SKYVEE.JPG",
+      "latitude": "32.7607918",
+      "longitude": "-96.4785824",
+      "altitude": "164.46",
+      "projectId": "30001"
+    },
+    {
+      "id": "30025",
+      "filename": "DJI_20251226122721_0157_D_SKYVEE.JPG",
+      "latitude": "32.7604179",
+      "longitude": "-96.4776476",
+      "altitude": "172.96",
+      "projectId": "30001"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfilename\tlatitude\tlongitude\taltitude\tprojectId\n30013\tC103 View.jpg\t32.7645920\t-96.4829700\tNULL\t30001\n30017\tDJI_20251226121747_0147_D_SKYVEE.JPG\t32.7604795\t-96.4778351\t146.56\t30001\n30018\tDJI_20251226121856_0148_D_SKYVEE.JPG\t32.7604732\t-96.4778745\t146.96\t30001\n30019\tDJI_20251226121938_0149_D_SKYVEE.JPG\t32.7604645\t-96.4778663\t147.26\t30001\n30020\tDJI_20251226122024_0151_D_SKYVEE.JPG\t32.7604655\t-96.4778620\t152.46\t30001\n30021\tDJI_20251226122136_0153_D_SKYVEE.JPG\t32.7605237\t-96.4780025\t148.16\t30001\n30022\tDJI_20251226122202_0154_D_SKYVEE.JPG\t32.7605238\t-96.4780034\t154.66\t30001\n30023\tDJI_20251226122327_0155_D_SKYVEE.JPG\t32.7607916\t-96.4785824\t146.86\t30001\n30024\tDJI_20251226122336_0156_D_SKYVEE.JPG\t32.7607918\t-96.4785824\t164.46\t30001\n30025\tDJI_20251226122721_0157_D_SKYVEE.JPG\t32.7604179\t-96.4776476\t172.96\t30001\n",
+  "stderr": "",
+  "execution_time_ms": 357
+}

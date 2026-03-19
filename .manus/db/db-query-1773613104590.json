@@ -1,0 +1,28 @@
+{
+  "query": "SELECT id, name, email, role FROM users WHERE email LIKE '%bechtol%forney%' OR email LIKE '%forneytx%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, name, email, role FROM users WHERE email LIKE '%bechtol%forney%' OR email LIKE '%forneytx%';",
+  "rows": [
+    {
+      "id": "4560004",
+      "name": "Tracey Bechtol",
+      "email": "TBechtol@forneytx.gov",
+      "role": "webmaster"
+    },
+    {
+      "id": "7920012",
+      "name": "cmcquiston",
+      "email": "cmcquiston@forneytx.gov",
+      "role": "user"
+    },
+    {
+      "id": "16140001",
+      "name": "eluna",
+      "email": "eluna@forneytx.gov",
+      "role": "user"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\temail\trole\n4560004\tTracey Bechtol\tTBechtol@forneytx.gov\twebmaster\n7920012\tcmcquiston\tcmcquiston@forneytx.gov\tuser\n16140001\teluna\teluna@forneytx.gov\tuser\n",
+  "stderr": "",
+  "execution_time_ms": 49
+}

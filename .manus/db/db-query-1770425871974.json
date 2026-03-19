@@ -1,0 +1,70 @@
+{
+  "query": "SELECT id, filename FROM media WHERE projectId = 1 ORDER BY id LIMIT 15;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, filename FROM media WHERE projectId = 1 ORDER BY id LIMIT 15;",
+  "rows": [
+    {
+      "id": "690001",
+      "filename": "1000000491.jpg"
+    },
+    {
+      "id": "690002",
+      "filename": "1000000322.jpg"
+    },
+    {
+      "id": "690003",
+      "filename": "1000000324.jpg"
+    },
+    {
+      "id": "690004",
+      "filename": "1000000323.jpg"
+    },
+    {
+      "id": "690005",
+      "filename": "1000000316.jpg"
+    },
+    {
+      "id": "690006",
+      "filename": "1000000320.jpg"
+    },
+    {
+      "id": "690007",
+      "filename": "1000000328.jpg"
+    },
+    {
+      "id": "690008",
+      "filename": "1000000327.jpg"
+    },
+    {
+      "id": "690009",
+      "filename": "1000000329.jpg"
+    },
+    {
+      "id": "690010",
+      "filename": "1000000152.jpg"
+    },
+    {
+      "id": "690011",
+      "filename": "1000000308.jpg"
+    },
+    {
+      "id": "690012",
+      "filename": "1000000325.jpg"
+    },
+    {
+      "id": "720001",
+      "filename": "Aerial Mapping View.jpg"
+    },
+    {
+      "id": "720002",
+      "filename": "Bridge Underside View 2.jpg"
+    },
+    {
+      "id": "720003",
+      "filename": "Bridge Underside View.jpg"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfilename\n690001\t1000000491.jpg\n690002\t1000000322.jpg\n690003\t1000000324.jpg\n690004\t1000000323.jpg\n690005\t1000000316.jpg\n690006\t1000000320.jpg\n690007\t1000000328.jpg\n690008\t1000000327.jpg\n690009\t1000000329.jpg\n690010\t1000000152.jpg\n690011\t1000000308.jpg\n690012\t1000000325.jpg\n720001\tAerial Mapping View.jpg\n720002\tBridge Underside View 2.jpg\n720003\tBridge Underside View.jpg\n",
+  "stderr": "",
+  "execution_time_ms": 370
+}

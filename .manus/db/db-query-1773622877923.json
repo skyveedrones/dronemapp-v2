@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO client_users (clientId, userId, role) VALUES (4560004, 7920012, 'user') ON DUPLICATE KEY UPDATE role = 'user';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute INSERT INTO client_users (clientId, userId, role) VALUES (4560004, 7920012, 'user') ON DUPLICATE KEY UPDATE role = 'user';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 64
+}
