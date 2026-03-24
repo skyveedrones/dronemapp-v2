@@ -1,0 +1,74 @@
+{
+  "declaredTotalPoints": 98,
+  "featuresInPayload": 99,
+  "inserted": 99,
+  "countAfterImport": 99,
+  "dbFingerprint": {
+    "db": "dronemapp_v2",
+    "dbUser": "811x5amzAEv2443.root@172.56.8.112",
+    "host": "localhost",
+    "port": 4000
+  },
+  "sampleFirst10": [
+    {
+      "filename": "HOLFORD_IMPORT_001_1140001.jpg",
+      "latitude": 32.970742,
+      "longitude": -96.648247,
+      "altitude": null
+    },
+    {
+      "filename": "HOLFORD_IMPORT_002_1410003.jpg",
+      "latitude": 32.976158139,
+      "longitude": -96.647987417,
+      "altitude": 153.45
+    },
+    {
+      "filename": "HOLFORD_IMPORT_003_1410004.jpg",
+      "latitude": 32.975400778,
+      "longitude": -96.648014944,
+      "altitude": 153.75
+    },
+    {
+      "filename": "HOLFORD_IMPORT_004_1410005.jpg",
+      "latitude": 32.975311056,
+      "longitude": -96.648063944,
+      "altitude": 153.75
+    },
+    {
+      "filename": "HOLFORD_IMPORT_005_1410006.jpg",
+      "latitude": 32.975066361,
+      "longitude": -96.648057694,
+      "altitude": 153.75
+    },
+    {
+      "filename": "HOLFORD_IMPORT_006_1410007.jpg",
+      "latitude": 32.974787167,
+      "longitude": -96.648013583,
+      "altitude": 156.95
+    },
+    {
+      "filename": "HOLFORD_IMPORT_007_1410008.jpg",
+      "latitude": 32.974459917,
+      "longitude": -96.648030222,
+      "altitude": 157.15
+    },
+    {
+      "filename": "HOLFORD_IMPORT_008_1410009.jpg",
+      "latitude": 32.973963972,
+      "longitude": -96.648025028,
+      "altitude": 171.34
+    },
+    {
+      "filename": "HOLFORD_IMPORT_009_1410010.jpg",
+      "latitude": 32.973712694,
+      "longitude": -96.648044667,
+      "altitude": 171.34
+    },
+    {
+      "filename": "HOLFORD_IMPORT_010_1410011.jpg",
+      "latitude": 32.973539556,
+      "longitude": -96.648057583,
+      "altitude": 171.34
+    }
+  ]
+}

@@ -32,6 +32,8 @@ import {
   Minimize,
   Move,
   Pencil,
+  Play,
+  Pause,
   Route,
   RotateCcw,
   Ruler,
@@ -39,15 +41,19 @@ import {
   Target,
   Trash2,
   Unlock,
+  Upload,
   X,
   MapPin,
   Navigation,
+  Plane,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MapboxFlyControls } from "@/components/MapboxFlyControls";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import { uploadProjectOverlay } from "@/app/actions/overlay";
 import type { Media } from "../../../drizzle/schema";
 import turfDistance from "@turf/distance";
 import turfArea from "@turf/area";
@@ -95,6 +101,9 @@ interface MapboxProjectMapProps {
 // ── Corner labels & colors ──────────────────────────────────────────────────
 const CORNER_LABELS = ["NW", "NE", "SE", "SW"];
 const CORNER_COLORS = ["#10B981", "#10B981", "#10B981", "#10B981"];
+const TERRAIN_SOURCE_ID = "pilot-terrain-dem";
+const BUILDINGS_LAYER_ID = "pilot-3d-buildings";
+const TERRAIN_EXAGGERATION = 1.25;
 
 // ── Measurement helpers ─────────────────────────────────────────────────────
 
@@ -148,6 +157,13 @@ export const MapboxProjectMap = forwardRef<MapboxProjectMapHandle, MapboxProject
     const rotationMarkerRef = useRef<mapboxgl.Marker | null>(null);
     const snapMarkersRef = useRef<mapboxgl.Marker[]>([]);
     const measureMarkersRef = useRef<mapboxgl.Marker[]>([]);
+    const prePilotCameraRef = useRef<{
+      center: [number, number];
+      zoom: number;
+      bearing: number;
+      pitch: number;
+    } | null>(null);
+    const autoFollowStopRef = useRef(false);
     // Tracks whether markers have been placed for the current sortedMedia set
     const markersRenderedForRef = useRef<string>("");
 
@@ -167,6 +183,8 @@ export const MapboxProjectMap = forwardRef<MapboxProjectMapHandle, MapboxProject
     const [opacityMap, setOpacityMap] = useState<Record<number, number>>({});
     const [visibilityMap, setVisibilityMap] = useState<Record<number, boolean>>({});
     const [isDeleting, setIsDeleting] = useState(false);
+    const [isUploadingOverlay, setIsUploadingOverlay] = useState(false);
+    const overlayFileInputRef = useRef<HTMLInputElement>(null);
 
     // 2-Point Snap state
     const [snapMode, setSnapMode] = useState(false);
@@ -182,6 +200,12 @@ export const MapboxProjectMap = forwardRef<MapboxProjectMapHandle, MapboxProject
     const [overlayLocked, setOverlayLocked] = useState<Record<number, boolean>>({});
     const [renamingOverlayId, setRenamingOverlayId] = useState<number | null>(null);
     const [renameValue, setRenameValue] = useState("");
+    const [pilotViewEnabled, setPilotViewEnabled] = useState(false);
+    const [pilotTerrainEnabled, setPilotTerrainEnabled] = useState(true);
+    const [pilotBuildingsEnabled, setPilotBuildingsEnabled] = useState(true);
+    const [autoFollowActive, setAutoFollowActive] = useState(false);
+    const [autoFollowIndex, setAutoFollowIndex] = useState(0);
+    const [autoFollowSpeed, setAutoFollowSpeed] = useState<1 | 2 | 3>(1);
 
     // Measurement state
     const [measureMode, setMeasureMode] = useState(false);
@@ -475,11 +499,10 @@ export const MapboxProjectMap = forwardRef<MapboxProjectMapHandle, MapboxProject
       }
 
       // ── Click Handler for Media Pins ──
-      const handleMediaPinClick = (e: mapboxgl.MapMouseEvent) => {
-        const features = map.queryRenderedFeatures({ layers: ['media-pins'] });
-        if (!features || features.length === 0) return;
+      const handleMediaPinClick = (e: mapboxgl.MapLayerMouseEvent) => {
+        const feature = e.features?.[0];
+        if (!feature || !feature.properties) return;
 
-        const feature = features[0];
         const props = feature.properties as any;
 
         setSelectedMedia({
@@ -1082,6 +1105,246 @@ export const MapboxProjectMap = forwardRef<MapboxProjectMapHandle, MapboxProject
       }
     }, [isFullscreen]);
 
+    // ── Pilot View toggle ───────────────────────────────────────────────────
+    const getFlightBearing = useCallback((): number => {
+      if (sortedMedia.length >= 2) {
+        const first = sortedMedia[0];
+        const last = sortedMedia[sortedMedia.length - 1];
+        const fromLat = parseFloat(first.latitude!);
+        const fromLng = parseFloat(first.longitude!);
+        const toLat = parseFloat(last.latitude!);
+        const toLng = parseFloat(last.longitude!);
+        const dLng = ((toLng - fromLng) * Math.PI) / 180;
+        const fromLatRad = (fromLat * Math.PI) / 180;
+        const toLatRad = (toLat * Math.PI) / 180;
+
+        const y = Math.sin(dLng) * Math.cos(toLatRad);
+        const x =
+          Math.cos(fromLatRad) * Math.sin(toLatRad) -
+          Math.sin(fromLatRad) * Math.cos(toLatRad) * Math.cos(dLng);
+
+        const bearing = (Math.atan2(y, x) * 180) / Math.PI;
+        return (bearing + 360) % 360;
+      }
+      return 0;
+    }, [sortedMedia]);
+
+    const togglePilotView = useCallback(() => {
+      const map = mapRef.current;
+      if (!map || !mapLoaded) {
+        toast.info("Map is still loading");
+        return;
+      }
+
+      if (!pilotViewEnabled) {
+        const c = map.getCenter();
+        prePilotCameraRef.current = {
+          center: [c.lng, c.lat],
+          zoom: map.getZoom(),
+          bearing: map.getBearing(),
+          pitch: map.getPitch(),
+        };
+
+        const targetBearing = getFlightBearing();
+        const currentZoom = map.getZoom();
+
+        map.easeTo({
+          bearing: targetBearing,
+          pitch: 62,
+          zoom: Math.max(currentZoom, 17),
+          duration: 900,
+          essential: true,
+        });
+        setPilotViewEnabled(true);
+        return;
+      }
+
+      if (autoFollowActive) {
+        autoFollowStopRef.current = true;
+        map.stop();
+        setAutoFollowActive(false);
+      }
+
+      const previous = prePilotCameraRef.current;
+      if (previous) {
+        map.easeTo({
+          center: previous.center,
+          zoom: previous.zoom,
+          bearing: previous.bearing,
+          pitch: previous.pitch,
+          duration: 700,
+          essential: true,
+        });
+      } else {
+        map.easeTo({ pitch: 0, duration: 500, essential: true });
+      }
+      setPilotViewEnabled(false);
+    }, [autoFollowActive, getFlightBearing, mapLoaded, pilotViewEnabled]);
+
+    const syncPilot3DFeatures = useCallback(() => {
+      const map = mapRef.current;
+      if (!map || !mapLoaded || !map.isStyleLoaded()) return;
+
+      const shouldUseTerrain = pilotViewEnabled && pilotTerrainEnabled;
+      if (shouldUseTerrain) {
+        if (!map.getSource(TERRAIN_SOURCE_ID)) {
+          map.addSource(TERRAIN_SOURCE_ID, {
+            type: "raster-dem",
+            url: "mapbox://mapbox.mapbox-terrain-dem-v1",
+            tileSize: 512,
+            maxzoom: 14,
+          });
+        }
+
+        map.setTerrain({
+          source: TERRAIN_SOURCE_ID,
+          exaggeration: TERRAIN_EXAGGERATION,
+        });
+
+        if (typeof map.setFog === "function") {
+          map.setFog({});
+        }
+      } else {
+        map.setTerrain(null);
+      }
+
+      const shouldUse3DBuildings = pilotViewEnabled && pilotBuildingsEnabled;
+      const has3DBuildingsLayer = Boolean(map.getLayer(BUILDINGS_LAYER_ID));
+
+      if (shouldUse3DBuildings && !has3DBuildingsLayer) {
+        const labelLayerId = map
+          .getStyle()
+          .layers?.find((layer) => layer.type === "symbol" && Boolean(layer.layout?.["text-field"]))?.id;
+
+        map.addLayer(
+          {
+            id: BUILDINGS_LAYER_ID,
+            source: "composite",
+            "source-layer": "building",
+            filter: ["==", ["get", "extrude"], "true"],
+            type: "fill-extrusion",
+            minzoom: 14,
+            paint: {
+              "fill-extrusion-color": "#c8d6e5",
+              "fill-extrusion-height": ["get", "height"],
+              "fill-extrusion-base": ["coalesce", ["get", "min_height"], 0],
+              "fill-extrusion-opacity": 0.5,
+            },
+          },
+          labelLayerId,
+        );
+      } else if (!shouldUse3DBuildings && has3DBuildingsLayer) {
+        map.removeLayer(BUILDINGS_LAYER_ID);
+      }
+    }, [mapLoaded, pilotBuildingsEnabled, pilotTerrainEnabled, pilotViewEnabled]);
+
+    useEffect(() => {
+      syncPilot3DFeatures();
+    }, [syncPilot3DFeatures]);
+
+    useEffect(() => {
+      const map = mapRef.current;
+      if (!map || !mapLoaded) return;
+
+      const handleStyleData = () => {
+        syncPilot3DFeatures();
+      };
+
+      map.on("styledata", handleStyleData);
+      return () => {
+        map.off("styledata", handleStyleData);
+      };
+    }, [mapLoaded, syncPilot3DFeatures]);
+
+    const getHeadingBetween = useCallback((from: [number, number], to: [number, number]): number => {
+      const [fromLng, fromLat] = from;
+      const [toLng, toLat] = to;
+      const dLng = ((toLng - fromLng) * Math.PI) / 180;
+      const fromLatRad = (fromLat * Math.PI) / 180;
+      const toLatRad = (toLat * Math.PI) / 180;
+
+      const y = Math.sin(dLng) * Math.cos(toLatRad);
+      const x =
+        Math.cos(fromLatRad) * Math.sin(toLatRad) -
+        Math.sin(fromLatRad) * Math.cos(toLatRad) * Math.cos(dLng);
+
+      const bearing = (Math.atan2(y, x) * 180) / Math.PI;
+      return (bearing + 360) % 360;
+    }, []);
+
+    const stopAutoFollow = useCallback((showToast = false) => {
+      const map = mapRef.current;
+      autoFollowStopRef.current = true;
+      map?.stop();
+      setAutoFollowActive(false);
+      if (showToast) toast.success("Auto Follow complete");
+    }, []);
+
+    const flyToMarkerSequence = useCallback((index: number) => {
+      const map = mapRef.current;
+      if (!map) return;
+      if (autoFollowStopRef.current) return;
+      if (index >= sortedMedia.length) {
+        stopAutoFollow(true);
+        return;
+      }
+
+      const current = sortedMedia[index];
+      const next = sortedMedia[Math.min(index + 1, sortedMedia.length - 1)];
+      const currentPos: [number, number] = [parseFloat(current.longitude!), parseFloat(current.latitude!)];
+      const nextPos: [number, number] = [parseFloat(next.longitude!), parseFloat(next.latitude!)];
+      const bearing = getHeadingBetween(currentPos, nextPos);
+
+      setAutoFollowIndex(index);
+      map.easeTo({
+        center: currentPos,
+        bearing,
+        pitch: pilotViewEnabled ? 62 : 58,
+        zoom: Math.max(map.getZoom(), 17),
+        duration: Math.round(2200 / autoFollowSpeed),
+        essential: true,
+      });
+
+      map.once("moveend", () => {
+        if (autoFollowStopRef.current) return;
+        flyToMarkerSequence(index + 1);
+      });
+    }, [autoFollowSpeed, getHeadingBetween, pilotViewEnabled, sortedMedia, stopAutoFollow]);
+
+    const toggleAutoFollow = useCallback(() => {
+      const map = mapRef.current;
+      if (!map || !mapLoaded) {
+        toast.info("Map is still loading");
+        return;
+      }
+      if (sortedMedia.length < 2) {
+        toast.info("Need at least 2 GPS points for Auto Follow");
+        return;
+      }
+
+      if (autoFollowActive) {
+        stopAutoFollow();
+        return;
+      }
+
+      autoFollowStopRef.current = false;
+      setAutoFollowActive(true);
+      setAutoFollowIndex(0);
+      flyToMarkerSequence(0);
+    }, [autoFollowActive, flyToMarkerSequence, mapLoaded, sortedMedia.length, stopAutoFollow]);
+
+    useEffect(() => {
+      if (autoFollowActive && sortedMedia.length < 2) {
+        stopAutoFollow();
+      }
+    }, [autoFollowActive, sortedMedia.length, stopAutoFollow]);
+
+    useEffect(() => {
+      return () => {
+        autoFollowStopRef.current = true;
+      };
+    }, []);
+
     // Listen for fullscreen change events
     useEffect(() => {
       const handleFullscreenChange = () => {
@@ -1308,10 +1571,10 @@ export const MapboxProjectMap = forwardRef<MapboxProjectMapHandle, MapboxProject
               {mediaWithGPS.length > 0 ? `${mediaWithGPS.length} GPS points` : ""} Satellite-Streets-V12
             </div>
 
-              {/* Fullscreen toggle button (top-right) */}
+              {/* Fullscreen toggle button */}
               <button
                 onClick={toggleFullscreen}
-                className="absolute top-3 right-3 z-[20] bg-white rounded shadow-md p-1.5 hover:bg-gray-100 transition-colors"
+                className="absolute top-3 left-3 z-[20] bg-white rounded shadow-md p-1.5 hover:bg-gray-100 transition-colors"
                 title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
               >
                 {isFullscreen ? <Minimize size={18} className="text-gray-700" /> : <Maximize size={18} className="text-gray-700" />}
@@ -1481,7 +1744,7 @@ export const MapboxProjectMap = forwardRef<MapboxProjectMapHandle, MapboxProject
                   {!sidebarOpen && !snapMode && !measureMode && (
                     <button
                       onClick={() => setSidebarOpen(true)}
-                      className="absolute right-0 top-14 z-[100] bg-slate-900/90 backdrop-blur-md text-white p-2 rounded-l-md border-l border-t border-b border-slate-700 hover:bg-slate-800 transition-colors"
+                      className="absolute left-0 top-14 z-[100] bg-slate-900/90 backdrop-blur-md text-white p-2 rounded-r-md border-r border-t border-b border-slate-700 hover:bg-slate-800 transition-colors"
                       title="Open Overlay Manager"
                     >
                       <Layers size={18} />
@@ -1489,15 +1752,15 @@ export const MapboxProjectMap = forwardRef<MapboxProjectMapHandle, MapboxProject
                   )}
 
                   <div
-                    className={`absolute right-0 top-0 h-full w-80 bg-slate-900/95 backdrop-blur-md text-white shadow-2xl transition-transform duration-300 z-[100] ${
-                      sidebarOpen ? "translate-x-0" : "translate-x-full"
+                    className={`absolute left-0 top-0 h-full w-80 bg-slate-900/95 backdrop-blur-md text-white shadow-2xl transition-transform duration-300 z-[100] ${
+                      sidebarOpen ? "translate-x-0" : "-translate-x-full"
                     }`}
                   >
                     <button
                       onClick={() => setSidebarOpen(false)}
-                      className="absolute -left-10 top-4 bg-slate-900 p-2 rounded-l-md border-l border-t border-b border-slate-700 hover:bg-slate-800 transition-colors"
+                      className="absolute -right-10 top-4 bg-slate-900 p-2 rounded-r-md border-r border-t border-b border-slate-700 hover:bg-slate-800 transition-colors"
                     >
-                      <ChevronRight size={20} />
+                      <ChevronRight size={20} className="rotate-180" />
                     </button>
 
                     <div className="p-5 h-full overflow-y-auto flex flex-col gap-4">
@@ -1516,14 +1779,98 @@ export const MapboxProjectMap = forwardRef<MapboxProjectMapHandle, MapboxProject
                       <div className="space-y-3">
                         <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Map Controls</p>
 
-                        {/* Fullscreen */}
-                        <button
-                          onClick={toggleFullscreen}
-                          className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 transition-all"
-                        >
-                          {isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
-                          <span className="text-sm font-medium">{isFullscreen ? "Exit Fullscreen" : "Fullscreen"}</span>
-                        </button>
+                        {/* Pilot View */}
+                        {mediaWithGPS.length > 0 && (
+                          <button
+                            onClick={togglePilotView}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all ${
+                              pilotViewEnabled
+                                ? "bg-cyan-600/20 border border-cyan-500/30"
+                                : "bg-slate-800 hover:bg-slate-700"
+                            }`}
+                          >
+                            <Plane size={16} className={pilotViewEnabled ? "text-cyan-400" : "text-slate-400"} />
+                            <div className="text-left">
+                              <span className="text-sm font-medium block">{pilotViewEnabled ? "Exit Pilot View" : "Pilot View"}</span>
+                              <span className="text-[10px] text-slate-400">Low-angle cockpit perspective</span>
+                            </div>
+                          </button>
+                        )}
+
+                        {pilotViewEnabled && mapLoaded && (
+                          <>
+                            <MapboxFlyControls
+                              map={mapRef.current}
+                              variant="sidebar"
+                            />
+
+                            <div className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3">
+                              <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">Pilot 3D</p>
+                              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => setPilotTerrainEnabled((v) => !v)}
+                                  className={`h-9 justify-start px-3 text-xs ${
+                                    pilotTerrainEnabled
+                                      ? "bg-cyan-600/30 hover:bg-cyan-600/40 text-cyan-100"
+                                      : "bg-slate-700 hover:bg-slate-600 text-slate-100"
+                                  }`}
+                                  title={pilotTerrainEnabled ? "Disable terrain" : "Enable terrain"}
+                                >
+                                  {pilotTerrainEnabled ? "Terrain On" : "Terrain Off"}
+                                </Button>
+
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => setPilotBuildingsEnabled((v) => !v)}
+                                  className={`h-9 justify-start px-3 text-xs ${
+                                    pilotBuildingsEnabled
+                                      ? "bg-cyan-600/30 hover:bg-cyan-600/40 text-cyan-100"
+                                      : "bg-slate-700 hover:bg-slate-600 text-slate-100"
+                                  }`}
+                                  title={pilotBuildingsEnabled ? "Disable 3D buildings" : "Enable 3D buildings"}
+                                >
+                                  {pilotBuildingsEnabled ? "Buildings On" : "Buildings Off"}
+                                </Button>
+                              </div>
+                            </div>
+
+                            {mediaWithGPS.length > 0 && (
+                              <div className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3">
+                                <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">Pilot Route</p>
+                                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                  <Button
+                                    type="button"
+                                    size="sm"
+                                    onClick={toggleAutoFollow}
+                                    className="h-9 justify-start px-3 text-xs bg-blue-600 hover:bg-blue-700 text-white"
+                                    title={autoFollowActive ? "Pause Auto Follow" : "Start Auto Follow"}
+                                  >
+                                    {autoFollowActive ? <Pause className="h-4 w-4 mr-2" /> : <Play className="h-4 w-4 mr-2" />}
+                                    {autoFollowActive
+                                      ? `Following ${autoFollowIndex + 1}/${sortedMedia.length}`
+                                      : "Auto Follow"}
+                                  </Button>
+
+                                  <Button
+                                    type="button"
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => setAutoFollowSpeed((s) => (s === 3 ? 1 : ((s + 1) as 1 | 2 | 3)))}
+                                    className="h-9 justify-start px-3 text-xs bg-slate-700 hover:bg-slate-600 text-slate-100"
+                                    title="Cycle auto-follow speed"
+                                  >
+                                    Speed {autoFollowSpeed}x
+                                  </Button>
+                                </div>
+                              </div>
+                            )}
+                          </>
+                        )}
 
                         {/* Hide/Show Flight Path */}
                         {mediaWithGPS.length > 0 && (
@@ -1557,7 +1904,57 @@ export const MapboxProjectMap = forwardRef<MapboxProjectMapHandle, MapboxProject
                             <span className="text-[10px] text-slate-400">Distance & area on map</span>
                           </div>
                         </button>
+
+                        {/* Fullscreen */}
+                        <button
+                          onClick={toggleFullscreen}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 transition-all"
+                        >
+                          {isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
+                          <span className="text-sm font-medium">{isFullscreen ? "Exit Fullscreen" : "Fullscreen"}</span>
+                        </button>
                       </div>
+
+                      {/* ── UPLOAD OVERLAY section ── */}
+                      {!isDemoProject && (
+                        <div className="pt-2 border-t border-slate-700 space-y-2">
+                          <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Add Overlay</p>
+                          <input
+                            ref={overlayFileInputRef}
+                            type="file"
+                            accept="image/png,image/jpeg,image/webp,image/tiff,application/pdf"
+                            className="hidden"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              e.target.value = "";
+                              setIsUploadingOverlay(true);
+                              try {
+                                const fd = new FormData();
+                                fd.append("file", file);
+                                await uploadProjectOverlay(fd, projectId);
+                                toast.success("Overlay uploaded successfully");
+                                onOverlayUpdated?.();
+                              } catch (err) {
+                                toast.error(err instanceof Error ? err.message : "Overlay upload failed");
+                              } finally {
+                                setIsUploadingOverlay(false);
+                              }
+                            }}
+                          />
+                          <button
+                            onClick={() => overlayFileInputRef.current?.click()}
+                            disabled={isUploadingOverlay}
+                            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl bg-emerald-600/20 border border-emerald-500/30 hover:bg-emerald-600/30 text-emerald-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <Upload size={16} className={isUploadingOverlay ? "animate-pulse" : ""} />
+                            <div className="text-left">
+                              <span className="text-sm font-medium block">{isUploadingOverlay ? "Uploading..." : "Upload Overlay"}</span>
+                              <span className="text-[10px] text-slate-400">PNG, JPG, PDF plan</span>
+                            </div>
+                          </button>
+                        </div>
+                      )}
 
                       {/* ── PER-OVERLAY CONTROLS ── */}
                       {activeOverlays.map((ov) => {

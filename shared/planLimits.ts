@@ -2,12 +2,12 @@
  * Plan limits for different subscription tiers
  */
 
-// Simple project count limits for feature-gating
-export const PLAN_LIMITS = {
-  FREE: 1,        // Just for testing
-  PILOT: 5,       // 5 Projects
-  MUNICIPAL: 25,  // 25 Projects
-  ENTERPRISE: Infinity
+// Legacy project count limits kept for backwards compatibility with older views.
+export const PROJECT_COUNT_LIMITS = {
+  FREE: 1,
+  PILOT: 5,
+  MUNICIPAL: 25,
+  ENTERPRISE: Infinity,
 } as const;
 
 export type SubscriptionTier = "free" | "starter" | "professional" | "business" | "enterprise";
@@ -78,6 +78,9 @@ export const PLAN_FEATURES: Record<SubscriptionTier, PlanLimits> = {
     ],
   },
 };
+
+// Canonical, tier-keyed limits used by current account and billing UI.
+export const PLAN_LIMITS: Record<SubscriptionTier, PlanLimits> = PLAN_FEATURES;
 
 /**
  * Check if user has reached project limit

@@ -11,10 +11,8 @@ import { DeleteProjectDialog } from "@/components/DeleteProjectDialog";
 import { EditProjectDialog } from "@/components/EditProjectDialog";
 import { ProjectCard } from "@/components/ProjectCard";
 import { SharedProjectCard } from "@/components/SharedProjectCard";
-import { UpgradeModal } from "@/components/modals/UpgradeModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { PLAN_LIMITS } from "../../../shared/planLimits";
 import {
   Dialog,
   DialogContent,
@@ -75,7 +73,6 @@ export default function Dashboard() {
   const { isClientOnly } = useClientAccess();
   const [, setLocation] = useLocation();
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -101,18 +98,7 @@ export default function Dashboard() {
   }
 
 
-  // Handle create project button - checks project limit before opening dialog
-  const handleCreateClick = () => {
-    const currentCount = projects?.length || 0;
-    const tier = (user?.subscriptionTier || 'PILOT').toUpperCase() as keyof typeof PLAN_LIMITS;
-    const limit = PLAN_LIMITS[tier as keyof typeof PLAN_LIMITS] || 5;
 
-    if (currentCount >= limit) {
-      setShowUpgradeModal(true);
-    } else {
-      setCreateDialogOpen(true);
-    }
-  };
   // Removed 'Feature coming soon' handler. Implement actual guide trigger if available.
 
   const handleExportData = async () => {
@@ -309,7 +295,7 @@ export default function Dashboard() {
               <DropdownMenuContent align="end" className="w-56">
                 {!isClientOnly && (
                   <>
-                    <DropdownMenuItem onClick={handleCreateClick}>
+                    <DropdownMenuItem onClick={() => setCreateDialogOpen(true)}>
                       <FolderPlus className="h-4 w-4 mr-2" />
                       New Project
                     </DropdownMenuItem>
@@ -438,7 +424,7 @@ export default function Dashboard() {
                 {!isClientOnly && (
                   <Button
                     className="bg-primary text-primary-foreground hover:bg-primary/90"
-                    onClick={handleCreateClick}
+                    onClick={() => setCreateDialogOpen(true)}
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Create Your First Project
@@ -476,7 +462,7 @@ export default function Dashboard() {
         )}
 
         {/* Referral Widget */}
-        <motion.div variants={fadeInUp}>
+        <motion.div id="referral-program" variants={fadeInUp}>
           <ReferralWidget />
         </motion.div>
 
@@ -547,14 +533,6 @@ export default function Dashboard() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* Upgrade Modal for Project Limit */}
-      <UpgradeModal
-        open={showUpgradeModal}
-        onOpenChange={setShowUpgradeModal}
-        currentCount={projects?.length}
-        limit={PLAN_LIMITS[(user?.subscriptionTier || 'PILOT').toUpperCase() as keyof typeof PLAN_LIMITS]}
-      />
     </DashboardLayout>
   );
 }

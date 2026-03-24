@@ -67,6 +67,21 @@ export async function getDb() {
   return _db;
 }
 
+async function isWebmasterUser(userId: number) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const result = await db
+    .select({ role: users.role })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+
+  return result[0]?.role === "webmaster";
+}
+
 export async function upsertUser(user: InsertUser): Promise<void> {
   if (!user.openId) {
     throw new Error("User openId is required for upsert");
@@ -79,6 +94,27 @@ export async function upsertUser(user: InsertUser): Promise<void> {
   }
 
   try {
+    // Email-merge: if a seeded/recovery account has the same email but a different openId,
+    // migrate it to the new OAuth openId so the user keeps their org assignment and org role.
+    if (user.email) {
+      const emailResult = await db.execute(sql`
+        SELECT id, openId FROM users WHERE LOWER(email) = LOWER(${user.email}) LIMIT 1
+      `) as unknown as [Array<{ id: number; openId: string }>, unknown];
+      const emailMatch = emailResult[0]?.[0];
+      if (emailMatch && emailMatch.openId !== user.openId) {
+        console.log(`[Auth] Merging OAuth login (openId=${user.openId}) with existing account (id=${emailMatch.id}) via email match`);
+        await db.execute(sql`
+          UPDATE users
+          SET openId = ${user.openId},
+              lastSignedIn = NOW()
+              ${user.loginMethod ? sql`, loginMethod = ${user.loginMethod}` : sql``}
+              ${user.name ? sql`, name = ${user.name}` : sql``}
+          WHERE id = ${emailMatch.id}
+        `);
+        return;
+      }
+    }
+
     // Check if this is a new user (for welcome email)
     const existingUser = await getUserByOpenId(user.openId);
     const isNewUser = !existingUser;
@@ -159,9 +195,47 @@ export async function getUserByOpenId(openId: string) {
     return undefined;
   }
 
-  const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
+  // Prefer a richer projection so auth.me includes plan and billing fields used by Account.
+  // Fall back to minimal columns in older drifted schemas.
+  try {
+    const result = await db.execute(sql`
+      SELECT
+        \`id\`, \`openId\`, \`name\`, \`email\`, \`loginMethod\`, \`role\`,
+        \`organizationId\`, \`orgRole\`,
+        \`subscriptionTier\`, \`subscriptionStatus\`, \`billingPeriod\`,
+        \`currentPeriodStart\`, \`currentPeriodEnd\`, \`cancelAtPeriodEnd\`,
+        \`stripeCustomerId\`, \`stripeSubscriptionId\`,
+        \`organization\`, \`logoUrl\`, \`createdAt\`, \`updatedAt\`, \`lastSignedIn\`
+      FROM \`users\`
+      WHERE \`openId\` = ${openId}
+      LIMIT 1
+    `);
 
-  return result.length > 0 ? result[0] : undefined;
+    const rows = ((result as unknown as [any[], unknown])?.[0] ?? []) as any[];
+    return rows[0] ?? undefined;
+  } catch {
+    const result = await db.execute(sql`
+      SELECT \`id\`, \`openId\`, \`name\`, \`email\`, \`loginMethod\`, \`role\`, \`organizationId\`, \`orgRole\`
+      FROM \`users\`
+      WHERE \`openId\` = ${openId}
+      LIMIT 1
+    `);
+
+    const rows = ((result as unknown as [any[], unknown])?.[0] ?? []) as any[];
+    const user = rows[0];
+    return user ? {
+      id: user.id,
+      openId: user.openId,
+      name: user.name,
+      email: user.email,
+      loginMethod: user.loginMethod,
+      role: user.role,
+      organizationId: user.organizationId,
+      orgRole: user.orgRole,
+      subscriptionTier: "free",
+      cancelAtPeriodEnd: "no",
+    } : undefined;
+  }
 }
 
 // ============================================
@@ -301,6 +375,15 @@ export async function getUserProjectCount(userId: number) {
     throw new Error("Database not available");
   }
 
+  if (await isWebmasterUser(userId)) {
+    const allProjects = await db
+      .select({ id: projects.id })
+      .from(projects)
+      .where(isNull(projects.deletedAt));
+
+    return allProjects.length;
+  }
+
   // Get owned projects count
   const ownedProjects = await db
     .select()
@@ -369,8 +452,69 @@ export async function createMedia(mediaItem: InsertMedia) {
     throw new Error("Database not available");
   }
 
-  const result = await db.insert(media).values(mediaItem);
-  const insertId = result[0].insertId;
+  const normalizedMediaItem: InsertMedia = {
+    ...mediaItem,
+    // Older DBs still use enum('photo','video').
+    mediaType: (mediaItem.mediaType === "image" ? "photo" : mediaItem.mediaType) as any,
+  };
+
+  let insertId: number;
+
+  try {
+    const result = await db.insert(media).values(normalizedMediaItem as any);
+    insertId = result[0].insertId;
+  } catch (error: any) {
+    const sqlMessage = String(error?.cause?.sqlMessage || error?.message || "");
+    const hasUnknownColumn = sqlMessage.includes("Unknown column");
+
+    if (!hasUnknownColumn) {
+      throw error;
+    }
+
+    // Fallback path for local schema drift: insert only common/stable columns.
+    const compatResult: any = await db.execute(sql`
+      INSERT INTO media (
+        projectId,
+        flightId,
+        userId,
+        filename,
+        fileKey,
+        url,
+        mimeType,
+        fileSize,
+        mediaType,
+        latitude,
+        longitude,
+        altitude,
+        capturedAt,
+        cameraMake,
+        cameraModel,
+        thumbnailUrl
+      ) VALUES (
+        ${normalizedMediaItem.projectId},
+        ${normalizedMediaItem.flightId ?? null},
+        ${normalizedMediaItem.userId},
+        ${normalizedMediaItem.filename},
+        ${normalizedMediaItem.fileKey},
+        ${normalizedMediaItem.url},
+        ${normalizedMediaItem.mimeType},
+        ${normalizedMediaItem.fileSize},
+        ${normalizedMediaItem.mediaType},
+        ${normalizedMediaItem.latitude ?? null},
+        ${normalizedMediaItem.longitude ?? null},
+        ${normalizedMediaItem.altitude ?? null},
+        ${normalizedMediaItem.capturedAt ?? null},
+        ${normalizedMediaItem.cameraMake ?? null},
+        ${normalizedMediaItem.cameraModel ?? null},
+        ${normalizedMediaItem.thumbnailUrl ?? null}
+      )
+    `);
+
+    insertId = compatResult?.[0]?.insertId;
+    if (!insertId) {
+      throw error;
+    }
+  }
   
   // Increment the project's media count
   await incrementProjectMediaCount(mediaItem.projectId);
@@ -556,6 +700,16 @@ export async function userHasProjectAccess(projectId: number, userId: number): P
     throw new Error("Database not available");
   }
 
+  if (await isWebmasterUser(userId)) {
+    const project = await db
+      .select({ id: projects.id })
+      .from(projects)
+      .where(and(eq(projects.id, projectId), isNull(projects.deletedAt)))
+      .limit(1);
+
+    return project.length > 0;
+  }
+
    // Check if user is the owner
   const project = await db
     .select()
@@ -591,6 +745,9 @@ export async function getProjectWithAccess(projectId: number, userId: number) {
     .limit(1);
   if (project.length === 0) {
     return null;
+  }
+  if (await isWebmasterUser(userId)) {
+    return { ...project[0], accessRole: 'owner' as const };
   }
   // Check if user is ownerr
   if (project[0].userId === userId) {
@@ -630,11 +787,16 @@ export async function getUserAccessibleProjects(userId: number): Promise<{
     .where(and(eq(projects.userId, userId), isNull(projects.deletedAt)))
     .orderBy(desc(projects.updatedAt));
 
-  // Get shared projects
-  const sharedProjectIds = await db
-    .select({ projectId: projectCollaborators.projectId, role: projectCollaborators.role })
-    .from(projectCollaborators)
-    .where(eq(projectCollaborators.userId, userId));
+  // Get shared projects. Some dev DBs may not yet have the collaborators table.
+  let sharedProjectIds: Array<{ projectId: number; role: 'viewer' | 'editor' | 'vendor' }> = [];
+  try {
+    sharedProjectIds = await db
+      .select({ projectId: projectCollaborators.projectId, role: projectCollaborators.role })
+      .from(projectCollaborators)
+      .where(eq(projectCollaborators.userId, userId));
+  } catch {
+    sharedProjectIds = [];
+  }
 
   const sharedProjects = [];
   for (const collab of sharedProjectIds) {
@@ -1574,23 +1736,18 @@ export async function getOwnerClients(ownerId: number) {
     throw new Error("Database not available");
   }
 
-  // Check if the requesting user is a webmaster — they can see all clients
-  const userResult = await db
-    .select({ role: users.role })
-    .from(users)
-    .where(eq(users.id, ownerId))
-    .limit(1);
-
-  const isWebmaster = userResult.length > 0 && userResult[0].role === 'webmaster';
+  if (await isWebmasterUser(ownerId)) {
+    return db
+      .select()
+      .from(clients)
+      .where(isNull(clients.deletedAt))
+      .orderBy(desc(clients.updatedAt));
+  }
 
   return db
     .select()
     .from(clients)
-    .where(
-      isWebmaster
-        ? isNull(clients.deletedAt)
-        : and(eq(clients.ownerId, ownerId), isNull(clients.deletedAt))
-    )
+    .where(and(eq(clients.ownerId, ownerId), isNull(clients.deletedAt)))
     .orderBy(desc(clients.updatedAt));
 }
 
@@ -1614,7 +1771,6 @@ export async function getClientById(clientId: number) {
 
 /**
  * Get a client by ID, ensuring it belongs to the specified owner.
- * Webmaster users can access any client regardless of ownerId.
  */
 export async function getOwnerClient(clientId: number, ownerId: number) {
   const db = await getDb();
@@ -1622,23 +1778,20 @@ export async function getOwnerClient(clientId: number, ownerId: number) {
     throw new Error("Database not available");
   }
 
-  // Check if the requesting user is a webmaster — they can access any client
-  const userResult = await db
-    .select({ role: users.role })
-    .from(users)
-    .where(eq(users.id, ownerId))
-    .limit(1);
+  if (await isWebmasterUser(ownerId)) {
+    const result = await db
+      .select()
+      .from(clients)
+      .where(and(eq(clients.id, clientId), isNull(clients.deletedAt)))
+      .limit(1);
 
-  const isWebmaster = userResult.length > 0 && userResult[0].role === 'webmaster';
+    return result.length > 0 ? result[0] : null;
+  }
 
   const result = await db
     .select()
     .from(clients)
-    .where(
-      isWebmaster
-        ? and(eq(clients.id, clientId), isNull(clients.deletedAt))
-        : and(eq(clients.id, clientId), eq(clients.ownerId, ownerId), isNull(clients.deletedAt))
-    )
+    .where(and(eq(clients.id, clientId), eq(clients.ownerId, ownerId), isNull(clients.deletedAt)))
     .limit(1);
 
   return result.length > 0 ? result[0] : null;
@@ -1726,11 +1879,16 @@ export async function getUserClientProjects(userId: number) {
     throw new Error("Database not available");
   }
 
-  // Get all clients the user belongs to
-  const userClients = await db
-    .select({ clientId: clientUsers.clientId })
-    .from(clientUsers)
-    .where(eq(clientUsers.userId, userId));
+  // Get all clients the user belongs to. Some dev DBs may not have client tables yet.
+  let userClients: Array<{ clientId: number }> = [];
+  try {
+    userClients = await db
+      .select({ clientId: clientUsers.clientId })
+      .from(clientUsers)
+      .where(eq(clientUsers.userId, userId));
+  } catch {
+    userClients = [];
+  }
 
   if (userClients.length === 0) {
     return [];
@@ -1809,16 +1967,35 @@ export async function userHasClientAccess(clientId: number, userId: number): Pro
     throw new Error("Database not available");
   }
 
-   // Check if user is the owner
-  const client = await db
+  // Fetch the client once for all checks
+  const clientRows = await db
     .select()
     .from(clients)
-    .where(and(eq(clients.id, clientId), eq(clients.ownerId, userId), isNull(clients.deletedAt)))
+    .where(and(eq(clients.id, clientId), isNull(clients.deletedAt)))
     .limit(1);
-  if (client.length > 0) {
+  if (clientRows.length === 0) return false;
+  const client = clientRows[0];
+
+  // Check if user is the direct owner
+  if (client.ownerId === userId) return true;
+
+  // ORG_ADMIN bypass: if the user is an org admin for the organization that owns this client,
+  // grant access immediately without needing an explicit clientUsers row.
+  const userRows = await db
+    .select({ orgRole: users.orgRole, organizationId: users.organizationId })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+  const userRecord = userRows[0];
+  if (
+    userRecord?.orgRole === 'ORG_ADMIN' &&
+    userRecord.organizationId != null &&
+    userRecord.organizationId === client.ownerId
+  ) {
     return true;
   }
-  // Check if user is a client userr
+
+  // Check if user is an explicit client user
   const clientUser = await db
     .select()
     .from(clientUsers)

@@ -8,9 +8,15 @@ import { generateEmailTemplate, EMAIL_CONFIG } from './email-config';
 
 let resend: Resend | null = null;
 
-function getResend(): Resend {
+function getResend(): Resend | null {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.warn('[Owner Notification] RESEND_API_KEY not configured, skipping owner notification email');
+    return null;
+  }
+
   if (!resend) {
-    resend = new Resend(process.env.RESEND_API_KEY);
+    resend = new Resend(apiKey);
   }
   return resend;
 }
@@ -53,7 +59,12 @@ export async function sendOwnerNotificationEmail(
       footer: 'You are receiving this email because you are the owner of MAPIT',
     });
 
-    const { error } = await getResend().emails.send({
+    const client = getResend();
+    if (!client) {
+      return { success: false, error: 'RESEND_API_KEY not configured' };
+    }
+
+    const { error } = await client.emails.send({
       from: `${EMAIL_CONFIG.fromName} <${EMAIL_CONFIG.fromEmail}>`,
       to: [OWNER_EMAIL],
       subject: `🎉 New User Signup - ${userName}`,

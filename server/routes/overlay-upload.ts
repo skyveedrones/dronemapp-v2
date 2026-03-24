@@ -71,11 +71,10 @@ async function pdfToPngViaPdftoppm(pdfBuffer: Buffer): Promise<Buffer> {
 // ── Pure-JS fallback: pdf-to-png-converter (no native deps) ───────────────
 async function pdfToPngViaJs(pdfBuffer: Buffer): Promise<Buffer> {
   const { pdfToPng: convert } = await import("pdf-to-png-converter");
-  const arrayBuffer = pdfBuffer.buffer.slice(
-    pdfBuffer.byteOffset,
-    pdfBuffer.byteOffset + pdfBuffer.byteLength
-  );
-  const pages = await convert(arrayBuffer, {
+  // Pass the Buffer directly — v3.x pdfToPng accepts Buffer/Uint8Array natively.
+  // DO NOT convert to ArrayBuffer slice; Node.js 24 pool Buffers have a larger
+  // underlying .buffer than their byteLength, which confuses pdfjs-dist.
+  const pages = await convert(pdfBuffer, {
     viewportScale: 2.0,
     pagesToProcess: [1],
     disableFontFace: true,
@@ -239,7 +238,7 @@ router.post("/overlay/upload", upload.single("file"), async (req: Request, res: 
       console.log("[Overlay Upload] Project not found:", projectId);
       return res.status(404).json({ error: "Project not found" });
     }
-    if (project.userId !== user.id && user.role !== "webmaster" && user.role !== "admin") {
+    if (project.userId !== user.id && user.role !== "webmaster") {
       return res.status(403).json({ error: "You do not own this project" });
     }
 

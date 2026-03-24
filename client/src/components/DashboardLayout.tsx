@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { Building2, ClipboardList, Download, LayoutDashboard, LogOut, Menu, Moon, Plane, Settings, Sun, Trash2, UserCircle, Users as UsersIcon } from "lucide-react";
+import { Building2, ClipboardList, Download, Gift, LayoutDashboard, LogOut, Menu, Moon, Plane, Settings, Sun, Trash2, UserCircle, Users as UsersIcon } from "lucide-react";
 import { usePWAInstall } from "@/hooks/usePWAInstall";
 import { PWAInstallModal } from "./PWAInstallModal";
 import { toast } from "sonner";
@@ -22,6 +22,7 @@ import { Button } from "./ui/button";
 const allMenuItems = [
   { icon: Plane, label: "Hire a Pilot", path: "https://www.skyveedrones.com", external: true },
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
+  { icon: Gift, label: "Referral Program", path: "/dashboard#referral-program" },
   { icon: UsersIcon, label: "Users", path: "/users", roles: ["admin", "webmaster"] },
   { icon: Building2, label: "Clients", path: "/clients", roles: ["admin", "webmaster"] },
   { icon: Trash2, label: "Trash", path: "/trash", roles: ["admin", "webmaster"] },
@@ -132,7 +133,8 @@ function DashboardLayoutContent({
     }
     return true;
   });
-  const activeMenuItem = menuItems.find(item => item.path === location);
+  const normalizePath = (path: string) => path.split("#")[0];
+  const activeMenuItem = menuItems.find(item => normalizePath(item.path) === normalizePath(location));
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -214,7 +216,7 @@ function DashboardLayoutContent({
               <DropdownMenuContent align="end" className="w-48">
                 {menuItems.map(item => {
                   const Icon = item.icon;
-                  const isActive = location === item.path;
+                  const isActive = normalizePath(location) === normalizePath(item.path);
                   const isExternal = (item as any).external;
                   return (
                     <DropdownMenuItem
@@ -223,7 +225,17 @@ function DashboardLayoutContent({
                         if (isExternal) {
                           window.open(item.path, '_blank');
                         } else {
-                          setLocation(item.path);
+                          const [targetPath, hash] = item.path.split("#");
+                          setLocation(targetPath);
+
+                          if (hash) {
+                            setTimeout(() => {
+                              const target = document.getElementById(hash);
+                              if (target) {
+                                target.scrollIntoView({ behavior: "smooth", block: "start" });
+                              }
+                            }, 50);
+                          }
                         }
                       }}
                       className={`cursor-pointer gap-2 ${

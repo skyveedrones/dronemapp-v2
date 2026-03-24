@@ -259,7 +259,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
  * Get plan limits for a specific subscription tier
  */
 export function getPlanLimits(tier: SubscriptionTier): PlanLimits {
-  return PLAN_FEATURES[tier];
+  return PLAN_LIMITS[tier];
 }
 
 /**

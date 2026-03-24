@@ -13,4 +13,11 @@ export const ENV = {
   cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME ?? "",
   cloudinaryApiKey: process.env.CLOUDINARY_API_KEY ?? "",
   cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET ?? "",
+  tempBypassEnabled: (process.env.TEMP_BYPASS_ENABLED ?? "false").toLowerCase() === "true",
+  adminSecret: process.env.ADMIN_SECRET ?? "",
+  allowedAdminEmails: (process.env.ALLOWED_ADMIN_EMAILS ?? "")
+    .split(",")
+    .map(v => v.trim().toLowerCase())
+    .filter(Boolean),
+  tempBypassExpiresAt: process.env.TEMP_BYPASS_EXPIRES_AT ?? "",
 };

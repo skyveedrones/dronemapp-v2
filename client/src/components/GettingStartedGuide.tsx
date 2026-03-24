@@ -107,12 +107,20 @@ export function GettingStartedGuide() {
             Practice aligning PDF blueprints and sharing stakeholder links in real-time.
           </p>
         </div>
-        <a
-          href="/project/1"
-          className="px-8 py-4 bg-[#10b981] text-slate-950 font-extrabold rounded-2xl hover:scale-105 hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] transition-all whitespace-nowrap no-underline"
-        >
-          Launch Demo Project
-        </a>
+        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+          <a
+            href="/demo/create-tutorial"
+            className="px-6 py-4 bg-white/5 border border-white/10 text-white font-bold rounded-2xl hover:bg-white/10 transition-all whitespace-nowrap no-underline text-center"
+          >
+            Watch Setup Walkthrough
+          </a>
+          <a
+            href="/project/1"
+            className="px-8 py-4 bg-[#10b981] text-slate-950 font-extrabold rounded-2xl hover:scale-105 hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] transition-all whitespace-nowrap no-underline text-center"
+          >
+            Launch Demo Project
+          </a>
+        </div>
       </div>
 
       {/* Header — below Demo box */}

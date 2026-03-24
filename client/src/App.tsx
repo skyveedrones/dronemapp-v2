@@ -30,6 +30,7 @@ import Billing from "./pages/Billing";
 import Account from "./pages/Account";
 import Trash from "./pages/Trash";
 import AuditLog from "./pages/AuditLog";
+import AdminDashboard from "./pages/AdminDashboard";
 import Welcome from "./pages/Welcome";
 import OnboardingPilot from "./pages/OnboardingPilot";
 import Municipal from "./pages/Municipal";
@@ -39,6 +40,7 @@ import SignupPage from "./pages/SignupPage";
 // Lazy-loaded map-heavy pages (mapbox-gl is ~1.7MB)
 const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
 const ProjectMap = lazy(() => import("./pages/ProjectMap"));
+const PilotViewCockpit = lazy(() => import("./pages/PilotViewCockpit"));
 const FlightDetail = lazy(() => import("./pages/FlightDetail"));
 const CreationTutorial = lazy(() => import("./pages/CreationTutorial"));
 const DemoProject = lazy(() => import("./pages/DemoProject"));
@@ -79,14 +81,17 @@ function ProtectedRoute({ component: Component, isDemoRoute = false }: { compone
   }, [loading, isAuthenticated, setLocation]);
 
   // Onboarding guard: redirect pilots (non-client users) without an org to /onboarding/pilot
+  // Bypassed on localhost for local development
+  const isLocalDev = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
   useEffect(() => {
+    if (isLocalDev) return; // Skip onboarding redirect in local dev
     if (!loading && isAuthenticated && user && !user.organizationId && user.role !== 'client') {
       // Only redirect if not already on onboarding page
       if (location !== '/onboarding/pilot') {
         setLocation('/onboarding/pilot');
       }
     }
-  }, [loading, isAuthenticated, user, location, setLocation]);
+  }, [loading, isAuthenticated, user, location, setLocation, isLocalDev]);
 
   // PHASE 2: Redirect client users away from admin-only routes
   useEffect(() => {
@@ -121,7 +126,8 @@ function ProtectedRoute({ component: Component, isDemoRoute = false }: { compone
   }
 
   // While onboarding redirect is pending, render nothing to avoid flash
-  if (user && !user.organizationId && user.role !== 'client' && location !== '/onboarding/pilot') {
+  // Skip this gate on localhost for local development
+  if (!isLocalDev && user && !user.organizationId && user.role !== 'client' && location !== '/onboarding/pilot') {
     return null;
   }
 
@@ -193,6 +199,14 @@ function Router() {
           return <ProtectedRoute component={ProjectMap} />;
         }}
       </Route>
+      <Route path="/project/:id/cockpit">
+        {(params) => {
+          if (params.id === '1') {
+            return <PilotViewCockpit />;
+          }
+          return <ProtectedRoute component={PilotViewCockpit} />;
+        }}
+      </Route>
       <Route path="/project/:id/flight/:flightId">
         {(params) => {
           // Demo project (ID: 1) doesn't require authentication
@@ -248,6 +262,10 @@ function Router() {
       </Route>
       <Route path="/audit-log">
         {() => <ProtectedRoute component={AuditLog} />}
+      </Route>
+
+      <Route path="/admin">
+        {() => <ProtectedRoute component={AdminDashboard} />}
       </Route>
       
       {/* Client management */}

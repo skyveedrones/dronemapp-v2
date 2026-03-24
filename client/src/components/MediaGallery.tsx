@@ -58,7 +58,6 @@ import {
   ZoomOut,
 } from "lucide-react";
 import { useState, useMemo, useEffect, useCallback, useRef, memo, useLayoutEffect } from "react";
-import { VList } from "virtua";
 import { toast } from "sonner";
 import { WatermarkDialog } from "./WatermarkDialog";
 import { GPSEditDialog } from "./GPSEditDialog";
@@ -256,81 +255,6 @@ const MediaCard = memo(function MediaCard({
   prev.item.thumbnailUrl === next.item.thumbnailUrl &&
   prev.canEditMedia === next.canEditMedia
 );
-
-// ── VirtualMediaGrid: VList-based virtual scrolling for 50+ items ─────────────
-// Chunks items into rows and uses VList to only render visible rows.
-// This eliminates browser repaint lag when scrolling large galleries.
-interface VirtualMediaGridProps {
-  items: Media[];
-  selectedIds: Set<number>;
-  gpsMarkerNumbers: Map<number, number>;
-  canEditMedia: boolean;
-  isDemoProject: boolean;
-  onCardClick: (item: Media) => void;
-  onToggleSelection: (id: number, e: React.MouseEvent) => void;
-}
-
-const VirtualMediaGrid = memo(function VirtualMediaGrid({
-  items,
-  selectedIds,
-  gpsMarkerNumbers,
-  canEditMedia,
-  isDemoProject,
-  onCardClick,
-  onToggleSelection,
-}: VirtualMediaGridProps) {
-  // Determine column count from window width (matches Tailwind breakpoints)
-  const getColCount = () => {
-    if (typeof window === "undefined") return 4;
-    if (window.innerWidth >= 1024) return 4;
-    if (window.innerWidth >= 768) return 3;
-    return 2;
-  };
-
-  const [colCount, setColCount] = useState(getColCount);
-
-  useEffect(() => {
-    const handleResize = () => setColCount(getColCount());
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // Chunk items into rows
-  const rows = useMemo(() => {
-    const result: Media[][] = [];
-    for (let i = 0; i < items.length; i += colCount) {
-      result.push(items.slice(i, i + colCount));
-    }
-    return result;
-  }, [items, colCount]);
-
-  return (
-    <VList style={{ height: "70vh" }}>
-      {rows.map((row, rowIdx) => (
-        <div key={rowIdx} className="flex gap-4 mb-4">
-          {row.map((item) => (
-            <div key={`media-${item.id}`} className="flex-1 min-w-0" style={{ aspectRatio: "1", minHeight: "200px", height: "auto" }}>
-              <MediaCard
-                item={item}
-                isSelected={selectedIds.has(item.id)}
-                markerNumber={gpsMarkerNumbers.get(item.id)}
-                canEditMedia={canEditMedia}
-                isDemoProject={isDemoProject}
-                onCardClick={onCardClick}
-                onToggleSelection={onToggleSelection}
-              />
-            </div>
-          ))}
-          {/* Fill empty slots in the last row */}
-          {row.length < colCount &&
-            Array.from({ length: colCount - row.length }).map((_, i) => (
-              <div key={`empty-${i}`} className="flex-1 min-w-0" />
-            ))}
-        </div>
-      ))}
-    </VList>
-  );
-});
 
 export function MediaGallery({ projectId, flightId, canEdit = true, onUploadClick, isDemoProject = false }: MediaGalleryProps) {
   const { user: authUser } = useAuth();
@@ -927,35 +851,21 @@ export function MediaGallery({ projectId, flightId, canEdit = true, onUploadClic
         </p>
       </div>
 
-      {/* Media Grid — VList virtual scrolling for 50+ items, CSS grid for smaller sets */}
-      {sortedMedia.length >= 50 ? (
-        // VList with row-chunking: only renders rows currently visible — eliminates repaint lag
-        // Each "row" contains COLS_PER_ROW MediaCards rendered as a flex row
-        <VirtualMediaGrid
-          items={sortedMedia}
-          selectedIds={selectedIds}
-          gpsMarkerNumbers={gpsMarkerNumbers}
-          canEditMedia={canEditMedia}
-          isDemoProject={isDemoProject}
-          onCardClick={setSelectedMedia}
-          onToggleSelection={toggleSelection}
-        />
-      ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {sortedMedia.map((item) => (
-            <MediaCard
-              key={item.id}
-              item={item}
-              isSelected={selectedIds.has(item.id)}
-              markerNumber={gpsMarkerNumbers.get(item.id)}
-              canEditMedia={canEditMedia}
-              isDemoProject={isDemoProject}
-              onCardClick={setSelectedMedia}
-              onToggleSelection={toggleSelection}
-            />
-          ))}
-        </div>
-      )}
+      {/* Media Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {sortedMedia.map((item) => (
+          <MediaCard
+            key={item.id}
+            item={item}
+            isSelected={selectedIds.has(item.id)}
+            markerNumber={gpsMarkerNumbers.get(item.id)}
+            canEditMedia={canEditMedia}
+            isDemoProject={isDemoProject}
+            onCardClick={setSelectedMedia}
+            onToggleSelection={toggleSelection}
+          />
+        ))}
+      </div>
 
       {/* Media Preview Dialog */}
       <Dialog open={!!selectedMedia} onOpenChange={() => { setSelectedMedia(null); setIsFullscreen(false); handleResetZoom(); }}>

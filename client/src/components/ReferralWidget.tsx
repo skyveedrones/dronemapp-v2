@@ -21,6 +21,15 @@ import { toast } from "sonner";
 
 const TOPO_SVG = `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 86c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm66-3c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-40-39c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm20-27c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zM0 80c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10-10-4.477-10-10zm80 0c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10-10-4.477-10-10zm0-80c0 5.523 4.477 10 10 10s10-4.477 10-10-4.477-10-10-10-10 4.477-10 10z' fill='%2310b981' fill-opacity='0.08' fill-rule='evenodd'/%3E%3C/svg%3E")`;
 
+type EmailApp = "system" | "gmail" | "outlook" | "yahoo";
+
+const EMAIL_APP_OPTIONS: Array<{ value: EmailApp; label: string }> = [
+  { value: "system", label: "Default Email App" },
+  { value: "gmail", label: "Gmail" },
+  { value: "outlook", label: "Outlook" },
+  { value: "yahoo", label: "Yahoo Mail" },
+];
+
 function buildReferralSlug(name: string, id: number): string {
   const first = name.split(" ")[0].toLowerCase().replace(/[^a-z]/g, "");
   return `${first}${id}`;
@@ -75,6 +84,13 @@ export const ReferralWidget = () => {
   const [refereeName, setRefereeName] = useState("");
   const [refereeEmail, setRefereeEmail] = useState("");
   const [generatedEmail, setGeneratedEmail] = useState<{ subject: string; body: string; to: string } | null>(null);
+  const [preferredEmailApp, setPreferredEmailApp] = useState<EmailApp>(() => {
+    if (typeof window === "undefined") return "system";
+    const saved = window.localStorage.getItem("mapit-referral-email-app");
+    return saved === "gmail" || saved === "outlook" || saved === "yahoo" || saved === "system"
+      ? saved
+      : "system";
+  });
 
   const slug = user ? buildReferralSlug(user.name ?? "pilot", user.id) : "pilot";
   const referralLink = `https://mapit.skyveedrones.com/signup?ref=${slug}`;
@@ -137,10 +153,36 @@ export const ReferralWidget = () => {
     setTimeout(() => setCopiedEmail(false), 2000);
   };
 
-  const handleOpenMailto = () => {
+  const getComposeUrl = (app: EmailApp, email: { to: string; subject: string; body: string }): string => {
+    const to = encodeURIComponent(email.to);
+    const subject = encodeURIComponent(email.subject);
+    const body = encodeURIComponent(email.body);
+
+    if (app === "gmail") {
+      return `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${subject}&body=${body}`;
+    }
+
+    if (app === "outlook") {
+      return `https://outlook.live.com/mail/0/deeplink/compose?to=${to}&subject=${subject}&body=${body}`;
+    }
+
+    if (app === "yahoo") {
+      return `https://compose.mail.yahoo.com/?to=${to}&subject=${subject}&body=${body}`;
+    }
+
+    return `mailto:${to}?subject=${subject}&body=${body}`;
+  };
+
+  const handleOpenEmail = () => {
     if (!generatedEmail) return;
-    const mailto = `mailto:${encodeURIComponent(generatedEmail.to)}?subject=${encodeURIComponent(generatedEmail.subject)}&body=${encodeURIComponent(generatedEmail.body)}`;
-    window.open(mailto, "_blank");
+    const composeUrl = getComposeUrl(preferredEmailApp, generatedEmail);
+    window.open(composeUrl, "_blank");
+  };
+
+  const handlePreferredAppChange = (value: string) => {
+    const next = value as EmailApp;
+    setPreferredEmailApp(next);
+    window.localStorage.setItem("mapit-referral-email-app", next);
   };
 
   const handleReset = () => {
@@ -322,6 +364,21 @@ export const ReferralWidget = () => {
                 </div>
 
                 {/* Action Buttons */}
+                <div className="space-y-1">
+                  <label className="block text-[11px] uppercase tracking-wider text-slate-500">Preferred Email App</label>
+                  <select
+                    value={preferredEmailApp}
+                    onChange={(e) => handlePreferredAppChange(e.target.value)}
+                    className="w-full bg-slate-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#10b981]/50 focus:ring-1 focus:ring-[#10b981]/20"
+                  >
+                    {EMAIL_APP_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value} className="bg-slate-900 text-white">
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
                 <div className="flex gap-2">
                   <button
                     onClick={handleCopyEmail}
@@ -340,11 +397,11 @@ export const ReferralWidget = () => {
                     )}
                   </button>
                   <button
-                    onClick={handleOpenMailto}
+                    onClick={handleOpenEmail}
                     className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-[#10b981] hover:bg-[#0da673] text-slate-950 font-bold rounded-xl transition-all text-sm"
                   >
                     <ExternalLink className="w-4 h-4" />
-                    Open in Email App
+                    Open in {EMAIL_APP_OPTIONS.find((opt) => opt.value === preferredEmailApp)?.label ?? "Email App"}
                   </button>
                 </div>
               </motion.div>

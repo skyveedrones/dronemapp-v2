@@ -1,0 +1,29 @@
+{
+  "startedAt": "2026-03-22T20:39:39.025Z",
+  "imported": {
+    "users": 7,
+    "clients": 3,
+    "projects": 10,
+    "flights": 2,
+    "media": 587,
+    "client_users": 4
+  },
+  "skippedClientUsers": 2,
+  "countsBefore": {
+    "users": 8,
+    "clients": 3,
+    "projects": 11,
+    "flights": 2,
+    "media": 587,
+    "client_users": 4
+  },
+  "countsAfter": {
+    "users": 8,
+    "clients": 3,
+    "projects": 11,
+    "flights": 2,
+    "media": 587,
+    "client_users": 4
+  },
+  "finishedAt": "2026-03-22T20:40:24.288Z"
+}

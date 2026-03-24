@@ -1,13 +1,8 @@
 export { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 
-const getOAuthPortalUrl = () =>
-  import.meta.env.VITE_OAUTH_PORTAL_URL ||
-  import.meta.env.VITE_OAUTH_SERVER_URL ||
-  window.location.origin;
-
 // Generate login URL at runtime so redirect URI reflects the current origin.
 export const getLoginUrl = () => {
-  const oauthPortalUrl = getOAuthPortalUrl();
+  const oauthPortalUrl = import.meta.env.VITE_OAUTH_PORTAL_URL;
   const appId = import.meta.env.VITE_APP_ID;
   const redirectUri = `${window.location.origin}/api/oauth/callback`;
   const state = btoa(redirectUri);
@@ -27,7 +22,7 @@ export const getLoginUrl = () => {
  * payload and redirects client-role users to /portal.
  */
 export const getPortalLoginUrl = () => {
-  const oauthPortalUrl = getOAuthPortalUrl();
+  const oauthPortalUrl = import.meta.env.VITE_OAUTH_PORTAL_URL;
   const appId = import.meta.env.VITE_APP_ID;
   const redirectUri = `${window.location.origin}/api/oauth/callback`;
   // Encode dest so the OAuth callback can redirect portal users correctly
@@ -47,7 +42,7 @@ export const getPortalLoginUrl = () => {
  * @param email - Email address to pre-fill in OAuth form (login_hint)
  */
 export const getBrandedLoginUrl = (email?: string) => {
-  const oauthPortalUrl = getOAuthPortalUrl();
+  const oauthPortalUrl = import.meta.env.VITE_OAUTH_PORTAL_URL;
   const appId = import.meta.env.VITE_APP_ID;
   const redirectUri = `${window.location.origin}/api/oauth/callback`;
   // Encode state with dashboard redirect destination

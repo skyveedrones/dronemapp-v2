@@ -18,18 +18,118 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const shouldBypassOAuth = () => {
+    if (import.meta.env.DEV) return true;
+    if (typeof window === "undefined") return false;
+    const host = window.location.hostname.toLowerCase();
+    return host === "localhost" || host === "127.0.0.1" || host === "::1";
+  };
+
+  const submitDevLogin = async () => {
+    const fallbackEmail = "clay@skyveedrones.com";
+    const payload = JSON.stringify({ email: email.trim() || fallbackEmail });
+    const endpoints = ["/api/auth/dev-login", "/api/dev-login"];
+
+    let lastError = "Dev login failed";
+    for (const endpoint of endpoints) {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+      });
+
+      let data: { ok?: boolean; success?: boolean; redirect?: string; error?: string } = {};
+      try {
+        data = await res.json();
+      } catch {
+        // ignore JSON parse failure and use status fallback
+      }
+
+      const success = data.ok === true || data.success === true || res.ok;
+      if (success) {
+        window.location.href = data.redirect ?? "/dashboard";
+        return;
+      }
+
+      lastError = data.error || `Dev login failed (${endpoint})`;
+    }
+
+    throw new Error(lastError);
+  };
+
+  const submitTempBypassLogin = async () => {
+    const payload = JSON.stringify({ email: email.trim(), secret: password });
+    const res = await fetch("/api/auth/temp-login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: payload,
+    });
+
+    let data: { ok?: boolean; success?: boolean; redirect?: string; error?: string } = {};
+    try {
+      data = await res.json();
+    } catch {
+      // ignore JSON parse failure and use status fallback
+    }
+
+    const success = data.ok === true || data.success === true || res.ok;
+    if (!success) {
+      throw new Error(data.error || "Temporary bypass login failed");
+    }
+
+    window.location.href = data.redirect ?? "/dashboard";
+  };
+
   const handleBrandedLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Trigger OAuth redirect with email pre-fill and dashboard redirect
+
+    // In local dev, bypass Manus OAuth and create a session directly.
+    if (shouldBypassOAuth()) {
+      try {
+        await submitDevLogin();
+      } catch (err) {
+        console.error("[DevLogin] Request failed:", err);
+      }
+      return;
+    }
+
+    // Production: Trigger OAuth redirect with email pre-fill and dashboard redirect
     window.location.href = getBrandedLoginUrl(email);
   };
 
-  const handleLogin = (e?: React.FormEvent) => {
+  const handleLogin = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
+    if (shouldBypassOAuth()) {
+      try {
+        await submitDevLogin();
+      } catch (err) {
+        console.error("[DevLogin] Request failed:", err);
+      }
+      return;
+    }
+
+    const tempBypassEnabled = String(import.meta.env.VITE_TEMP_BYPASS_ENABLED || "").toLowerCase() === "true";
+    if (tempBypassEnabled && email.trim() && password) {
+      try {
+        await submitTempBypassLogin();
+      } catch (err) {
+        console.error("[TempBypass] Request failed:", err);
+      }
+      return;
+    }
+
     window.location.href = getLoginUrl();
   };
 
-  const handlePortalLogin = () => {
+  const handlePortalLogin = async () => {
+    if (shouldBypassOAuth()) {
+      try {
+        await submitDevLogin();
+      } catch (err) {
+        console.error("[DevLogin] Request failed:", err);
+      }
+      return;
+    }
     window.location.href = getPortalLoginUrl();
   };
 

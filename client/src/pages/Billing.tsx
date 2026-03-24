@@ -81,8 +81,7 @@ export default function Billing() {
   }
 
   const currentPlan = user.subscriptionTier || "free";
-  const currentPlanData = PLAN_FEATURES[currentPlan as keyof typeof PLAN_FEATURES];
-  const safeCurrentPlanData = currentPlanData ?? PLAN_FEATURES.free;
+  const currentPlanData = PLAN_FEATURES[currentPlan as keyof typeof PLAN_FEATURES] || PLAN_FEATURES.free;
   const billingPeriod = user.billingPeriod || "month";
   const nextBillingDate = user.currentPeriodEnd ? new Date(user.currentPeriodEnd) : null;
 
@@ -164,7 +163,7 @@ export default function Billing() {
               <CardContent className="space-y-6">
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-2xl font-bold">{safeCurrentPlanData.name}</h3>
+                    <h3 className="text-2xl font-bold">{currentPlanData.name}</h3>
                     {currentPlan !== "free" && (
                       <Badge variant="secondary">Active</Badge>
                     )}
@@ -172,7 +171,7 @@ export default function Billing() {
                   <p className="text-sm text-muted-foreground">
                     {currentPlan === "free"
                       ? "Free tier"
-                      : `${safeCurrentPlanData.price}${(safeCurrentPlanData as any).period || ""}`}
+                      : `${currentPlanData.price}${(currentPlanData as any).period || ""}`}
                   </p>
                 </div>
 
@@ -191,7 +190,7 @@ export default function Billing() {
                 <div className="space-y-2">
                   <h4 className="font-semibold text-sm">Included features:</h4>
                   <ul className="space-y-2">
-                    {safeCurrentPlanData.features.map((feature, index) => (
+                    {currentPlanData.features.map((feature, index) => (
                       <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">
                         <span className="text-primary mt-0.5">✓</span>
                         {feature}

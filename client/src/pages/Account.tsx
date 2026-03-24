@@ -36,6 +36,7 @@ import {
   X,
   Camera,
   Loader2,
+  Settings,
 } from "lucide-react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
@@ -199,7 +200,10 @@ export default function Account() {
 
   if (!user) return null;
 
-  const tier = ((user as any).subscriptionTier || "free") as SubscriptionTier;
+  const rawTier = String((user as any).subscriptionTier || "free").toLowerCase();
+  const tier = (["free", "starter", "professional", "business", "enterprise"].includes(rawTier)
+    ? rawTier
+    : "free") as SubscriptionTier;
   const tierInfo = TIER_DISPLAY[tier] || TIER_DISPLAY.free;
   const TierIcon = tierInfo.icon;
   const statusInfo = getStatusBadge((user as any).subscriptionStatus);
@@ -215,7 +219,7 @@ export default function Account() {
   const stripeCustomerId = (user as any).stripeCustomerId;
   const logoUrl = (user as any).logoUrl;
 
-  const limits = PLAN_FEATURES[tier];
+  const limits = PLAN_LIMITS[tier] ?? PLAN_LIMITS.free;
 
   const startEditing = () => {
     setEditName(user.name || "");
@@ -560,11 +564,21 @@ export default function Account() {
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Account Role</p>
-                    <div className="flex items-center gap-2">
-                      <Shield className="h-3.5 w-3.5 text-muted-foreground" />
-                      <Badge variant="outline" className="capitalize text-xs">
-                        {user.role || "user"}
-                      </Badge>
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2">
+                        <Shield className="h-3.5 w-3.5 text-muted-foreground" />
+                        <Badge variant="outline" className="capitalize text-xs">
+                          {user.role || "user"}
+                        </Badge>
+                      </div>
+                      {user.role === 'webmaster' && (
+                        <Link href="/admin">
+                          <Button variant="ghost" size="sm" className="gap-1.5 text-xs h-7 px-2">
+                            <Settings className="h-3.5 w-3.5" />
+                            Admin Page
+                          </Button>
+                        </Link>
+                      )}
                     </div>
                   </div>
                 </div>

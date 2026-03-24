@@ -6,6 +6,7 @@ import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
+import { registerDevAuthRoutes } from "./devAuth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
@@ -71,6 +72,9 @@ async function startServer() {
     next(err);
   });
   
+  // Dev-only login bypass (/app-auth page + /api/dev-login) — no-op in production
+  registerDevAuthRoutes(app);
+
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
   
@@ -164,17 +168,22 @@ async function startServer() {
   }
 
   const preferredPort = parseInt(process.env.PORT || "3000");
-  const port = await findAvailablePort(preferredPort);
+  let port = preferredPort;
 
-  if (port !== preferredPort) {
-    console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
+  // In production hosts like Railway, the platform-provided PORT must be used as-is.
+  // Only auto-scan for free ports during local development.
+  if (process.env.NODE_ENV !== 'production') {
+    port = await findAvailablePort(preferredPort);
+    if (port !== preferredPort) {
+      console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
+    }
   }
 
   // Set global request timeout to 120 seconds for PDF generation
   server.setTimeout(120000);
   
   server.listen(port, '0.0.0.0', () => {
-    console.log(`[Server] Running on http://0.0.0.0:${port}/`);
+    console.log(`[Server] Running on http://localhost:${port}/`);
   });
   
   // Graceful shutdown

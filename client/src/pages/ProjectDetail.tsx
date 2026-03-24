@@ -19,7 +19,6 @@ import { NewFlightDialog } from "@/components/NewFlightDialog";
 import { ReportGeneratorDialog } from "@/components/ReportGeneratorDialog";
 import { ShareProjectDialog } from "@/components/ShareProjectDialog";
 import { WarrantyReminderDialog } from "@/components/WarrantyReminderDialog";
-import { ProjectLogoDialog } from "@/components/ProjectLogoDialog";
 import { DemoBanner } from "@/components/DemoBanner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -43,7 +42,6 @@ import {
   FileText,
   FolderOpen,
   Image,
-  ImagePlus,
   Layers,
   LogOut,
   Map,
@@ -51,7 +49,6 @@ import {
   Pencil,
   Plane,
   Plus,
-  Share2,
   Shield,
   Trash2,
   Upload,
@@ -136,7 +133,6 @@ export default function ProjectDetail() {
   const [newFlightDialogOpen, setNewFlightDialogOpen] = useState(false);
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
   const [warrantyReminderDialogOpen, setWarrantyReminderDialogOpen] = useState(false);
-  const [logoDialogOpen, setLogoDialogOpen] = useState(false);
   const [sampleReportDialogOpen, setSampleReportDialogOpen] = useState(false);
 
 
@@ -433,10 +429,6 @@ export default function ProjectDetail() {
                             Share Project
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem onClick={() => setLogoDialogOpen(true)}>
-                            <ImagePlus className="h-4 w-4 mr-2 text-pink-500" />
-                            {project.logoUrl ? 'Change Logo' : 'Upload Logo'}
-                          </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => setEditDialogOpen(true)}>
                             <Pencil className="h-4 w-4 mr-2" />
                             Edit Project
@@ -622,6 +614,7 @@ export default function ProjectDetail() {
         project={project}
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
+        enableLogoManagement={isOwner && !isDemoProject}
       />
 
       <DeleteProjectDialog
@@ -673,13 +666,6 @@ export default function ProjectDetail() {
         warrantyEndDate={project?.warrantyEndDate ? new Date(project.warrantyEndDate) : null}
         open={warrantyReminderDialogOpen}
         onOpenChange={setWarrantyReminderDialogOpen}
-      />
-
-      <ProjectLogoDialog
-        projectId={projectId}
-        currentLogoUrl={project?.logoUrl}
-        open={logoDialogOpen}
-        onOpenChange={setLogoDialogOpen}
       />
 
       {/* Sample Report Dialog - Shows the PDF sample report */}

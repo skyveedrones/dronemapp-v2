@@ -54,6 +54,10 @@ export async function cloudinaryUpload(
     folder: string;
     filename?: string;
     resourceType?: 'image' | 'video' | 'auto' | 'raw';
+    chunkSizeBytes?: number;
+    quality?: 'original' | 'auto' | string;
+    metadata?: boolean;
+    exif?: boolean;
     transformation?: object;
   },
   retries: number = 5
@@ -62,29 +66,66 @@ export async function cloudinaryUpload(
   
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      // WEBMASTER FIX: Use upload_stream for chunked uploading (bypasses 100MB limit)
-      // This ensures large drone videos preserve GPS and telemetry metadata.
+      // Use Cloudinary upload_large_stream so files 333MB+ upload in transport chunks.
+      const chunkSize = options.chunkSizeBytes ?? (6 * 1024 * 1024);
+      const uploadOptions: any = {
+        folder: options.folder,
+        public_id: options.filename,
+        resource_type: options.resourceType || 'auto',
+        chunk_size: chunkSize,
+        quality: options.quality || 'original',
+        metadata: options.metadata ?? true,
+        exif: options.exif ?? true,
+        image_metadata: true,
+        media_metadata: true,
+      };
+
       const result = await new Promise((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-          {
-            resource_type: "video",      // Essential for drone footage
-            chunk_size: 20000000,        // 20MB chunks to prevent the 50% stall
-            folder: options.folder,
-            public_id: options.filename,
-            image_metadata: true,        // Extracts GPS/EXIF data for Mapit
-            raw_convert: "aspose",       // Indexes telemetry data
-          },
+        const uploader = cloudinary.uploader as any;
+        const uploadLargeStream = uploader.upload_large_stream || uploader.upload_stream;
+        const uploadStream = uploadLargeStream(
+          uploadOptions,
           (error: UploadApiErrorResponse | undefined, result: UploadApiResponse | undefined) => {
-            if (error) reject(error);
-            else resolve(result);
-          }
+            if (error) {
+              reject(error);
+              return;
+            }
+            resolve(result);
+          },
         );
         
         // Feed the file buffer into the stream
         uploadStream.end(fileBuffer);
       });
 
-      return result as CloudinaryUploadResult;
+      const typed = result as UploadApiResponse;
+      const thumbnailUrl = typed.resource_type === 'video'
+        ? cloudinary.url(typed.public_id, {
+            resource_type: 'video',
+            width: 300,
+            height: 200,
+            crop: 'fill',
+            format: 'jpg',
+          })
+        : cloudinary.url(typed.public_id, {
+            width: 300,
+            height: 200,
+            crop: 'fill',
+            quality: 'auto',
+            fetch_format: 'auto',
+          });
+
+      return {
+        url: typed.url,
+        secureUrl: typed.secure_url,
+        publicId: typed.public_id,
+        thumbnailUrl,
+        width: typed.width,
+        height: typed.height,
+        format: typed.format,
+        resourceType: typed.resource_type as 'image' | 'video' | 'raw',
+        bytes: typed.bytes,
+      };
     } catch (error: any) {
       lastError = error;
       console.error(`[Cloudinary] Upload attempt ${attempt}/${retries} failed:`, error.message);

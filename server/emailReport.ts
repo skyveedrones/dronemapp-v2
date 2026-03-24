@@ -10,9 +10,15 @@ import { nanoid } from 'nanoid';
 
 let resend: Resend | null = null;
 
-function getResend(): Resend {
+function getResend(): Resend | null {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.warn('[Email Report] RESEND_API_KEY not configured, skipping email send');
+    return null;
+  }
+
   if (!resend) {
-    resend = new Resend(process.env.RESEND_API_KEY);
+    resend = new Resend(apiKey);
   }
   return resend;
 }
@@ -314,7 +320,12 @@ export async function sendReportEmail(params: EmailReportParams): Promise<{ succ
     
     // Send email
     // Using verified domain: skyveedrones.com
-    const { error } = await getResend().emails.send({
+    const client = getResend();
+    if (!client) {
+      return { success: false, error: 'RESEND_API_KEY not configured' };
+    }
+
+    const { error } = await client.emails.send({
       from: 'Mapit Reports <noreply@skyveedrones.com>',
       to: [to],
       subject: `Mapit Report - ${projectName}`,

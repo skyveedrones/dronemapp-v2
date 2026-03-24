@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { getOwnerClients, getAllClients } from './db';
+import { getOwnerClients } from './db';
 
 /**
  * Vitest tests for webmaster role access control
@@ -7,13 +7,12 @@ import { getOwnerClients, getAllClients } from './db';
 
 describe('Webmaster Role Access Control', () => {
   describe('getOwnerClients function', () => {
-    it('should return all clients when userRole is "webmaster"', async () => {
-      // Mock data - simulating webmaster access
+    it('should allow global client visibility when userRole is "webmaster"', async () => {
+      // Webmaster users should be able to see all clients for support workflows
       const webmasterRole = 'webmaster';
       const userId = 999; // Arbitrary user ID
       
-      // When userRole is webmaster, the function should bypass ownerId filter
-      // This is verified by the function logic: if (userRole === 'webmaster') return all clients
+      // When userRole is webmaster, client visibility is global rather than owner-scoped
       expect(webmasterRole).toBe('webmaster');
     });
 
@@ -27,11 +26,11 @@ describe('Webmaster Role Access Control', () => {
     });
 
     it('should return only owner clients when userRole is admin', async () => {
-      // Mock data - simulating admin access (should be restricted like regular users)
+      // Mock data - simulating admin access
       const adminRole = 'admin';
       const userId = 456;
       
-      // Admin role should not have global access (only webmaster does)
+      // Admin role sees only their owned clients
       expect(adminRole).not.toBe('webmaster');
     });
   });

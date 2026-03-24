@@ -1,0 +1,29 @@
+{
+  "status": "FOUND",
+  "user": {
+    "id": 1,
+    "openId": "dev-owner-local",
+    "name": "Clay B",
+    "email": "clay@skyveedrones.com",
+    "role": "admin",
+    "subscriptionTier": "enterprise",
+    "subscriptionStatus": "active",
+    "billingPeriod": "annual",
+    "currentPeriodStart": null,
+    "currentPeriodEnd": null,
+    "cancelAtPeriodEnd": "no",
+    "stripeCustomerId": null,
+    "stripeSubscriptionId": null
+  },
+  "tier_check": {
+    "raw_value": "enterprise",
+    "normalized": "enterprise",
+    "is_valid": true
+  },
+  "account_page_will_see": {
+    "name": "Clay B",
+    "subscriptionTier": "enterprise",
+    "subscriptionStatus": "active",
+    "billingPeriod": "annual"
+  }
+}

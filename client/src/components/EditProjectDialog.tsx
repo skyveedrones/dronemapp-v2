@@ -22,9 +22,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { ProjectLogoDialog } from "@/components/ProjectLogoDialog";
 import { trpc } from "@/lib/trpc";
 import { Project } from "../../../drizzle/schema";
-import { Calendar, Loader2, MapPin, Plane, Shield, User } from "lucide-react";
+import { Calendar, ImagePlus, Loader2, MapPin, Plane, Shield, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -33,6 +34,7 @@ interface EditProjectDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess?: () => void;
+  enableLogoManagement?: boolean;
 }
 
 export function EditProjectDialog({
@@ -40,6 +42,7 @@ export function EditProjectDialog({
   open,
   onOpenChange,
   onSuccess,
+  enableLogoManagement = false,
 }: EditProjectDialogProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -52,6 +55,7 @@ export function EditProjectDialog({
   const [dronePilot, setDronePilot] = useState("");
   const [faaLicenseNumber, setFaaLicenseNumber] = useState("");
   const [laancAuthNumber, setLaancAuthNumber] = useState("");
+  const [logoDialogOpen, setLogoDialogOpen] = useState(false);
 
   const utils = trpc.useUtils();
 
@@ -152,9 +156,10 @@ export function EditProjectDialog({
   if (!project) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px] bg-card border-border max-h-[90vh] overflow-y-auto">
-        <form onSubmit={handleSubmit}>
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-[500px] bg-card border-border max-h-[90vh] overflow-y-auto">
+          <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle
               className="text-xl"
@@ -258,6 +263,46 @@ export function EditProjectDialog({
                 className="bg-background border-border"
               />
             </div>
+
+            {/* Project Branding */}
+            {enableLogoManagement && (
+              <div className="border-t border-border pt-4 mt-2">
+                <div className="flex items-center gap-2 mb-3">
+                  <ImagePlus className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium">Project Branding</span>
+                </div>
+                <p className="text-xs text-muted-foreground mb-3">
+                  Upload or change the project logo used in project headers and reports.
+                </p>
+                <div className="flex items-center justify-between rounded-md border border-border bg-background p-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    {project.logoUrl ? (
+                      <img
+                        src={`${project.logoUrl}?t=${project.updatedAt}`}
+                        alt="Project Logo"
+                        className="h-10 w-10 object-contain rounded border border-border bg-card p-1"
+                      />
+                    ) : (
+                      <div className="h-10 w-10 rounded border border-dashed border-border flex items-center justify-center text-muted-foreground">
+                        <ImagePlus className="h-4 w-4" />
+                      </div>
+                    )}
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium truncate">{project.logoUrl ? "Logo uploaded" : "No logo uploaded"}</p>
+                      <p className="text-xs text-muted-foreground truncate">Manage logo image file</p>
+                    </div>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="border-border"
+                    onClick={() => setLogoDialogOpen(true)}
+                  >
+                    {project.logoUrl ? "Change Logo" : "Upload Logo"}
+                  </Button>
+                </div>
+              </div>
+            )}
 
             {/* Drone Pilot Section */}
             <div className="border-t border-border pt-4 mt-2">
@@ -374,8 +419,18 @@ export function EditProjectDialog({
               )}
             </Button>
           </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {enableLogoManagement && project && (
+        <ProjectLogoDialog
+          projectId={project.id}
+          currentLogoUrl={project.logoUrl}
+          open={logoDialogOpen}
+          onOpenChange={setLogoDialogOpen}
+        />
+      )}
+    </>
   );
 }
