@@ -9,8 +9,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "start": "vite preview --port ${PORT:-8080} --host 0.0.0.0",
-    "preview": "vite preview --port ${PORT:-8080} --host 0.0.0.0"
+    "start": "vite preview --port ${PORT:-3000} --host 0.0.0.0",
+    "preview": "vite preview --port ${PORT:-3000} --host 0.0.0.0"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.693.0",
