@@ -74,9 +74,6 @@ async function startServer() {
   
   // Dev-only login bypass (/app-auth page + /api/dev-login) — no-op in production
   registerDevAuthRoutes(app);
-
-  // OAuth callback under /api/oauth/callback
-  registerOAuthRoutes(app);
   
   // Extract user from session cookie before rate limiting so tier is correct
   app.use('/api/trpc', async (req: Request, _res: Response, next: NextFunction) => {
@@ -160,12 +157,16 @@ async function startServer() {
     })
   );
   
+
   // development mode uses Vite, production mode uses static files
   if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);
   } else {
     serveStatic(app);
   }
+
+  // OAuth callback under /api/oauth/callback (registered AFTER Vite to avoid 404)
+  registerOAuthRoutes(app);
 
   const preferredPort = parseInt(process.env.PORT || "3000");
   let port = preferredPort;
