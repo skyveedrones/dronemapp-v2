@@ -1,0 +1,2 @@
+[build]
+cmd = "pnpm install --no-frozen-lockfile --force && pnpm run build"
