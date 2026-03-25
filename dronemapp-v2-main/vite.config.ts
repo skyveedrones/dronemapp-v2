@@ -247,4 +247,10 @@ export default defineConfig({
       deny: ["**/.*"],
     },
   },
+  preview: {
+    allowedHosts: [
+      'dronemapp-v2-production.up.railway.app',
+      'mapit.skyveedrones.com'
+    ]
+  }
 });
