@@ -1,6 +1,3 @@
-  "engines": {
-    "node": "22.12.x"
-  },
 {
   "name": "dronemapp-v2",
   "version": "2.1.0",
