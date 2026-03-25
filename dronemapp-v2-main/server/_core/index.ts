@@ -35,8 +35,14 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 }
 
 async function startServer() {
+  console.log('[Startup] Server process started');
   const app = express();
   const server = createServer(app);
+
+  // Health check endpoint
+  app.get('/healthz', (req, res) => {
+    res.send('OK');
+  });
 
   // Trust proxy for accurate rate limiting behind reverse proxy (Manus deployment)
   app.set('trust proxy', 1);
@@ -160,7 +166,7 @@ async function startServer() {
   server.setTimeout(120000);
   
   server.listen(port, '0.0.0.0', () => {
-    console.log(`[Server] Running on http://0.0.0.0:${port}/`);
+    console.log(`[Server] Listening on http://0.0.0.0:${port}/`);
   });
   
   // Graceful shutdown
