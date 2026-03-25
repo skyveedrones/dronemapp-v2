@@ -182,8 +182,10 @@ async function startServer() {
   // Set global request timeout to 120 seconds for PDF generation
   server.setTimeout(120000);
   
-  server.listen(port, '0.0.0.0', () => {
-    console.log(`[Server] Running on http://localhost:${port}/`);
+  // Use Railway/production compatible port and host
+  const railwayPort = process.env.PORT || 8080;
+  server.listen(railwayPort, '0.0.0.0', () => {
+    console.log(`Server is officially live and listening on port ${railwayPort}`);
   });
   
   // Graceful shutdown
