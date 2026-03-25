@@ -248,6 +248,7 @@ export default defineConfig({
       ".manusvm.computer",
       "localhost",
       "127.0.0.1",
+      "mapit.skyveedrones.com",
     ],
     fs: {
       strict: true,
