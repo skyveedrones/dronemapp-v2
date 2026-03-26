@@ -3838,9 +3838,9 @@ export const appRouter = router({
           const fs = await import('fs/promises');
           const path = await import('path');
           const possiblePaths = [
-            path.join(process.cwd(), 'client', 'public', 'images', 'mapit-logo-header.png'),
-            path.join(process.cwd(), 'public', 'images', 'mapit-logo-header.png'),
-            path.join(process.cwd(), 'dist', 'public', 'images', 'mapit-logo-header.png'),
+            path.join(safeCwd, 'client', 'public', 'images', 'mapit-logo-header.png'),
+            path.join(safeCwd, 'public', 'images', 'mapit-logo-header.png'),
+            path.join(safeCwd, 'dist', 'public', 'images', 'mapit-logo-header.png'),
           ];
           let logoBuffer: Buffer | null = null;
           for (const logoPath of possiblePaths) {
