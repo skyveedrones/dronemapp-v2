@@ -7,9 +7,12 @@
     "node": ">=20.19.0 <21 || >=22.12.0"
   },
   "scripts": {
-    "build": "vite build",
+    "dev": "vite",
+    "build:client": "vite build",
+    "build:server": "tsc -p tsconfig.server.json",
+    "build": "pnpm run build:client && pnpm run build:server",
     "prestart": "pnpm run build",
-    "start": "node dist/index.js || node dist/server/index.js"
+    "start": "node dist/server/index.js || node dist/server/_core/index.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.693.0",
