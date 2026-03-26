@@ -24,9 +24,10 @@ async function startServer() {
   });
 
   const port = process.env.PORT || 3000;
+  const host = "0.0.0.0"; // Add this line
 
-  server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}/`);
+  server.listen(port, host, () => {
+    console.log(`🚀 Server is officially live at http://${host}:${port}`);
   });
 }
 
