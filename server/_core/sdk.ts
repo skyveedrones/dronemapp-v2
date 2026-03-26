@@ -267,127 +267,26 @@ class SDKServer {
     } as GetUserInfoWithJwtResponse;
   }
 
+  // BYPASS OAUTH: Accept email from query or body for login, skip all session/cookie logic
   async authenticateRequest(req: Request): Promise<User> {
-    // Regular authentication flow
-    const cookieHeader = req.headers.cookie;
-    console.log("[Auth] Cookie header received:", cookieHeader ? "YES (length: " + cookieHeader.length + ")" : "NO");
-    
-    const cookies = this.parseCookies(cookieHeader);
-    const sessionCookie = cookies.get(COOKIE_NAME);
-    console.log("[Auth] Session cookie found:", sessionCookie ? "YES" : "NO");
-    
-    const session = await this.verifySession(sessionCookie);
-    console.log("[Auth] Session verification:", session ? "SUCCESS (openId: " + session.openId + ")" : "FAILED");
-
-    if (!session) {
-      throw ForbiddenError("Invalid session cookie");
-    }
-
-    const sessionUserId = session.openId;
-    const signedInAt = new Date();
-    let user: User | undefined;
-
-    try {
-      user = await db.getUserByOpenId(sessionUserId);
-    } catch (error) {
-      console.error("[Auth] Failed to query user by openId:", error);
-    }
-
-    // If user not in DB, sync from OAuth server automatically
-    if (!user) {
-      try {
-        const userInfo = await this.getUserInfoWithJwt(sessionCookie ?? "");
-          await db.upsertUser({
-            openId: userInfo.openId,
-            name: userInfo.name || null,
-            email: userInfo.email ?? null,
-            loginMethod: userInfo.loginMethod ?? userInfo.platform ?? null,
-            lastSignedIn: signedInAt,
-          });
-          user = await db.getUserByOpenId(userInfo.openId);
-      } catch (error) {
-        console.error("[Auth] Failed to sync user from OAuth:", error);
-
-        // Fallback: if session JWT is valid, attempt local user hydration
-        // without calling OAuth endpoints (useful in local/dev auth bypass).
-        try {
-          await db.upsertUser({
-            openId: session.openId,
-            name: session.name || null,
-            loginMethod: "session",
-            lastSignedIn: signedInAt,
-          });
-          user = await db.getUserByOpenId(session.openId);
-          if (user) {
-            console.log("[Auth] Recovered user from session payload:", session.openId);
-          }
-        } catch (fallbackError) {
-          console.error("[Auth] Session fallback user sync failed:", fallbackError);
-        }
+    const email = (req.body && req.body.email) || (req.query && req.query.email);
+    if (email) {
+      let user = await db.getUserByEmail(email);
+      if (!user) {
+        await db.upsertUser({
+          openId: email,
+          email,
+          name: email,
+          loginMethod: "email",
+        });
+        user = await db.getUserByEmail(email);
       }
-    }
-
-    if (!user) {
-      if (process.env.NODE_ENV === "development") {
-        console.warn("[Auth] Using development fallback user due to missing DB user record");
-        const isDevOwner = session.openId === "dev-owner-local";
-        return {
-          id: 0,
-          openId: session.openId,
-          name: session.name,
-          email: null,
-          loginMethod: "session",
-          role: isDevOwner ? "webmaster" : "admin",
-          logoUrl: null,
-          logoKey: null,
-          watermarkUrl: null,
-          watermarkKey: null,
-          defaultDronePilot: null,
-          defaultFaaLicenseNumber: null,
-          defaultLaancAuthNumber: null,
-          organization: null,
-          companyName: null,
-          department: null,
-          phone: null,
-          passwordHash: null,
-          stripeCustomerId: null,
-          stripeSubscriptionId: null,
-          subscriptionTier: isDevOwner ? "enterprise" : "free",
-          subscriptionStatus: isDevOwner ? "active" : null,
-          billingPeriod: isDevOwner ? "annual" : null,
-          currentPeriodStart: null,
-          currentPeriodEnd: null,
-          cancelAtPeriodEnd: "no",
-          organizationId: null,
-          orgRole: null,
-          createdAt: signedInAt,
-          updatedAt: signedInAt,
-          lastSignedIn: signedInAt,
-        };
+      if (!user) {
+        throw ForbiddenError("Failed to create or fetch user");
       }
-
-      throw ForbiddenError("User not found");
+      return user;
     }
-
-    try {
-      await db.upsertUser({
-        openId: user.openId,
-        lastSignedIn: signedInAt,
-      });
-    } catch (error) {
-      console.error("[Auth] Failed to update lastSignedIn:", error);
-    }
-
-    // Some local DB snapshots still restrict users.role to enum('user','admin').
-    // Keep DB-compatible values, but expose dev-owner-local as webmaster in dev.
-    if (process.env.NODE_ENV === "development" && user.openId === "dev-owner-local") {
-      return {
-        ...user,
-        role: "webmaster",
-      };
-    }
-
-    return user;
+    throw ForbiddenError("Authentication required: email missing");
   }
 }
 
