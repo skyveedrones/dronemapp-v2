@@ -4077,10 +4077,11 @@ export const appRouter = router({
         try {
           const fs = await import('fs/promises');
           const path = await import('path');
+          const safeCwd2 = process.cwd() || ".";
           const possiblePaths = [
-            path.join(process.cwd(), 'client', 'public', 'images', 'mapit-logo-header.png'),
-            path.join(process.cwd(), 'public', 'images', 'mapit-logo-header.png'),
-            path.join(process.cwd(), 'dist', 'public', 'images', 'mapit-logo-header.png'),
+            path.join(safeCwd2, 'client', 'public', 'images', 'mapit-logo-header.png'),
+            path.join(safeCwd2, 'public', 'images', 'mapit-logo-header.png'),
+            path.join(safeCwd2, 'dist', 'public', 'images', 'mapit-logo-header.png'),
           ];
           let logoBuffer: Buffer | null = null;
           for (const logoPath of possiblePaths) {
