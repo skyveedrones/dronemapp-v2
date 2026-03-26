@@ -39,7 +39,7 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
   throw new Error(`No available port found starting from ${startPort}`);
 }
 
-async function startServer() {
+export async function startServer() {
   const app = express();
   const server = createServer(app);
 
@@ -184,7 +184,7 @@ async function startServer() {
   server.setTimeout(120000);
   
   // Use Railway/production compatible port and host
-  const railwayPort = process.env.PORT || 8080;
+  const railwayPort = Number(process.env.PORT) || 8080;
   server.listen(railwayPort, '0.0.0.0', () => {
     console.log(`Server is officially live and listening on port ${railwayPort}`);
   });
