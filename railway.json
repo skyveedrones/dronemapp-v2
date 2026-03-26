@@ -6,7 +6,7 @@
     "buildCommand": "pnpm run build"
   },
   "deploy": {
-    "startCommand": "pnpm start",
+    "startCommand": "pnpm exec tsx server/auth-only.ts",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }
