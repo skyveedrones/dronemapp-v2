@@ -1,27 +1,29 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "Node16",
-    "moduleResolution": "node16",
-    "baseUrl": ".",
+    "module": "CommonJS",
+    "moduleResolution": "node",
     "outDir": "./dist",
     "rootDir": "./",
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": ["shared/*"]
+    },
     "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "allowJs": true,
-    "paths": {
-      "@shared/*": ["shared/*"]
-    }
-  },
-    "include": ["server/**/*.ts", "shared/**/*.ts"],
-  "exclude": ["node_modules", "client", "**/*.test.ts"]
-    "exclude": [
-      "node_modules", 
-      "client", 
-      "**/*.test.ts", 
-      "**/*.spec.ts", 
-      "vite.config.ts"
-    ],
     "noEmitOnError": false
+  },
+  "include": [
+    "server/**/*.ts", 
+    "shared/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules", 
+    "client", 
+    "**/*.test.ts", 
+    "**/*.spec.ts", 
+    "vite.config.ts"
+  ]
 }
