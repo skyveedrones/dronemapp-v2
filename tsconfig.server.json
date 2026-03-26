@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",
+    "module": "Node16",
     "moduleResolution": "node16",
+    "baseUrl": ".",
     "outDir": "./dist",
     "rootDir": "./",
     "strict": false,
@@ -13,6 +14,14 @@
       "@shared/*": ["shared/*"]
     }
   },
-  "include": ["server/**/*.ts"],
+    "include": ["server/**/*.ts", "shared/**/*.ts"],
   "exclude": ["node_modules", "client", "**/*.test.ts"]
+    "exclude": [
+      "node_modules", 
+      "client", 
+      "**/*.test.ts", 
+      "**/*.spec.ts", 
+      "vite.config.ts"
+    ],
+    "noEmitOnError": false
 }
