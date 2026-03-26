@@ -6,7 +6,6 @@ import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
-import { registerDevAuthRoutes } from "./devAuth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
@@ -19,6 +18,11 @@ import { initializeRedisClient, createPerUserRateLimiter, createUploadRateLimite
 import { sdk } from "./sdk";
 import emailRouter from "../routes/email";
 import overlayUploadRouter from "../routes/overlay-upload";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -43,23 +47,13 @@ export async function startServer() {
   const app = express();
   const server = createServer(app);
 
-  // Trust proxy for accurate rate limiting behind reverse proxy (Manus deployment)
+  // Trust proxy for accurate rate limiting behind reverse proxy
   app.set('trust proxy', 1);
-  
-  // Initialize version system
   initializeVersion();
-
-  // Stripe webhook endpoint - must be registered BEFORE express.json() for raw body
   app.post("/api/stripe/webhook", express.raw({ type: 'application/json' }), handleStripeWebhook);
-
-  // Overlay upload route — uses multer for multipart parsing (registered before express.json for safety)
   app.use("/api", overlayUploadRouter);
-  
-  // Configure body parser with larger size limit for file uploads (1.5GB for base64 encoded 1GB files)
   app.use(express.json({ limit: "1500mb" }));
   app.use(express.urlencoded({ limit: "1500mb", extended: true }));
-  
-  // Custom error handler for payload too large errors - return JSON instead of HTML
   app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     if (err.type === 'entity.too.large') {
       return res.status(413).json({
@@ -71,11 +65,6 @@ export async function startServer() {
     }
     next(err);
   });
-  
-  // Dev-only login bypass (/app-auth page + /api/dev-login) — no-op in production
-  registerDevAuthRoutes(app);
-  
-  // Extract user from session cookie before rate limiting so tier is correct
   app.use('/api/trpc', async (req: Request, _res: Response, next: NextFunction) => {
     try {
       const user = await sdk.authenticateRequest(req);
@@ -85,56 +74,32 @@ export async function startServer() {
     }
     next();
   });
-
-  // Apply rate limiting middleware to tRPC routes
   app.use('/api/trpc', createPerUserRateLimiter());
   app.use('/api/trpc', createConcurrentRequestsLimiter());
-  
-  // TUS video upload routes (before body parser to handle raw streams)
   app.use("/api", tusRouter);
   app.use("/api/upload", createUploadRateLimiter());
-  
-  // Direct-to-S3 photo upload routes
   app.use("/api", photoUploadRouter);
-  
-  // Image proxy routes for bypassing CloudFront 403 errors
   app.use("/api", imageProxyRouter);
-  
-  // Email/lead capture routes
   app.use("/api", emailRouter);
-
-  // Version endpoint - returns current deployed version
   app.get("/api/version", (req, res) => {
     res.json(getVersionJson());
   });
-
-  // PDF generation endpoint
   app.post("/api/generate-pdf", async (req, res) => {
     try {
       const { html, filename } = req.body;
-      
       if (!html) {
         return res.status(400).json({ error: 'HTML content is required' });
       }
-      
-      // Set socket timeout to 120 seconds for map rendering
       req.socket.setTimeout(120000);
-      
       const { generatePdfFromHtml } = await import('../pdfGenerator');
       const pdfBuffer = await generatePdfFromHtml(html);
-      
-      // Ensure pdfBuffer is a Buffer
       const buffer = Buffer.isBuffer(pdfBuffer) ? pdfBuffer : Buffer.from(pdfBuffer);
-      
-      // Set proper headers for PDF download
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Length', buffer.length);
       res.setHeader('Content-Disposition', `attachment; filename="${filename || 'report.pdf'}"`);
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', '0');
-      
-      // Send buffer as binary data
       res.end(buffer, 'binary');
       console.log('[PDF] PDF sent successfully, size:', buffer.length, 'bytes');
     } catch (error: any) {
@@ -144,8 +109,6 @@ export async function startServer() {
       }
     }
   });
-  
-  // tRPC API
   app.use(
     "/api/trpc",
     createExpressMiddleware({
@@ -156,40 +119,23 @@ export async function startServer() {
       },
     })
   );
-  
-
-  // development mode uses Vite, production mode uses static files
   if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);
   } else {
-    serveStatic(app);
+    // Use absolute path for static files
+    const publicPath = path.resolve(__dirname, '../../dist/public');
+    serveStatic(app, publicPath);
   }
-
-  // OAuth callback under /api/oauth/callback (registered AFTER Vite to avoid 404)
   registerOAuthRoutes(app);
-
-  const preferredPort = parseInt(process.env.PORT || "3000");
-  let port = preferredPort;
-
-  // In production hosts like Railway, the platform-provided PORT must be used as-is.
-  // Only auto-scan for free ports during local development.
-  if (process.env.NODE_ENV !== 'production') {
-    port = await findAvailablePort(preferredPort);
-    if (port !== preferredPort) {
-      console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
-    }
+  const preferredPort = Number(process.env.PORT) || 8080;
+  const port = await findAvailablePort(preferredPort);
+  if (port !== preferredPort) {
+    console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
   }
-
-  // Set global request timeout to 120 seconds for PDF generation
   server.setTimeout(120000);
-  
-  // Use Railway/production compatible port and host
-  const railwayPort = Number(process.env.PORT) || 8080;
-  server.listen(railwayPort, '0.0.0.0', () => {
-    console.log(`Server is officially live and listening on port ${railwayPort}`);
+  server.listen(port, '0.0.0.0', () => {
+    console.log(`[Server] Running on http://0.0.0.0:${port}/`);
   });
-  
-  // Graceful shutdown
   process.on('SIGTERM', () => {
     console.log('[Server] SIGTERM received, closing connections...');
     server.close(() => {
@@ -197,18 +143,18 @@ export async function startServer() {
       process.exit(0);
     });
   });
-  
-  // Global error handlers
   process.on('uncaughtException', (error) => {
     console.error('[Server] Uncaught Exception:', error);
   });
-  
   process.on('unhandledRejection', (reason, promise) => {
     console.error('[Server] Unhandled Rejection at:', promise, 'reason:', reason);
   });
+  return { app, server };
 }
 
-startServer().catch((error) => {
-  console.error('[Server] Fatal startup error:', error);
-  process.exit(1);
-});
+if (import.meta.url === `file://${process.argv[1]}`) {
+  startServer().catch((error) => {
+    console.error('[Server] Fatal startup error:', error);
+    process.exit(1);
+  });
+}
