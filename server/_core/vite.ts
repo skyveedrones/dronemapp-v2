@@ -3,6 +3,7 @@ import fs from "fs";
 import { type Server } from "http";
 import { nanoid } from "nanoid";
 import path from "path";
+import { fileURLToPath } from "url";
 import { createServer as createViteServer } from "vite";
 import viteConfig from "../../vite.config";
 
@@ -48,20 +49,22 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const distPath =
-    process.env.NODE_ENV === "development"
-      ? path.resolve(import.meta.dirname, "../..", "dist", "public")
-      : path.resolve(import.meta.dirname, "public");
-  if (!fs.existsSync(distPath)) {
+  // ESM __dirname shim
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+
+  // Allow PUBLIC_DIR override, fallback to default
+  const publicDir = process.env.PUBLIC_DIR || path.resolve(__dirname, "../../dist/public");
+  if (!fs.existsSync(publicDir)) {
     console.error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`
+      `Could not find the build directory: ${publicDir}, make sure to build the client first`
     );
   }
 
-  app.use(express.static(distPath));
+  app.use(express.static(publicDir));
 
   // fall through to index.html if the file doesn't exist
   app.use("*", (_req, res) => {
-    res.sendFile(path.resolve(distPath, "index.html"));
+    res.sendFile(path.resolve(publicDir, "index.html"));
   });
 }
