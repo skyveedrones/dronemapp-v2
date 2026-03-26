@@ -1,6 +1,14 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+function logEnvVar(name: string, value: any) {
+  if (value === undefined || value === "") {
+    console.error(`\n\u001b[31mERROR: MISSING VARIABLE: ${name}\u001b[0m`);
+  } else {
+    console.log(`[ENV] ${name}:`, value);
+  }
+}
+
 export const ENV = {
   appId: process.env.VITE_APP_ID ?? "",
   cookieSecret: process.env.JWT_SECRET ?? "",
@@ -21,3 +29,20 @@ export const ENV = {
     .filter(Boolean),
   tempBypassExpiresAt: process.env.TEMP_BYPASS_EXPIRES_AT ?? "",
 };
+
+// Log all ENV variables and warn if missing
+logEnvVar("VITE_APP_ID", ENV.appId);
+logEnvVar("JWT_SECRET", ENV.cookieSecret);
+logEnvVar("DATABASE_URL", ENV.databaseUrl);
+logEnvVar("OAUTH_SERVER_URL", ENV.oAuthServerUrl);
+logEnvVar("OWNER_OPEN_ID", ENV.ownerOpenId);
+logEnvVar("NODE_ENV", process.env.NODE_ENV);
+logEnvVar("BUILT_IN_FORGE_API_URL", ENV.forgeApiUrl);
+logEnvVar("BUILT_IN_FORGE_API_KEY", ENV.forgeApiKey);
+logEnvVar("CLOUDINARY_CLOUD_NAME", ENV.cloudinaryCloudName);
+logEnvVar("CLOUDINARY_API_KEY", ENV.cloudinaryApiKey);
+logEnvVar("CLOUDINARY_API_SECRET", ENV.cloudinaryApiSecret);
+logEnvVar("TEMP_BYPASS_ENABLED", process.env.TEMP_BYPASS_ENABLED);
+logEnvVar("ADMIN_SECRET", ENV.adminSecret);
+logEnvVar("ALLOWED_ADMIN_EMAILS", process.env.ALLOWED_ADMIN_EMAILS);
+logEnvVar("TEMP_BYPASS_EXPIRES_AT", ENV.tempBypassExpiresAt);

@@ -255,4 +255,7 @@ export default defineConfig({
       deny: ["**/.*"],
     },
   },
+  preview: {
+    allowedHosts: true,
+  },
 });
