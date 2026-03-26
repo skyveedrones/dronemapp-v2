@@ -5,7 +5,7 @@ import express, { Request, Response, NextFunction } from "express";
 import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
-import { registerOAuthRoutes } from "./oauth";
+// import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
@@ -65,13 +65,9 @@ export async function startServer() {
     }
     next(err);
   });
-  app.use('/api/trpc', async (req: Request, _res: Response, next: NextFunction) => {
-    try {
-      const user = await sdk.authenticateRequest(req);
-      (req as any).user = user;
-    } catch {
-      // Not authenticated — will fall back to free tier limits
-    }
+  // BYPASS OAUTH: Allow all requests as unauthenticated
+  app.use('/api/trpc', (_req: Request, _res: Response, next: NextFunction) => {
+    // No authentication, all users are treated as guests
     next();
   });
   app.use('/api/trpc', createPerUserRateLimiter());
@@ -126,7 +122,7 @@ export async function startServer() {
     const publicPath = path.resolve(__dirname, '../../dist/public');
     serveStatic(app, publicPath);
   }
-  registerOAuthRoutes(app);
+  // registerOAuthRoutes(app); // BYPASS OAUTH
   const preferredPort = Number(process.env.PORT) || 8080;
   const port = await findAvailablePort(preferredPort);
   if (port !== preferredPort) {
