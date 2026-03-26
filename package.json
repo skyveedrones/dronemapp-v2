@@ -10,7 +10,8 @@
     "dev": "vite",
     "build": "vite build",
     "start": "node dist/index.js",
-    "preview": "vite preview --port ${PORT:-3000} --host 0.0.0.0"
+    "preview": "vite preview --port ${PORT:-3000} --host 0.0.0.0",
+    "prerun": "vite build"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.693.0",
