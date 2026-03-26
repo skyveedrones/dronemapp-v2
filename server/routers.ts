@@ -4,7 +4,7 @@ import { and, desc, eq, inArray, isNull, or, sql } from "drizzle-orm";
 import ExifParser from "exif-parser";
 import { nanoid } from "nanoid";
 import { z } from "zod";
-import { PLAN_LIMITS } from "../shared/planLimits";
+import { PLAN_FEATURES } from "../shared/planLimits";
 import { getDb } from "./db";
 import { media, clientUsers, clients, clientInvitations, clientProjectAssignments, projectOverlays, users, projectCollaborators, projects, referrals, organizations } from "../drizzle/schema";
 import { getSessionCookieOptions } from "./_core/cookies";
@@ -1384,7 +1384,7 @@ export const appRouter = router({
         if (projectCount >= limits.maxProjects) {
           throw new TRPCError({
             code: "FORBIDDEN",
-            message: `You have reached the project limit of ${limits.maxProjects} for your ${userTier} plan. Upgrade to create more projects.`,
+            message: `You have reached the project limit of ${limits.maxProjects} for your ${String(userTier)} plan. Upgrade to create more projects.`,
           });
         }
         
@@ -1803,7 +1803,7 @@ export const appRouter = router({
           url,
           mimeType: input.mimeType,
           fileSize: input.fileSize,
-          mediaType: getMediaType(input.mimeType),
+          mediaType: getMediaType(input.mimeType) as 'photo' | 'video',
           latitude: input.latitude != null ? String(input.latitude) : null,
           longitude: input.longitude != null ? String(input.longitude) : null,
           altitude: input.altitude != null ? String(input.altitude) : null,
@@ -5862,7 +5862,7 @@ export const appRouter = router({
           `);
 
           const insertedRows = await db.execute(sql`SELECT LAST_INSERT_ID() AS id`);
-          const insertedId = (insertedRows as Array<{ id: number | string }>)[0]?.id;
+          const insertedId = (insertedRows as unknown as Array<{ id: number | string }>)[0]?.id;
           orgId = insertedId ? Number(insertedId) : undefined;
         }
 

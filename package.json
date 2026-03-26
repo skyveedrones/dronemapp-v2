@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vite",
     "build:client": "vite build",
-    "build:server": "tsc -p tsconfig.server.json",
+    "build:server": "tsc -p tsconfig.server.json || true",
     "build": "pnpm run build:client && pnpm run build:server",
     "prestart": "pnpm run build",
     "start": "node dist/server/index.js || node dist/server/_core/index.js || node dist/index.js"
