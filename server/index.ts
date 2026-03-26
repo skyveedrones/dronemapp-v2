@@ -10,21 +10,21 @@ async function startServer() {
   const app = express();
   const server = createServer(app);
 
-  // Serve static files from dist/public in production
-  const staticPath =
-    process.env.NODE_ENV === "production"
-      ? path.resolve(__dirname, "public")
-      : path.resolve(__dirname, "..", "dist", "public");
+  // Register API routes here if needed
+  // Example: app.use('/api', apiRouter);
 
-  app.use(express.static(staticPath));
+  // Serve static files from absolute path to dist/public
+  const publicPath = path.resolve(__dirname, "../dist/public");
+  app.use(express.static(publicPath));
 
-  // Handle client-side routing - serve index.html for all routes
-  app.get("*", (_req, res) => {
-    res.sendFile(path.join(staticPath, "index.html"));
+  // SPA fallback: serve index.html for all non-API routes
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api")) return next();
+    res.sendFile(path.join(publicPath, "index.html"));
   });
 
   const port = process.env.PORT || 3000;
-  const host = "0.0.0.0"; // Add this line
+  const host = "0.0.0.0";
 
   server.listen(port, host, () => {
     console.log(`🚀 Server is officially live at http://${host}:${port}`);
