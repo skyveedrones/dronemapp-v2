@@ -27,41 +27,22 @@ app.use("/api/upload", photoUploadRouter);
 app.use("/api", imageProxyRouter);
 app.use("/api", emailRouter);
 
+// Update static asset mapping to dist/public
+app.use(express.static(path.join(process.cwd(), 'dist/public')));
+
 const clientDistPath = path.resolve(process.cwd(), 'dist/public'); 
 
 // Single /app-auth route with intelligent fallback paths
 app.get('/app-auth', (req, res) => {
-  const root = process.cwd();
-  
-  // Try paths in order of likelihood on Railway
-  // Railway's build output is typically at dist/public, not client/dist/public
-  const pathsToTry = [
-    path.join(root, 'dist/public/index.html'),           // Production build output (Railway standard)
-    path.join(root, 'client/dist/public/index.html'),    // Local dev structure
-    path.join(root, '../client/dist/public/index.html'), // Parent directory
-    path.join(root, '../dist/public/index.html'),        // Alternative parent
-  ];
+  // Look for index.html in dist/public
+  const indexPath = path.join(process.cwd(), 'dist/public/index.html');
 
-  const validPath = pathsToTry.find(p => fs.existsSync(p));
-
-  if (validPath) {
-    console.log(`[Auth] Successfully serving from: ${validPath}`);
-    return res.sendFile(validPath);
+  if (fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
   }
 
-  // Diagnostic response with all attempted paths
-  console.error(`[Auth 404] File not found. Attempted paths:`);
-  pathsToTry.forEach((p, idx) => {
-    console.error(`  ${idx + 1}. ${p} - ${fs.existsSync(p) ? 'EXISTS' : 'NOT FOUND'}`);
-  });
-  
-  res.status(404).json({ 
-    error: "Auth page not found",
-    message: "index.html could not be located in any expected directory",
-    attempted_paths: pathsToTry,
-    current_working_directory: root,
-    hint: "Ensure 'npm run build' completed successfully and dist/public/index.html exists"
-  });
+  // Diagnostic if it still fails
+  res.status(404).send(`File not found at: ${indexPath}`);
 });
 
 // Serve all static files (CSS, JS, Images)
