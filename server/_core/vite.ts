@@ -50,7 +50,7 @@ export async function setupVite(app: Express, server: Server) {
 
 export function serveStatic(app: Express) {
   // Always use process.cwd() for static paths in production
-  const publicDir = path.resolve(process.cwd(), "client/dist/public");
+  const publicDir = path.resolve(process.cwd(), "dist/public");
   if (!fs.existsSync(publicDir)) {
     console.error(
       `Could not find the build directory: ${publicDir}, make sure to build the client first`

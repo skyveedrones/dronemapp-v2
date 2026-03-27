@@ -119,7 +119,7 @@ export async function startServer() {
     await setupVite(app, server);
   } else {
     // Use process.cwd() for static files
-    const staticPath = path.resolve(process.cwd(), 'client/dist/public');
+    const staticPath = path.resolve(process.cwd(), 'dist/public');
     console.log('[Server] process.cwd():', process.cwd());
     console.log('[Server] Static files served from:', staticPath);
     serveStatic(app);
