@@ -50,13 +50,14 @@ export async function setupVite(app: Express, server: Server) {
 
 export function serveStatic(app: Express) {
   // Always use process.cwd() for static paths in production
-  const publicDir = process.env.PUBLIC_DIR || path.join(process.cwd(), "dist/public");
+  const publicDir = path.resolve(process.cwd(), "dist/public");
   if (!fs.existsSync(publicDir)) {
     console.error(
       `Could not find the build directory: ${publicDir}, make sure to build the client first`
     );
   }
 
+  // Only serve from dist/public, never from just 'public'
   app.use(express.static(publicDir));
 
   // SPA fallback: serve index.html for all unmatched routes
