@@ -27,7 +27,7 @@ app.use("/api/upload", photoUploadRouter);
 app.use("/api", imageProxyRouter);
 app.use("/api", emailRouter);
 
-const clientDistPath = path.resolve(process.cwd(), 'client/dist/public');
+const clientDistPath = path.resolve(process.cwd(), 'dist/public');
 
 // Single /app-auth route with intelligent fallback paths
 app.get('/app-auth', (req, res) => {
