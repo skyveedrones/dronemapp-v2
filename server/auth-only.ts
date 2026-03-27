@@ -26,13 +26,19 @@ app.use("/api/upload", photoUploadRouter);
 app.use("/api", imageProxyRouter);
 app.use("/api", emailRouter);
 
-// 1. Tell the server where the public folder is
-app.use(express.static(path.resolve(process.cwd(), 'client/dist/public')));
+const clientDistPath = path.resolve(process.cwd(), 'client/dist/public');
 
-// Add the missing OAuth Portal route
+// 1. Serve all static files (CSS, JS, Images)
+app.use(express.static(clientDistPath));
+
+// 2. Catch-all for /app-auth or any other sub-routes
 app.get('/app-auth', (req, res) => {
-  // This serves your main index.html which contains the login UI logic
-  res.sendFile(path.resolve(process.cwd(), 'client/dist/public/index.html'));
+  res.sendFile(path.join(clientDistPath, 'index.html'), (err) => {
+    if (err) {
+      console.error("Error sending index.html:", err);
+      res.status(500).send("Login page missing on server. Check build logs.");
+    }
+  });
 });
 
 // Health check
