@@ -121,6 +121,14 @@ export async function startServer() {
     // Use absolute path for static files
     const publicPath = path.resolve(__dirname, '../../dist/public');
     serveStatic(app, publicPath);
+    // Catch-all route for SPA: serve index.html for unmatched GET requests
+    app.get('*', (req, res, next) => {
+      if (req.method !== 'GET' || req.path.startsWith('/api')) return next();
+      const indexPath = path.resolve(__dirname, '../../dist/public/index.html');
+      res.sendFile(indexPath, err => {
+        if (err) next(err);
+      });
+    });
   }
   // registerOAuthRoutes(app); // BYPASS OAUTH
   const preferredPort = Number(process.env.PORT) || 8080;
