@@ -29,43 +29,45 @@ app.use("/api", emailRouter);
 
 const clientDistPath = path.resolve(process.cwd(), 'client/dist/public');
 
-// --- PLACE THIS AT THE VERY TOP OF YOUR ROUTES ---
-app.get('/app-auth', (req, res) => {
-  // This matches the exact successful path from your Railway logs
-  const indexPath = path.join(process.cwd(), 'client/dist/public/index.html');
-
-  if (fs.existsSync(indexPath)) {
-    return res.sendFile(indexPath);
-  }
-
-  // Diagnostic if it still fails
-  res.status(404).send(`File not found at: ${indexPath}`);
-});
-
-// 1. Serve all static files (CSS, JS, Images)
-app.use(express.static(clientDistPath));
-
-// 2. Catch-all for /app-auth or any other sub-routes
+// Single /app-auth route with intelligent fallback paths
 app.get('/app-auth', (req, res) => {
   const root = process.cwd();
+  
+  // Try paths in order of likelihood on Railway
+  // Railway's build output is typically at dist/public, not client/dist/public
   const pathsToTry = [
-    path.join(root, 'client/dist/public/index.html'),
-    path.join(root, '../client/dist/public/index.html'),
-    path.join(root, 'dist/public/index.html')
+    path.join(root, 'dist/public/index.html'),           // Production build output (Railway standard)
+    path.join(root, 'client/dist/public/index.html'),    // Local dev structure
+    path.join(root, '../client/dist/public/index.html'), // Parent directory
+    path.join(root, '../dist/public/index.html'),        // Alternative parent
   ];
 
   const validPath = pathsToTry.find(p => fs.existsSync(p));
 
   if (validPath) {
-    console.log(`[Success] Serving auth from: ${validPath}`);
+    console.log(`[Auth] Successfully serving from: ${validPath}`);
     return res.sendFile(validPath);
   }
 
-  console.error(`[Error] 404 - Could not find index.html. Tried: ${pathsToTry.join(', ')}`);
-  res.status(404).send("Auth page not found. Check server logs for tried paths.");
+  // Diagnostic response with all attempted paths
+  console.error(`[Auth 404] File not found. Attempted paths:`);
+  pathsToTry.forEach((p, idx) => {
+    console.error(`  ${idx + 1}. ${p} - ${fs.existsSync(p) ? 'EXISTS' : 'NOT FOUND'}`);
+  });
+  
+  res.status(404).json({ 
+    error: "Auth page not found",
+    message: "index.html could not be located in any expected directory",
+    attempted_paths: pathsToTry,
+    current_working_directory: root,
+    hint: "Ensure 'npm run build' completed successfully and dist/public/index.html exists"
+  });
 });
 
-// Health check
+// Serve all static files (CSS, JS, Images)
+app.use(express.static(clientDistPath));
+
+// Health check endpoint
 app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
 
 const port = Number(process.env.PORT) || 8080;
