@@ -10,6 +10,7 @@ import { tusRouter } from "./tusUploadRoute";
 import photoUploadRouter from "./photoUploadRoute";
 import { imageProxyRouter } from "./imageProxy";
 import { handleStripeWebhook } from "./stripe-webhook";
+import path from 'path';
 
 const app = express();
 
@@ -24,6 +25,12 @@ app.use("/api", tusRouter);
 app.use("/api/upload", photoUploadRouter);
 app.use("/api", imageProxyRouter);
 app.use("/api", emailRouter);
+
+// Add the missing OAuth Portal route
+app.get('/app-auth', (req, res) => {
+  // This serves your main index.html which contains the login UI logic
+  res.sendFile(path.resolve(process.cwd(), 'client/dist/public/index.html'));
+});
 
 // Health check
 app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
