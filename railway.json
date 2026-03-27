@@ -9,7 +9,7 @@
   "deploy": {
     "runtime": "V2",
     "numReplicas": 1,
-    "startCommand": "pnpm exec tsx server/auth-only.ts",
+    "startCommand": "pnpm start",
     "sleepApplication": false,
     "useLegacyStacker": false,
     "ipv6GreensEnabled": false,
