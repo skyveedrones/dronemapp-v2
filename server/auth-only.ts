@@ -11,6 +11,7 @@ import photoUploadRouter from "./photoUploadRoute";
 import { imageProxyRouter } from "./imageProxy";
 import { handleStripeWebhook } from "./stripe-webhook";
 import path from 'path';
+import fs from 'fs';
 
 const app = express();
 
@@ -33,9 +34,22 @@ app.use(express.static(clientDistPath));
 
 // 2. Catch-all for /app-auth or any other sub-routes
 app.get('/app-auth', (req, res) => {
-  // We use a relative path from the /app root based on the log scan
-  const absolutePath = path.join(process.cwd(), 'client/dist/public/index.html');
-  res.sendFile(absolutePath);
+  const root = process.cwd();
+  const pathsToTry = [
+    path.join(root, 'client/dist/public/index.html'),
+    path.join(root, '../client/dist/public/index.html'),
+    path.join(root, 'dist/public/index.html')
+  ];
+
+  const validPath = pathsToTry.find(p => fs.existsSync(p));
+
+  if (validPath) {
+    console.log(`[Success] Serving auth from: ${validPath}`);
+    return res.sendFile(validPath);
+  }
+
+  console.error(`[Error] 404 - Could not find index.html. Tried: ${pathsToTry.join(', ')}`);
+  res.status(404).send("Auth page not found. Check server logs for tried paths.");
 });
 
 // Health check
