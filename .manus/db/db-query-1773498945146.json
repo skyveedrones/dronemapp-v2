@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS project_overlays (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  projectId INT NOT NULL,\n  fileUrl VARCHAR(255) NOT NULL,\n  opacity INT DEFAULT 50,\n  coordinates JSON,\n  isActive BOOLEAN DEFAULT true,\n  label VARCHAR(255),\n  version_number INT DEFAULT 1,\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  FOREIGN KEY (projectId) REFERENCES projects(id)\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute CREATE TABLE IF NOT EXISTS project_overlays (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  projectId INT NOT NULL,\n  fileUrl VARCHAR(255) NOT NULL,\n  opacity INT DEFAULT 50,\n  coordinates JSON,\n  isActive BOOLEAN DEFAULT true,\n  label VARCHAR(255),\n  version_number INT DEFAULT 1,\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  FOREIGN KEY (projectId) REFERENCES projects(id)\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 153
-}

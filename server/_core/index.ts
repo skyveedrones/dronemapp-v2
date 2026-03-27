@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: ".env" });
 
 import express, { Request, Response, NextFunction } from "express";
+import { clerkMiddleware, getAuth } from "@clerk/express";
 import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
@@ -44,8 +45,56 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 }
 
 export async function startServer() {
+
   const app = express();
   const server = createServer(app);
+
+  // Clerk middleware (must be before protected routes)
+  app.use(clerkMiddleware());
+  // Clerk Auth Callback Route
+  app.get("/api/auth/callback", async (req: Request, res: Response) => {
+    try {
+      const auth = getAuth(req);
+      const email = auth?.sessionClaims?.email;
+      if (!email) {
+        return res.status(401).json({ error: "No email found in Clerk session." });
+      }
+      // Use Drizzle to query users table for role and client_id, and update lastSignedIn
+      const dbModule = await import("../db");
+      const { getDb, users } = dbModule;
+      const db = await getDb();
+      if (!db) {
+        return res.status(500).json({ error: "Database unavailable" });
+      }
+      // Use Drizzle ORM query
+      const [user] = await db
+        .select({ role: users.role, client_id: users.organizationId })
+        .from(users)
+        .where(eq(users.email, email))
+        .limit(1);
+
+      if (!user) {
+        return res.redirect("/unauthorized");
+      }
+
+      // Update lastSignedIn
+      await db
+        .update(users)
+        .set({ lastSignedIn: new Date() })
+        .where(eq(users.email, email));
+
+      if (user.role === "admin") {
+        return res.redirect("/admin");
+      } else if (user.role === "client") {
+        return res.redirect("/portal");
+      } else {
+        return res.redirect("/unauthorized");
+      }
+    } catch (err) {
+      console.error("[Clerk Auth Callback Error]", err);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  });
 
   // Trust proxy for accurate rate limiting behind reverse proxy
   app.set('trust proxy', 1);

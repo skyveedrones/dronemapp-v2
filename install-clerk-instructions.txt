@@ -1,0 +1,37 @@
+# Clerk Integration Steps (Backend)
+
+1. Install Clerk packages:
+   pnpm add @clerk/clerk-sdk-node @clerk/express
+
+2. Add Clerk middleware to your Express app in server/_core/index.ts:
+   - Import ClerkExpressWithAuth from '@clerk/express'.
+   - Add ClerkExpressWithAuth() as middleware before your protected routes.
+
+3. Create an /api/auth/callback route:
+   - Use Clerk's session to get the user's email.
+   - Look up the user in your database (users table) by email or Clerk user ID.
+   - Determine the user's role (admin, client, etc.).
+   - Redirect to /admin or /portal based on role.
+
+4. Ensure your .env has Clerk keys:
+   CLERK_PUBLISHABLE_KEY=...
+   CLERK_SECRET_KEY=...
+
+5. Test the flow: login, callback, role-based redirect.
+
+# Clerk Integration Steps (Frontend)
+
+1. Install Clerk frontend SDK:
+   pnpm add @clerk/clerk-react
+
+2. Wrap your app with <ClerkProvider> in your main entry file.
+
+3. Use Clerk's <SignIn />, <SignUp />, and hooks for authentication UI and session management.
+
+4. Protect routes using Clerk's hooks (useUser, useAuth).
+
+5. Test the full login and redirect flow.
+
+---
+
+You can copy/paste these steps or let me automate each part for you. Ready to proceed with backend automation?
