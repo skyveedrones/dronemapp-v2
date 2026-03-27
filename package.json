@@ -8,9 +8,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "build:client": "vite build",
+    "build:client": "vite build --outDir dist/public",
     "build:server": "tsc -p tsconfig.server.json || true",
-    "build": "pnpm run build:client && pnpm run build:server",
+    "build": "node scripts/generate-version.mjs && node scripts/ensure-version.mjs && vite build --outDir dist/public && esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
     "prestart": "pnpm run build",
     "start": "tsx server/index.ts"
   },
