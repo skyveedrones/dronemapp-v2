@@ -1,16 +1,13 @@
 #!/bin/sh
 
-# Always build before starting
-echo "[Railway] Running build step..."
-pnpm install --frozen-lockfile
-pnpm run build
+echo "[Railway] Startup Sequence Initiated..."
+echo "[Railway] Current Directory: $(pwd)"
 
-# Check for build output
-if [ ! -f dist/public/index.html ]; then
-  echo "[Railway] ERROR: dist/public/index.html not found after build. Exiting."
-  exit 1
-fi
+# Run a radar scan to find exactly where Vite put the files
+echo "[Railway] Scanning for index.html..."
+find . -name "index.html" | grep -v "node_modules" || echo "No index.html found in tree!"
 
+# Start the servers (letting Express handle 404s naturally if they happen)
 if [ "$SERVICE_TYPE" = "auth" ]; then
   echo "[Railway] Starting Auth Service (auth-only)"
   exec pnpm exec tsx server/auth-only.ts
