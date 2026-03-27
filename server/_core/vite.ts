@@ -61,6 +61,6 @@ export function serveStatic(app: Express) {
 
   // SPA fallback: serve index.html for all unmatched routes
   app.use("*", (_req, res) => {
-    res.sendFile(path.join(publicDir, "index.html"));
+    res.sendFile(path.resolve(publicDir, "index.html"));
   });
 }
