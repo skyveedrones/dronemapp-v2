@@ -26,6 +26,9 @@ app.use("/api/upload", photoUploadRouter);
 app.use("/api", imageProxyRouter);
 app.use("/api", emailRouter);
 
+// 1. Tell the server where the public folder is
+app.use(express.static(path.resolve(process.cwd(), 'client/dist/public')));
+
 // Add the missing OAuth Portal route
 app.get('/app-auth', (req, res) => {
   // This serves your main index.html which contains the login UI logic
