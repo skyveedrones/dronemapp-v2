@@ -29,6 +29,36 @@ app.use("/api", emailRouter);
 
 const clientDistPath = path.resolve(process.cwd(), 'client/dist/public');
 
+// --- PLACE THIS AT THE VERY TOP OF YOUR ROUTES ---
+app.get('/app-auth', (req, res) => {
+  // 1. Try to find the file using the CLIENT_DIST variable you have in Railway
+  const clientDist = process.env.CLIENT_DIST || path.join(process.cwd(), 'client/dist/public');
+  const indexPath = path.join(clientDist, 'index.html');
+
+  console.log(`Checking for index at: ${indexPath}`);
+
+  if (fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
+  }
+
+  // 2. If that fails, try the absolute path from your previous logs
+  const fallbackPath = '/app/client/dist/public/index.html';
+  if (fs.existsSync(fallbackPath)) {
+    return res.sendFile(fallbackPath);
+  }
+
+  // 3. Last resort: Send the diagnostic info so we can see it in the browser
+  res.status(404).send(`
+    <h2>Path Diagnostic</h2>
+    <ul>
+      <li><b>CWD:</b> ${process.cwd()}</li>
+      <li><b>CLIENT_DIST Env:</b> ${process.env.CLIENT_DIST}</li>
+      <li><b>Checked Path 1:</b> ${indexPath}</li>
+      <li><b>Checked Path 2:</b> ${fallbackPath}</li>
+    </ul>
+  `);
+});
+
 // 1. Serve all static files (CSS, JS, Images)
 app.use(express.static(clientDistPath));
 
