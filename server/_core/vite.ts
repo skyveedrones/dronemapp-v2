@@ -49,12 +49,8 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  // ESM __dirname shim
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-
-  // Allow PUBLIC_DIR override, fallback to default
-  const publicDir = process.env.PUBLIC_DIR || path.resolve(__dirname, "../../dist/public");
+  // Always use process.cwd() for static paths in production
+  const publicDir = process.env.PUBLIC_DIR || path.join(process.cwd(), "dist/public");
   if (!fs.existsSync(publicDir)) {
     console.error(
       `Could not find the build directory: ${publicDir}, make sure to build the client first`
@@ -63,8 +59,8 @@ export function serveStatic(app: Express) {
 
   app.use(express.static(publicDir));
 
-  // fall through to index.html if the file doesn't exist
+  // SPA fallback: serve index.html for all unmatched routes
   app.use("*", (_req, res) => {
-    res.sendFile(path.resolve(publicDir, "index.html"));
+    res.sendFile(path.join(publicDir, "index.html"));
   });
 }

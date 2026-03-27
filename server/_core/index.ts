@@ -118,17 +118,8 @@ export async function startServer() {
   if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);
   } else {
-    // Use absolute path for static files
-    const publicPath = path.resolve(__dirname, '../../dist/public');
-    serveStatic(app, publicPath);
-    // Catch-all route for SPA: serve index.html for unmatched GET requests
-    app.get('*', (req, res, next) => {
-      if (req.method !== 'GET' || req.path.startsWith('/api')) return next();
-      const indexPath = path.resolve(__dirname, '../../dist/public/index.html');
-      res.sendFile(indexPath, err => {
-        if (err) next(err);
-      });
-    });
+    // Use process.cwd() for static files
+    serveStatic(app);
   }
   // registerOAuthRoutes(app); // BYPASS OAUTH
   const preferredPort = Number(process.env.PORT) || 8080;
