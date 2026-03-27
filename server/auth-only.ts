@@ -33,12 +33,9 @@ app.use(express.static(clientDistPath));
 
 // 2. Catch-all for /app-auth or any other sub-routes
 app.get('/app-auth', (req, res) => {
-  res.sendFile(path.join(clientDistPath, 'index.html'), (err) => {
-    if (err) {
-      console.error("Error sending index.html:", err);
-      res.status(500).send("Login page missing on server. Check build logs.");
-    }
-  });
+  // We use a relative path from the /app root based on the log scan
+  const absolutePath = path.join(process.cwd(), 'client/dist/public/index.html');
+  res.sendFile(absolutePath);
 });
 
 // Health check
