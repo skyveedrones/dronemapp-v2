@@ -1,8 +1,11 @@
 [phases.setup]
-nixPkgs = ["nodejs", "pnpm"]
-
-[phases.install]
-cmds = ["pnpm install --no-frozen-lockfile --force"]
+  nixPkgs = ["nodejs", "python3"] # Python is often needed for node-gyp/build tools
 
 [phases.build]
-cmds = ["pnpm run build"]
+  cmds = [
+    "npm install",
+    "node scripts/generate-version.mjs && node scripts/ensure-version.mjs && vite build --outDir dist/public && esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist"
+  ]
+
+[start]
+  cmd = "node dist/server/auth-only.js"
