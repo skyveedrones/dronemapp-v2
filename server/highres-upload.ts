@@ -27,7 +27,7 @@ export async function uploadHighResolutionMedia(
     });
 
     // Determine resource type based on media type
-    const resourceType = mediaType === "video" ? "video" : "image";
+    const resourceType = mediaType === "video" ? "video" : "photo";
 
     // Upload with minimal compression to preserve quality
     const uploadOptions: any = {
@@ -60,7 +60,7 @@ export async function uploadHighResolutionMedia(
     } else {
       // If it's a buffer, convert to base64
       const base64 = file.toString("base64");
-      const dataUrl = `data:${mediaType === "video" ? "video/mp4" : "image/jpeg"};base64,${base64}`;
+      const dataUrl = `data:${mediaType === "video" ? "video/mp4" : "photo/jpeg"};base64,${base64}`;
       uploadResult = await cloudinaryV2.uploader.upload(dataUrl, uploadOptions);
     }
 

@@ -72,7 +72,7 @@ async function pdfToPngViaPdftoppm(pdfBuffer: Buffer): Promise<Buffer> {
 // ── Pure-JS fallback: pdf-to-png-converter (no native deps) ───────────────
 async function pdfToPngViaJs(pdfBuffer: Buffer): Promise<Buffer> {
   const { pdfToPng: convert } = await import("pdf-to-png-converter");
-  const arrayBuffer = file.buffer.buffer.slice(file.buffer.byteOffset, file.buffer.byteOffset + file.buffer.byteLength);
+  const arrayBuffer = (file.buffer as any).buffer;
   const pages = await convert(arrayBuffer, {
     viewportScale: 2.0,
     pagesToProcess: [1],
