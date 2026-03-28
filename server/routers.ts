@@ -141,7 +141,7 @@ const updateProjectSchema = z.object({
   laancAuthNumber: z.string().max(100).nullable().optional(),
 });
 
-// Helper function to extract EXIF GPS data from image buffer
+// Helper function to extract EXIF GPS data from photo buffer
 async function extractExifData(buffer: Buffer): Promise<{
   latitude: number | null;
   longitude: number | null;
@@ -1215,7 +1215,7 @@ export const appRouter = router({
         let thumbnailUrl: string | null = null;
 
         const isVideo = input.mimeType.startsWith("video/");
-        const isPhoto = input.mimeType.startsWith("image/");
+        const isPhoto = input.mimeType.startsWith("photo/");
 
         // Upload to S3
         fileKey = `projects/${input.projectId}/media/${uniqueId}-${input.filename}`;
@@ -1227,11 +1227,11 @@ export const appRouter = router({
           try {
             const thumbBuffer = await generateThumbnail(combinedBuffer, 250);
             const thumbKey = `projects/${input.projectId}/thumbnails/${uniqueId}-thumb.jpg`;
-            const thumbResult = await storagePut(thumbKey, thumbBuffer, "image/jpeg");
+            const thumbResult = await storagePut(thumbKey, thumbBuffer, "photo/jpeg");
             thumbnailUrl = thumbResult.url;
           } catch (error) {
             console.error("Failed to generate thumbnail:", error);
-            thumbnailUrl = url; // Fall back to original image
+            thumbnailUrl = url; // Fall back to original photo
           }
         }
 
@@ -1239,7 +1239,7 @@ export const appRouter = router({
         if (input.thumbnailData && isVideo) {
           const thumbnailBuffer = Buffer.from(input.thumbnailData, "base64");
           const thumbKey = `projects/${input.projectId}/thumbnails/${uniqueId}-thumb.jpg`;
-          const thumbResult = await storagePut(thumbKey, thumbnailBuffer, "image/jpeg");
+          const thumbResult = await storagePut(thumbKey, thumbnailBuffer, "photo/jpeg");
           thumbnailUrl = thumbResult.url;
         }
 
@@ -1327,7 +1327,7 @@ export const appRouter = router({
           cameraModel: null as string | null,
         };
 
-        if (input.mimeType.startsWith("image/")) {
+        if (input.mimeType.startsWith("photo/")) {
           exifData = await extractExifData(buffer);
         }
 
@@ -1341,7 +1341,7 @@ export const appRouter = router({
         let thumbnailUrl: string | null = null;
 
         const isVideo = input.mimeType.startsWith("video/");
-        const isPhoto = input.mimeType.startsWith("image/");
+        const isPhoto = input.mimeType.startsWith("photo/");
 
         fileKey = `projects/${input.projectId}/media/${uniqueId}-${input.filename}`;
         const result = await storagePut(fileKey, buffer, input.mimeType);
@@ -1352,11 +1352,11 @@ export const appRouter = router({
           try {
             const thumbBuffer = await generateThumbnail(buffer, 250);
             const thumbKey = `projects/${input.projectId}/thumbnails/${uniqueId}-thumb.jpg`;
-            const thumbResult = await storagePut(thumbKey, thumbBuffer, "image/jpeg");
+            const thumbResult = await storagePut(thumbKey, thumbBuffer, "photo/jpeg");
             thumbnailUrl = thumbResult.url;
           } catch (error) {
             console.error("Failed to generate thumbnail:", error);
-            thumbnailUrl = url; // Fall back to original image
+            thumbnailUrl = url; // Fall back to original photo
           }
         }
 
@@ -1364,7 +1364,7 @@ export const appRouter = router({
         if (input.thumbnailData && isVideo) {
           const thumbnailBuffer = Buffer.from(input.thumbnailData, "base64");
           const thumbKey = `projects/${input.projectId}/thumbnails/${uniqueId}-thumb.jpg`;
-          const thumbResult = await storagePut(thumbKey, thumbnailBuffer, "image/jpeg");
+          const thumbResult = await storagePut(thumbKey, thumbnailBuffer, "photo/jpeg");
           thumbnailUrl = thumbResult.url;
         }
 
@@ -1490,7 +1490,7 @@ export const appRouter = router({
         };
 
         // If client didn't provide GPS data, try to extract EXIF data from S3
-        if (!input.latitude && !input.longitude && input.mimeType.startsWith("image/")) {
+        if (!input.latitude && !input.longitude && input.mimeType.startsWith("photo/")) {
           console.log(`[Photo Upload] No client-side telemetry provided, attempting server-side EXIF extraction`);
           try {
             const response = await fetch(fileUrl);
@@ -1516,14 +1516,14 @@ export const appRouter = router({
 
         // Generate thumbnail for images
         let thumbnailUrl: string | null = null;
-        if (input.mimeType.startsWith("image/")) {
+        if (input.mimeType.startsWith("photo/")) {
           try {
             const response = await fetch(fileUrl);
             const arrayBuffer = await response.arrayBuffer();
             const buffer = Buffer.from(arrayBuffer);
             const thumbBuffer = await generateThumbnail(buffer, 250);
             const thumbKey = `projects/${input.projectId}/thumbnails/${nanoid(12)}-thumb.jpg`;
-            const thumbResult = await storagePut(thumbKey, thumbBuffer, "image/jpeg");
+            const thumbResult = await storagePut(thumbKey, thumbBuffer, "photo/jpeg");
             thumbnailUrl = thumbResult.url;
           } catch (error) {
             console.error("[Photo Upload] Failed to generate thumbnail:", error);
@@ -1595,7 +1595,7 @@ export const appRouter = router({
           const thumbnailBuffer = Buffer.from(input.thumbnailData, "base64");
           const uniqueId = nanoid(12);
           const thumbnailKey = `projects/${input.projectId}/thumbnails/${uniqueId}-thumb.jpg`;
-          const thumbnailResult = await storagePut(thumbnailKey, thumbnailBuffer, "image/jpeg");
+          const thumbnailResult = await storagePut(thumbnailKey, thumbnailBuffer, "photo/jpeg");
           thumbnailUrl = thumbnailResult.url;
         }
 
@@ -1862,7 +1862,11 @@ export const appRouter = router({
 
         const buffer = Buffer.from(input.fileData, "base64");
         const fileSize = buffer.length;
-        const mediaType = input.mimeType.startsWith("video/") ? "video" : "photo";
+        // Only allow 'photo' or 'video' as mediaType
+        let mediaType: "photo" | "video" = "photo";
+        if (input.mimeType && input.mimeType.startsWith("video/")) {
+          mediaType = "video";
+        }
         const uploadResult = await uploadHighResolutionMedia(
           buffer,
           input.filename,
@@ -2621,10 +2625,10 @@ export const appRouter = router({
         return watermark;
       }),
 
-    // Save/update user's watermark image
+    // Save/update user's watermark photo
     saveWatermark: protectedProcedure
       .input(z.object({
-        watermarkData: z.string(), // Base64 encoded watermark image
+        watermarkData: z.string(), // Base64 encoded watermark photo
       }))
       .mutation(async ({ ctx, input }) => {
         try {
@@ -2639,7 +2643,7 @@ export const appRouter = router({
           const { url } = await storagePut(
             fileKey,
             watermarkBuffer,
-            "image/png"
+            "photo/png"
           );
 
           // Update user's watermark in database
@@ -2678,7 +2682,7 @@ export const appRouter = router({
     applyPermanent: protectedProcedure
       .input(z.object({
         mediaIds: z.array(z.number()).min(1).max(50),
-        watermarkData: z.string().optional(), // Base64 encoded watermark image (optional if using saved)
+        watermarkData: z.string().optional(), // Base64 encoded watermark photo (optional if using saved)
         useSavedWatermark: z.boolean().default(false),
         position: z.enum(["top-left", "top-right", "bottom-left", "bottom-right", "center"]).default("top-left"),
         opacity: z.number().min(10).max(100).default(70),
@@ -2712,7 +2716,7 @@ export const appRouter = router({
         } else {
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: "Please provide a watermark image or use saved watermark",
+            message: "Please provide a watermark photo or use saved watermark",
           });
         }
 
@@ -2731,7 +2735,7 @@ export const appRouter = router({
               continue;
             }
 
-            // Fetch the original image
+            // Fetch the original photo
             const imageResponse = await fetch(mediaItem.url);
             if (!imageResponse.ok) {
               results.push({ mediaId, success: false, error: "Failed to fetch" });
@@ -2739,7 +2743,7 @@ export const appRouter = router({
             }
             const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
 
-            // Apply watermark to full image
+            // Apply watermark to full photo
             const watermarkedBuffer = await applyWatermark(imageBuffer, watermarkBuffer, {
               position: input.position,
               opacity: input.opacity,
@@ -2750,7 +2754,7 @@ export const appRouter = router({
             // Generate watermarked thumbnail
             const thumbnailBuffer = await generateThumbnail(watermarkedBuffer, 400);
 
-            // Upload watermarked image to S3 (replace original)
+            // Upload watermarked photo to S3 (replace original)
             const timestamp = Date.now();
             const ext = mediaItem.filename.split(".").pop() || "jpg";
             const baseName = mediaItem.filename.replace(/\.[^.]+$/, "").replace(/_watermarked_\d+$/, "");
@@ -2761,13 +2765,13 @@ export const appRouter = router({
             const { url: newUrl } = await storagePut(
               fileKey,
               watermarkedBuffer,
-              "image/jpeg"
+              "photo/jpeg"
             );
 
             const { url: newThumbnailUrl } = await storagePut(
               thumbnailKey,
               thumbnailBuffer,
-              "image/jpeg"
+              "photo/jpeg"
             );
 
             // Update media record in database with new URLs
@@ -2795,7 +2799,7 @@ export const appRouter = router({
     applyVideoWatermark: protectedProcedure
       .input(z.object({
         mediaId: z.number(),
-        watermarkData: z.string().optional(), // Base64 encoded watermark image (optional if using saved)
+        watermarkData: z.string().optional(), // Base64 encoded watermark photo (optional if using saved)
         useSavedWatermark: z.boolean().default(false),
         position: z.enum(["top-left", "top-right", "bottom-left", "bottom-right", "center"]).default("top-left"),
         opacity: z.number().min(10).max(100).default(70),
@@ -2827,7 +2831,7 @@ export const appRouter = router({
         } else {
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: "Please provide a watermark image or use saved watermark",
+            message: "Please provide a watermark photo or use saved watermark",
           });
         }
 
@@ -2914,7 +2918,7 @@ export const appRouter = router({
     applyBatch: protectedProcedure
       .input(z.object({
         mediaIds: z.array(z.number()).min(1).max(50),
-        watermarkData: z.string(), // Base64 encoded watermark image
+        watermarkData: z.string(), // Base64 encoded watermark photo
         position: z.enum(["top-left", "top-right", "bottom-left", "bottom-right", "center"]).default("top-left"),
         opacity: z.number().min(10).max(100).default(70),
         scale: z.number().min(5).max(50).default(15),
@@ -2938,7 +2942,7 @@ export const appRouter = router({
               continue;
             }
 
-            // Fetch the original image
+            // Fetch the original photo
             const imageResponse = await fetch(mediaItem.url);
             if (!imageResponse.ok) {
               results.push({ mediaId, success: false, error: "Failed to fetch" });
@@ -2961,11 +2965,11 @@ export const appRouter = router({
             const newFilename = `${baseName}_watermarked_${timestamp}.${ext}`;
             const fileKey = `${ctx.user.id}/temp/${newFilename}`;
 
-            // Upload watermarked image to S3 temp folder
+            // Upload watermarked photo to S3 temp folder
             const { url: newUrl } = await storagePut(
               fileKey,
               watermarkedBuffer,
-              "image/jpeg"
+              "photo/jpeg"
             );
 
             results.push({
@@ -3036,12 +3040,12 @@ export const appRouter = router({
           if (media.mediaType !== "photo") continue;
 
           try {
-            // Fetch original image
+            // Fetch original photo
             const response = await fetch(media.url);
             if (!response.ok) continue;
             const imageBuffer = Buffer.from(await response.arrayBuffer());
 
-            // Process image (resize and optionally watermark)
+            // Process photo (resize and optionally watermark)
             const processedBuffer = await processImageForReport(
               imageBuffer,
               input.resolution,
@@ -3054,14 +3058,14 @@ export const appRouter = router({
             );
 
             // Convert to base64 data URL
-            const dataUrl = `data:image/jpeg;base64,${processedBuffer.toString("base64")}`;
+            const dataUrl = `data:photo/jpeg;base64,${processedBuffer.toString("base64")}`;
             mediaImages.push({ filename: media.filename, dataUrl, media });
           } catch (error) {
             console.error(`[Report] Failed to process media ${media.id}:`, error);
           }
         }
 
-        // Generate static map image
+        // Generate static map photo
         let mapImageDataUrl: string | null = null;
         const gpsMedia = selectedMedia.filter(m => m.latitude && m.longitude);
         if (gpsMedia.length > 0) {
@@ -3096,7 +3100,7 @@ export const appRouter = router({
             }
           }
           if (logoBuffer) {
-            skyVeeLogoDataUrl = `data:image/png;base64,${logoBuffer.toString('base64')}`;
+            skyVeeLogoDataUrl = `data:photo/png;base64,${logoBuffer.toString('base64')}`;
           }
         } catch (error) {
           console.error('[Report] Failed to load MAPIT logo:', error);
@@ -3278,12 +3282,12 @@ export const appRouter = router({
           if (media.mediaType !== "photo") continue;
 
           try {
-            // Fetch original image
+            // Fetch original photo
             const response = await fetch(media.url);
             if (!response.ok) continue;
             const imageBuffer = Buffer.from(await response.arrayBuffer());
 
-            // Process image (resize and optionally watermark)
+            // Process photo (resize and optionally watermark)
             const processedBuffer = await processImageForReport(
               imageBuffer,
               input.resolution,
@@ -3296,14 +3300,14 @@ export const appRouter = router({
             );
 
             // Convert to base64 data URL
-            const dataUrl = `data:image/jpeg;base64,${processedBuffer.toString("base64")}`;
+            const dataUrl = `data:photo/jpeg;base64,${processedBuffer.toString("base64")}`;
             mediaImages.push({ filename: media.filename, dataUrl, media });
           } catch (error) {
             console.error(`[Report] Failed to process media ${media.id}:`, error);
           }
         }
 
-        // Generate static map image
+        // Generate static map photo
         let mapImageDataUrl: string | null = null;
         const gpsMedia = selectedMedia.filter(m => m.latitude && m.longitude);
         if (gpsMedia.length > 0) {
@@ -3336,7 +3340,7 @@ export const appRouter = router({
             }
           }
           if (logoBuffer) {
-            skyVeeLogoDataUrl = `data:image/png;base64,${logoBuffer.toString('base64')}`;
+            skyVeeLogoDataUrl = `data:photo/png;base64,${logoBuffer.toString('base64')}`;
           }
         } catch (error) {
           console.error('[Report] Failed to load MAPIT logo:', error);
@@ -3408,10 +3412,10 @@ export const appRouter = router({
         }
 
         // Validate file type
-        if (!input.mimeType.startsWith("image/")) {
+        if (!input.mimeType.startsWith("photo/")) {
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: "Only image files are allowed for logos",
+            message: "Only photo files are allowed for logos",
           });
         }
 
@@ -3475,10 +3479,10 @@ export const appRouter = router({
         }
 
         // Validate file type
-        if (!input.mimeType.startsWith("image/")) {
+        if (!input.mimeType.startsWith("photo/")) {
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: "Only image files are allowed for logos",
+            message: "Only photo files are allowed for logos",
           });
         }
 
@@ -3916,10 +3920,10 @@ export const appRouter = router({
       }))
       .mutation(async ({ ctx, input }) => {
         // Validate file type
-        if (!input.mimeType.startsWith("image/")) {
+        if (!input.mimeType.startsWith("photo/")) {
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: "Only image files are allowed for logos",
+            message: "Only photo files are allowed for logos",
           });
         }
 

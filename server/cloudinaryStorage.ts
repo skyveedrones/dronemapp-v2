@@ -29,7 +29,7 @@ export interface CloudinaryUploadResult {
   width: number;
   height: number;
   format: string;
-  resourceType: 'image' | 'video' | 'raw';
+  resourceType: 'photo' | 'video' | 'raw';
   bytes: number;
 }
 
@@ -53,7 +53,7 @@ export async function cloudinaryUpload(
   options: {
     folder: string;
     filename?: string;
-    resourceType?: 'image' | 'video' | 'auto' | 'raw';
+    resourceType?: 'photo' | 'video' | 'auto' | 'raw';
     transformation?: object;
   },
   retries: number = 5
@@ -148,7 +148,7 @@ async function uploadWithTimeout(
     }
 
     // For images, apply optimization
-    if (options.resourceType === 'image' || !options.resourceType) {
+    if (options.resourceType === 'photo' || !options.resourceType) {
       uploadOptions.transformation = options.transformation || {
         quality: 'auto',
         fetch_format: 'auto',
@@ -204,7 +204,7 @@ async function uploadWithTimeout(
 
         // Generate thumbnail URL
         let thumbnailUrl = result.secure_url;
-        if (result.resource_type === 'image') {
+        if (result.resource_type === 'photo') {
           // For images, create a thumbnail transformation URL
           thumbnailUrl = cloudinary.url(result.public_id, {
             width: 300,
@@ -232,7 +232,7 @@ async function uploadWithTimeout(
           width: result.width,
           height: result.height,
           format: result.format,
-          resourceType: result.resource_type as 'image' | 'video' | 'raw',
+          resourceType: result.resource_type as 'photo' | 'video' | 'raw',
           bytes: result.bytes,
         });
       }
@@ -251,7 +251,7 @@ export async function cloudinaryUploadImage(
   return cloudinaryUpload(fileBuffer, {
     folder,
     filename,
-    resourceType: 'image',
+    resourceType: 'photo',
   });
 }
 
@@ -275,7 +275,7 @@ export async function cloudinaryUploadVideo(
  */
 export async function cloudinaryDelete(
   publicId: string,
-  resourceType: 'image' | 'video' | 'raw' = 'image'
+  resourceType: 'photo' | 'video' | 'raw' = 'photo'
 ): Promise<boolean> {
   try {
     const result = await cloudinary.uploader.destroy(publicId, {
@@ -293,7 +293,7 @@ export async function cloudinaryDelete(
  */
 export function cloudinaryThumbnailUrl(
   publicId: string,
-  resourceType: 'image' | 'video' = 'image',
+  resourceType: 'photo' | 'video' = 'photo',
   width: number = 300,
   height: number = 200
 ): string {

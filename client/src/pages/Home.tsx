@@ -18,9 +18,9 @@ import { motion } from "framer-motion";
 import Features from "@/components/Features";
 import Footer from "@/components/Footer";
 import { ContactModal } from "@/components/ContactModal";
-import { GlobalHamburgerHeader } from "@/components/GlobalHamburgerHeader";
-import { CyberDivider } from "@/components/CyberDivider";
-import { MunicipalGateway } from "@/components/MunicipalGateway";
+
+
+
 import {
   Upload,
   Map,
@@ -115,7 +115,7 @@ export default function Home() {
   return (
     <div className="min-h-screen text-foreground">
       {/* Enterprise Navigation */}
-      <GlobalHamburgerHeader />
+
 
 
 
@@ -268,8 +268,8 @@ export default function Home() {
       </section>
 
       {/* SECTION 2: MUNICIPAL GATEWAY — full-width, outside hero section */}
-      <CyberDivider />
-      <MunicipalGateway />
+
+
 
       {/* SECTION 3: UNIVERSAL COMPATIBILITY — flows directly from Municipal, no divider */}
       <section className="relative bg-slate-950 pt-12 pb-12 md:pb-16 z-20">
@@ -329,13 +329,13 @@ export default function Home() {
         </div>
       </section>
 
-      <CyberDivider />
+
       {/* SECTION 4: FEATURES */}
       <section id="features" className="relative bg-white dark:bg-black pt-12 md:pt-16 pb-12 md:pb-16 px-6 z-10 transition-colors duration-300">
         <Features />
       </section>
 
-      <CyberDivider />
+
       {/* SECTION 5: HIRE A PILOT SERVICE */}
       <section
         className="relative py-20 md:py-28 px-6 overflow-hidden"
@@ -472,7 +472,7 @@ export default function Home() {
         </div>
       </section>
 
-      <CyberDivider />
+
       {/* CTA Section */}
       <section className="pt-12 md:pt-16 pb-12 relative overflow-hidden bg-white dark:bg-black transition-colors duration-300">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 dark:from-primary/10 dark:via-transparent dark:to-primary/10" />
@@ -527,7 +527,7 @@ export default function Home() {
       </section>
 
       {/* CyberDivider before footer */}
-      <CyberDivider />
+
 
       {/* Footer - Using new component */}
       <Footer onContactClick={() => setShowContactModal(true)} />

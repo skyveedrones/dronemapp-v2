@@ -991,30 +991,23 @@ export function MediaUploadDialog({
 
 
 
-        <div className="flex-1 overflow-auto space-y-4">
-          {/* Drop Zone */
-          <div
-            className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-              isDragging
-                ? "border-primary bg-primary/5"
-                : "border-border hover:border-primary/50"
-            }`}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-          >
-            <Upload className="h-10 w-10 mx-auto mb-4 text-muted-foreground" />
-            <p className="text-sm text-muted-foreground mb-2">
-              Drag and drop files here, or click to browse
-            </p>
-            <p className="text-xs text-muted-foreground mb-4">
-              Supports JPEG, PNG, WebP, HEIC images and MP4, MOV, AVI, WebM videos<br />
-              <span className="text-primary">Videos support chunked upload (no size limit)</span>
-            </p>
-            <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2 mb-2 text-left">
-              <p className="text-xs text-amber-400 font-medium">H.265/HEVC videos are not supported for browser playback.</p>
-              <p className="text-xs text-muted-foreground">Convert to H.264 using <a href="https://handbrake.fr" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline font-medium">HandBrake</a> (free) before uploading.</p>
-            </div>
+       <div className="flex-1 overflow-auto space-y-4">
+  {/* Drop Zone */}
+  <div
+    className={`border-2 border-dashed ...`}
+    onDragOver={handleDragOver}
+    onDragLeave={handleDragLeave}
+    onDrop={handleDrop}
+  >
+    {/* ...drop zone content... */}
+  </div>
+  {/* File List */}
+  {files.length > 0 && (
+    <div className="space-y-2 mt-4">
+      {/* ... */}
+    </div>
+  )}
+</div>
             <input
               type="file"
               multiple
@@ -1031,222 +1024,64 @@ export function MediaUploadDialog({
             </label>
           </div>
 
-          {/* File List */}
-          {files.length > 0 && (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <h4 className="text-sm font-medium">
-                  Files ({files.length})
-                </h4>
-                {!isUploading && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setFiles([])}
-                    className="text-muted-foreground"
-                  >
-                    Clear All
-                  </Button>
-                )}
-              </div>
-
-              <div className="space-y-2 max-h-[300px] overflow-auto">
-                {files.map((fileItem, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-3 p-3 rounded-lg bg-card border border-border"
-                  >
-                    {/* Thumbnail or Icon */}
-                    <div className="w-12 h-12 rounded bg-muted flex items-center justify-center overflow-hidden flex-shrink-0">
-                      {fileItem.thumbnail ? (
-                        <img 
-                          src={fileItem.thumbnail} 
-                          alt="Video thumbnail" 
-                          className="w-full h-full object-cover"
-                        />
-                      ) : fileItem.file.type.startsWith("image/") ? (
-                        <FileImage className="h-6 w-6 text-muted-foreground" />
-                      ) : (
-                        <FileVideo className="h-6 w-6 text-muted-foreground" />
-                      )}
-                    </div>
-
-                    {/* File Info */}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">
-                        {fileItem.file.name}
-                      </p>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <span>{formatBytes(fileItem.file.size)}</span>
-                        {fileItem.isH265 && (
-                          <span className="text-amber-500 font-medium">(H.265 - may not play in browser)</span>
+{/* File List */}
+            {files.length > 0 && (
+              <div className="space-y-2 mt-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-medium">Files ({files.length})</h4>
+                  {!isUploading && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setFiles([])}
+                      className="h-8 text-xs"
+                    >
+                      Clear all
+                    </Button>
+                  )}
+                </div>
+                <div className="max-h-[300px] overflow-y-auto pr-2 space-y-2">
+                  {files.map((file, idx) => (
+                    <div key={idx} className="flex items-center justify-between bg-muted/50 rounded-md p-2 text-xs">
+                      <div className="flex items-center gap-2 truncate mr-2">
+                        {file.type.startsWith('image/') ? (
+                          <ImageIcon className="h-3.5 w-3.5 text-blue-400 shrink-0" />
+                        ) : (
+                          <VideoIcon className="h-3.5 w-3.5 text-purple-400 shrink-0" />
                         )}
-                        {fileItem.uploadSpeed && fileItem.status === "uploading" && (
-                          <>
-                            <span>•</span>
-                            <span className="flex items-center gap-1">
-                              <ArrowUpRight className="h-3 w-3" />
-                              {formatBytes(fileItem.uploadSpeed)}/s
-                            </span>
-                            {fileItem.eta && fileItem.eta > 0 && (
-                              <>
-                                <span>•</span>
-                                <span className="flex items-center gap-1">
-                                  <Clock className="h-3 w-3" />
-                                  {formatTime(fileItem.eta)} left
-                                </span>
-                              </>
-                            )}
-                          </>
-                        )}
-                        {fileItem.status === "uploading" && fileItem.file.type.startsWith("video/") && (
-                          <>
-                            <span>•</span>
-                            <span className="text-primary">
-                              {fileItem.progress < 95
-                                ? "Uploading to Cloudinary..."
-                                : "Saving media record..."}
-                            </span>
-                          </>
-                        )}
+                        <span className="truncate" title={file.name}>{file.name}</span>
+                        <span className="text-muted-foreground shrink-0">({(file.size / (1024 * 1024)).toFixed(1)}MB)</span>
                       </div>
-
-                      {/* Progress Bar */}
-                      {fileItem.status === "uploading" && (
-                        <Progress 
-                          value={fileItem.progress} 
-                          className="h-1 mt-2"
-                        />
-                      )}
-
-                      {/* Error Message */}
-                      {fileItem.error && (
-                        <p className="text-xs text-destructive mt-1">
-                          {fileItem.error}
-                        </p>
-                      )}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 shrink-0"
+                        onClick={() => removeFile(idx)}
+                        disabled={isUploading}
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </Button>
                     </div>
-
-                    {/* Status Icon */}
-                    <div className="flex-shrink-0">
-                      {fileItem.status === "pending" && !isUploading && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => removeFile(index)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      )}
-                      {fileItem.status === "uploading" && (
-                        <Loader2 className="h-5 w-5 animate-spin text-primary" />
-                      )}
-                      {fileItem.status === "success" && (
-                        <CheckCircle className="h-5 w-5 text-green-500" />
-                      )}
-                      {fileItem.status === "error" && (
-                        <AlertCircle className="h-5 w-5 text-destructive" />
-                      )}
-                      {fileItem.status === "paused" && (
-                        <RefreshCw className="h-5 w-5 text-amber-500" />
-                      )}
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-
-        {/* Footer */}
-        <div className="flex items-center justify-between pt-4 border-t">
-          <div className="text-sm text-muted-foreground">
-            {pendingCount > 0 && `${pendingCount} pending`}
-            {successCount > 0 && ` • ${successCount} uploaded`}
-            {errorCount > 0 && ` • ${errorCount} failed`}
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={handleClose} disabled={isUploading}>
-              {isUploading ? "Uploading..." : "Close"}
-            </Button>
-            <Button
-              onClick={uploadFiles}
-              disabled={pendingCount === 0 || isUploading}
-            >
-              {isUploading ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Uploading...
-                </>
-              ) : (
-                <>
-                  <Upload className="h-4 w-4 mr-2" />
-                  Upload {pendingCount > 0 ? `(${pendingCount})` : ""}
-                </>
-              )}
-            </Button>
-          </div>
+        <div className="flex items-center justify-end gap-3 p-4 border-t mt-auto">
+          <Button variant="outline" onClick={handleClose} disabled={isUploading}>
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleUpload} 
+            disabled={isUploading || files.length === 0}
+          >
+            {isUploading ? "Uploading..." : "Start Upload"}
+          </Button>
         </div>
       </DialogContent>
-
-      {/* H.265 Warning Dialog */}
-      <Dialog open={h265WarningOpen} onOpenChange={setH265WarningOpen}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-amber-500">
-              <AlertCircle className="h-5 w-5" />
-              H.265/HEVC Video Detected
-            </DialogTitle>
-            <DialogDescription>
-              The following video(s) are encoded in H.265/HEVC format and cannot be uploaded. Please convert them to H.264 first:
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4">
-            <div className="bg-muted p-3 rounded-lg max-h-32 overflow-y-auto">
-              <ul className="text-sm space-y-1">
-                {h265Files.map((filename, i) => (
-                  <li key={i} className="flex items-center gap-2">
-                    <FileVideo className="h-4 w-4 text-muted-foreground" />
-                    <span className="truncate">{filename}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            
-            <div className="bg-blue-500/10 border border-blue-500/20 p-4 rounded-lg">
-              <h4 className="font-medium text-blue-400 mb-2">Recommended: Convert to H.264</h4>
-              <p className="text-sm text-muted-foreground mb-3">
-                For best browser compatibility, convert your videos to H.264 format using <strong>HandBrake</strong> (free software):
-              </p>
-              <ol className="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
-                <li>Download HandBrake from <a href="https://handbrake.fr" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">handbrake.fr</a></li>
-                <li>Open your video file in HandBrake</li>
-                <li>Select "Fast 1080p30" or "Fast 2160p60 4K" preset</li>
-                <li>Ensure Video Codec is set to "H.264 (x264)"</li>
-                <li>Click "Start Encode" and upload the converted file</li>
-              </ol>
-            </div>
-            
-            <div className="text-sm text-muted-foreground">
-              <strong>Tip:</strong> On your DJI drone, you can change the video codec from H.265 to H.264 in the camera settings to avoid this issue for future recordings.
-            </div>
-          </div>
-          
-          <div className="flex gap-2 justify-end pt-4 border-t">
-            <Button
-              onClick={() => {
-                // Remove H.265 files from the upload list
-                setFiles(prev => prev.filter(f => !f.isH265));
-                setH265WarningOpen(false);
-              }}
-            >
-              OK, Remove H.265 Files
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </Dialog>
   );
-}
+}; // End of MediaUploadDialog component
+
+export default MediaUploadDialog;

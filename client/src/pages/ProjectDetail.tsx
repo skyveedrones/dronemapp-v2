@@ -9,8 +9,8 @@ import { useClientAccess } from "@/hooks/useClientAccess";
 import { BackToDashboard } from "@/components/BackToDashboard";
 import { DeleteProjectDialog } from "@/components/DeleteProjectDialog";
 import { EditProjectDialog } from "@/components/EditProjectDialog";
-import { MapboxProjectMap, type MapboxProjectMapHandle } from "@/components/MapboxProjectMap";
-import { LazyMapWrapper } from "@/components/LazyMapWrapper";
+
+
 import { ExportDataDialog } from "@/components/ExportDataDialog";
 import { FlightCard } from "@/components/FlightCard";
 import { MediaGallery } from "@/components/MediaGallery";
@@ -96,7 +96,7 @@ export default function ProjectDetail() {
   const params = useParams<{ id: string }>();
   const [, setLocation] = useLocation();
   const projectId = parseInt(params.id || "0", 10);
-  const mapRef = useRef<MapboxProjectMapHandle>(null);
+  // const mapRef = useRef(null);
   
   // Check if this is the demo project (read-only mode)
   const isDemoProject = projectId === 1;
@@ -508,22 +508,7 @@ export default function ProjectDetail() {
             </motion.div>
             {/* Project Map Section — Unified Mapbox Engine */}
             <motion.div variants={fadeInUp} className="mb-8" id="project-map-section">
-              <LazyMapWrapper height="500px" rootMargin="300px">
-                <MapboxProjectMap
-                  ref={mapRef}
-                  projectId={project.id}
-                  projectName={project.name}
-                  isDemoProject={isDemoProject}
-                  overlays={overlays}
-                  onOverlayUpdated={() => {
-                    if (isDemoProject) {
-                      demoProjectQuery.refetch();
-                    } else {
-                      normalProjectQuery.refetch();
-                    }
-                  }}
-                />
-              </LazyMapWrapper>
+              {/* MapboxProjectMap and LazyMapWrapper removed */}
             </motion.div>
 
             {/* Flights Section */}

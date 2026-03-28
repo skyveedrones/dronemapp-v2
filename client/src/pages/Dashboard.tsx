@@ -11,7 +11,7 @@ import { DeleteProjectDialog } from "@/components/DeleteProjectDialog";
 import { EditProjectDialog } from "@/components/EditProjectDialog";
 import { ProjectCard } from "@/components/ProjectCard";
 import { SharedProjectCard } from "@/components/SharedProjectCard";
-import { UpgradeModal } from "@/components/modals/UpgradeModal";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PLAN_LIMITS } from "../../../shared/planLimits";
@@ -49,8 +49,8 @@ import {
   FileJson,
 } from "lucide-react";
 import { Link } from "wouter";
-import { ReferralWidget } from "@/components/ReferralWidget";
-import { GettingStartedGuide } from "@/components/GettingStartedGuide";
+
+
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
@@ -477,12 +477,12 @@ export default function Dashboard() {
 
         {/* Referral Widget */}
         <motion.div variants={fadeInUp}>
-          <ReferralWidget />
+
         </motion.div>
 
         {/* Getting Started Guide */}
         <motion.div variants={fadeInUp}>
-          <GettingStartedGuide />
+
         </motion.div>
       </motion.div>
 
@@ -548,13 +548,7 @@ export default function Dashboard() {
         </DialogContent>
       </Dialog>
 
-      {/* Upgrade Modal for Project Limit */}
-      <UpgradeModal
-        open={showUpgradeModal}
-        onOpenChange={setShowUpgradeModal}
-        currentCount={projects?.length}
-        limit={PLAN_LIMITS[(user?.subscriptionTier || 'PILOT').toUpperCase() as keyof typeof PLAN_LIMITS]}
-      />
+
     </DashboardLayout>
   );
 }

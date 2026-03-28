@@ -27,20 +27,20 @@ import Pricing from "./pages/Pricing";
 import Login from "./pages/Login";
 import Payment from "./pages/Payment";
 import Billing from "./pages/Billing";
-import Account from "./pages/Account";
-import Trash from "./pages/Trash";
-import AuditLog from "./pages/AuditLog";
+
+// import Trash from "./pages/Trash";
+// import AuditLog from "./pages/AuditLog";
 import Welcome from "./pages/Welcome";
-import OnboardingPilot from "./pages/OnboardingPilot";
-import Municipal from "./pages/Municipal";
-import Referral from "./pages/Referral";
-import SignupPage from "./pages/SignupPage";
+// import OnboardingPilot from "./pages/OnboardingPilot";
+// import Municipal from "./pages/Municipal";
+// import Referral from "./pages/Referral";
+// import SignupPage from "./pages/SignupPage";
 
 // Lazy-loaded map-heavy pages (mapbox-gl is ~1.7MB)
 const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
 const ProjectMap = lazy(() => import("./pages/ProjectMap"));
 const FlightDetail = lazy(() => import("./pages/FlightDetail"));
-const CreationTutorial = lazy(() => import("./pages/CreationTutorial"));
+// const CreationTutorial = lazy(() => import("./pages/CreationTutorial"));
 const DemoProject = lazy(() => import("./pages/DemoProject"));
 
 // Lazy-loaded feature pages (not needed on initial load)
@@ -166,9 +166,7 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/pricing" component={Pricing} />
       <Route path="/payment" component={Payment} />
-      <Route path="/account">
-        {() => <ProtectedRoute component={Account} />}
-      </Route>
+      
       <Route path="/dashboard">
         {() => <ProtectedRoute component={Dashboard} />}
       </Route>
@@ -214,7 +212,7 @@ function Router() {
       
       {/* Demo Project */}
       <Route path="/demo" component={DemoProject} />
-      <Route path="/demo/create-tutorial" component={CreationTutorial} />
+      {/* <Route path="/demo/create-tutorial" component={CreationTutorial} /> */}
       <Route path="/demo/project">
         {() => <ProtectedRoute component={ProjectDetail} />}
       </Route>

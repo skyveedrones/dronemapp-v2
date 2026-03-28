@@ -11,8 +11,8 @@ import {
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
 import { Building2, ClipboardList, Download, LayoutDashboard, LogOut, Menu, Moon, Plane, Settings, Sun, Trash2, UserCircle, Users as UsersIcon } from "lucide-react";
-import { usePWAInstall } from "@/hooks/usePWAInstall";
-import { PWAInstallModal } from "./PWAInstallModal";
+
+
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
@@ -107,7 +107,7 @@ function DashboardLayoutContent({
   const { theme, toggleTheme } = useTheme();
   const [location, setLocation] = useLocation();
   const isMobile = useIsMobile();
-  const { canInstall, isInstalled, platform, isTablet, triggerInstall, showIOSModal, setShowIOSModal } = usePWAInstall();
+
 
   const handleInstallClick = async () => {
     if (platform === "ios") {
@@ -260,11 +260,7 @@ function DashboardLayoutContent({
       </main>
 
       {/* iOS / iPad install instructions modal */}
-      <PWAInstallModal
-        open={showIOSModal}
-        onOpenChange={setShowIOSModal}
-        isTablet={isTablet}
-      />
+
     </div>
   );
 }

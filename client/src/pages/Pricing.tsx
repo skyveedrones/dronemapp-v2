@@ -4,7 +4,7 @@ import { Check, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { getLoginUrl } from "@/const";
-import { GlobalHamburgerHeader } from "@/components/GlobalHamburgerHeader";
+
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
@@ -155,7 +155,7 @@ export default function Pricing() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-      <GlobalHamburgerHeader />
+
 
       {/* Hero Section */}
       <section className="container pt-36 pb-16 md:pt-40 md:pb-24">
