@@ -1,1 +1,11 @@
-{ "build": { "builder": "NIXPACKS", "buildCommand": "pnpm run build -- --outDir dist/public" }, "deploy": { "startCommand": "node dist/index.js", "restartPolicyType": "ON_FAILURE" } }
+{
+	"build": {
+		"builder": "NIXPACKS",
+		"buildCommand": "pnpm run build -- --outDir dist/public"
+	},
+	"deploy": {
+		"startCommand": "node dist/index.js",
+		"healthCheckPath": "/",
+		"restartPolicyType": "ON_FAILURE"
+	}
+}
