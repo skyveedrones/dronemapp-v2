@@ -1215,7 +1215,7 @@ export const appRouter = router({
         let thumbnailUrl: string | null = null;
 
         const isVideo = input.mimeType.startsWith("video/");
-        const isImage = input.mimeType.startsWith("image/");
+        const isPhoto = input.mimeType.startsWith("image/");
 
         // Upload to S3
         fileKey = `projects/${input.projectId}/media/${uniqueId}-${input.filename}`;
@@ -1223,7 +1223,7 @@ export const appRouter = router({
         url = result.url;
 
         // Generate thumbnail for images
-        if (isImage) {
+        if (isPhoto) {
           try {
             const thumbBuffer = await generateThumbnail(combinedBuffer, 250);
             const thumbKey = `projects/${input.projectId}/thumbnails/${uniqueId}-thumb.jpg`;
@@ -1341,14 +1341,14 @@ export const appRouter = router({
         let thumbnailUrl: string | null = null;
 
         const isVideo = input.mimeType.startsWith("video/");
-        const isImage = input.mimeType.startsWith("image/");
+        const isPhoto = input.mimeType.startsWith("image/");
 
         fileKey = `projects/${input.projectId}/media/${uniqueId}-${input.filename}`;
         const result = await storagePut(fileKey, buffer, input.mimeType);
         url = result.url;
 
         // Generate thumbnail for images
-        if (isImage) {
+        if (isPhoto) {
           try {
             const thumbBuffer = await generateThumbnail(buffer, 250);
             const thumbKey = `projects/${input.projectId}/thumbnails/${uniqueId}-thumb.jpg`;
