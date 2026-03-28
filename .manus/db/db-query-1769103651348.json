@@ -1,9 +1,0 @@
-{
-  "query": "INSERT INTO projects (userId, name, description, location, clientName, status, flightDate, mediaCount) VALUES \n(1, 'City of Forney - CIP222 18\" Water Line Loop GIS Mapping', 'Add 18\" water line loop at Lovers Lane at 80 service road', 'Forney, TX', 'City of Forney', 'completed', '2026-01-08', 26),\n(1, 'Gail Wilson Extension', 'New Road Extension from Innovation Blvd to 740 with grading', 'Forney, Texas', 'City of Forney', 'active', '2026-01-11', 18),\n(1, 'Oncor Forney Switch', 'Visual Documentation of site and degradation to Trinity Rd and Bois D''Arc due to construction traffic', 'Forney, Texas', 'Oncor / City of Forney', 'active', '2026-01-16', 14);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute INSERT INTO projects (userId, name, description, location, clientName, status, flightDate, mediaCount) VALUES \n(1, 'City of Forney - CIP222 18\" Water Line Loop GIS Mapping', 'Add 18\" water line loop at Lovers Lane at 80 service road', 'Forney, TX', 'City of Forney', 'completed', '2026-01-08', 26),\n(1, 'Gail Wilson Extension', 'New Road Extension from Innovation Blvd to 740 with grading', 'Forney, Texas', 'City of Forney', 'active', '2026-01-11', 18),\n(1, 'Oncor Forney Switch', 'Visual Documentation of site and degradation to Trinity Rd and Bois D''Arc due to construction traffic', 'Forney, Texas', 'Oncor / City of Forney', 'active', '2026-01-16', 14);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 374
-}

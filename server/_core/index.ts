@@ -16,6 +16,7 @@ import { handleStripeWebhook } from "../stripe-webhook";
 import { initializeVersion, getVersionJson } from "../version";
 import { initializeRedisClient, createPerUserRateLimiter, createUploadRateLimiter, createConcurrentRequestsLimiter, closeRedisClient } from "./rateLimiter";
 import { sdk } from "./sdk";
+import { clerkMiddleware } from "@clerk/express";
 import emailRouter from "../routes/email";
 import overlayUploadRouter from "../routes/overlay-upload";
 
@@ -44,6 +45,8 @@ async function startServer() {
 
   // Trust proxy for accurate rate limiting behind reverse proxy (Manus deployment)
   app.set('trust proxy', 1);
+  // Clerk middleware for authentication
+  app.use(clerkMiddleware());
   
   // Initialize version system
   initializeVersion();
@@ -74,16 +77,7 @@ async function startServer() {
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
   
-  // Extract user from session cookie before rate limiting so tier is correct
-  app.use('/api/trpc', async (req: Request, _res: Response, next: NextFunction) => {
-    try {
-      const user = await sdk.authenticateRequest(req);
-      (req as any).user = user;
-    } catch {
-      // Not authenticated — will fall back to free tier limits
-    }
-    next();
-  });
+  // Removed old sdk.authenticateRequest logic; Clerk now handles authentication
 
   // Apply rate limiting middleware to tRPC routes
   app.use('/api/trpc', createPerUserRateLimiter());

@@ -1,9 +1,0 @@
-{
-  "query": "SELECT id, projectId, fileUrl, opacity, isActive, label, version_number, createdAt, CASE WHEN coordinates IS NULL THEN 'NULL' WHEN coordinates = '' THEN 'EMPTY' ELSE SUBSTRING(CAST(coordinates AS CHAR), 1, 100) END as coord_preview FROM project_overlays ORDER BY createdAt DESC LIMIT 10;",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user zhFTwZdMBa685Cr.4d37142b48ab --database FiS5WF2NaftJTm6fu3BYQb --execute SELECT id, projectId, fileUrl, opacity, isActive, label, version_number, createdAt, CASE WHEN coordinates IS NULL THEN 'NULL' WHEN coordinates = '' THEN 'EMPTY' ELSE SUBSTRING(CAST(coordinates AS CHAR), 1, 100) END as coord_preview FROM project_overlays ORDER BY createdAt DESC LIMIT 10;",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 93
-}
