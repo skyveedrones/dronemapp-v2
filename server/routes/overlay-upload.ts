@@ -15,6 +15,7 @@
  * to the project_overlays table.
  */
 import express, { Router, Request, Response } from "express";
+import { Buffer } from "buffer";
 import multer from "multer";
 import { getDb } from "../db";
 import { projectOverlays, projects, media } from "../../drizzle/schema";
