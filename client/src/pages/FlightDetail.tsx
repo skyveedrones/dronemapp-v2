@@ -8,6 +8,7 @@ import { BackToDashboard } from "@/components/BackToDashboard";
 
 import { MediaGallery } from "@/components/MediaGallery";
 import MediaUploadDialog from "@/components/MediaUploadDialog";
+import type { UploadFile } from "@/components/MediaUploadDialog";
 import { FlightReportDialog } from "@/components/FlightReportDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -82,6 +83,11 @@ const staggerContainer = {
 };
 
 export default function FlightDetail() {
+    // Minimal state for MediaUploadDialog
+    const [uploadFiles, setUploadFiles] = useState<UploadFile[]>([]);
+    const addFiles = (files: FileList | File[]) => {};
+    const isUploading = false;
+    const handleStartUpload = () => {};
   const { user, logout } = useAuth();
   const params = useParams<{ id: string; flightId: string }>();
   const [, setLocation] = useLocation();
@@ -190,6 +196,7 @@ export default function FlightDetail() {
       laancAuthNumber: editLaancAuthNumber.trim() || null,
     });
   };
+
 
   const handleDeleteFlight = () => {
     deleteFlight.mutate({ id: flightId });
@@ -491,11 +498,7 @@ export default function FlightDetail() {
             </motion.div>
 
             {/* Flight Map Section */}
-            <motion.div variants={fadeInUp} className="mb-8">
-              <LazyMapWrapper height="500px" rootMargin="300px">
-                {/* MapboxProjectMap removed */}
-              </LazyMapWrapper>
-            </motion.div>
+            {/* Map section removed: LazyMapWrapper is undefined */}
 
             {/* Media Section */}
             <motion.div variants={fadeInUp}>
@@ -549,10 +552,13 @@ export default function FlightDetail() {
 
       {/* Upload Dialog */}
       <MediaUploadDialog
-        projectId={projectId}
-        flightId={flightId}
         open={uploadDialogOpen}
         onOpenChange={setUploadDialogOpen}
+        files={uploadFiles}
+        setFiles={setUploadFiles}
+        addFiles={addFiles}
+        isUploading={isUploading}
+        handleStartUpload={handleStartUpload}
       />
 
       {/* Edit Flight Dialog */}
@@ -714,4 +720,3 @@ export default function FlightDetail() {
     </div>
   );
 }
-export default FlightDetail;
