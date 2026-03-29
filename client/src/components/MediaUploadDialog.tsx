@@ -1,3 +1,5 @@
+// Explicit export for type-only import
+export { UploadFile };
 import React, { useRef } from 'react';
 import {
   Dialog,
@@ -23,7 +25,7 @@ import {
 // 1. Refined types to match your JSX usage perfectly
 type FileStatus = 'pending' | 'uploading' | 'success' | 'error';
 
-type UploadFile = {
+export type UploadFile = {
   id: string;
   file: File;           // The actual native File object
   status: FileStatus;
