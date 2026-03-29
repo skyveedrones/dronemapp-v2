@@ -1,11 +1,16 @@
-import { COOKIE_NAME } from "@shared/const";
+[import { COOKIE_NAME } from "@shared/const";
 import { TRPCError } from "@trpc/server";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import ExifParser from "exif-parser";
 import { nanoid } from "nanoid";
 import { z } from "zod";
-import { PLAN_FEATURES } from "../shared/planFeatures";
-import { PLAN_LIMITS } from "../shared/planLimits";
+// Temporary Mock for missing plan features file
+const PLAN_FEATURES = {
+  free: { maxProjects: 3, maxFlights: 10 },
+  pro: { maxProjects: 25, maxFlights: 100 },
+  enterprise: { maxProjects: 999, maxFlights: 999 },
+};
+import { PLAN_LIMITS } from "../planLimits";
 import { getDb } from "./db";
 import { media, clientUsers, clients, projectOverlays, users, projectCollaborators, projects, referrals, organizations } from "../drizzle/schema";
 import { getSessionCookieOptions } from "./_core/cookies";
@@ -851,18 +856,19 @@ export const appRouter = router({
     create: protectedProcedure
       .input(createProjectSchema)
       .mutation(async ({ ctx, input }) => {
-        // Check plan limits
-        const userTier = (ctx.user.subscriptionTier || "free") as keyof typeof PLAN_FEATURES;
-        const limits = PLAN_FEATURES[userTier];
+        // Get the tier from the user (e.g., "free") and convert to uppercase (e.g., "FREE")
+        const userTier = (ctx.user.subscriptionTier?.toUpperCase() || "FREE") as keyof typeof PLAN_LIMITS;
+        // PLAN_LIMITS[userTier] is just the number of projects allowed
+        const maxProjectsAllowed = PLAN_LIMITS[userTier];
         const projectCount = await getUserProjectCount(ctx.user.id);
-        
-        if (projectCount >= limits.maxProjects) {
+
+        if (projectCount >= maxProjectsAllowed) {
           throw new TRPCError({
             code: "FORBIDDEN",
-            message: `You have reached the project limit of ${limits.maxProjects} for your ${userTier} plan. Upgrade to create more projects.`,
+            message: `Plan limit reached. Your ${userTier} plan allows ${maxProjectsAllowed} projects.`,
           });
         }
-        
+
         const project = await createProject({
           userId: ctx.user.id,
           name: input.name,
