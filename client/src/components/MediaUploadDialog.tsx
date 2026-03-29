@@ -286,7 +286,7 @@ export default MediaUploadDialog;
   const getUploadSignature = trpc.media.getUploadSignature.useMutation();
   const utils = trpc.useUtils();
 
-  const { data: mediaList = propMediaList || [] } = trpc.media.list.useQuery(
+  const { data: mediaList = [] } = trpc.media.list.useQuery(
     { projectId, flightId },
     { enabled: uploadMode === 'highres' }
   );
