@@ -4,13 +4,7 @@ import { and, desc, eq, inArray } from "drizzle-orm";
 import ExifParser from "exif-parser";
 import { nanoid } from "nanoid";
 import { z } from "zod";
-// Temporary Mock for missing plan features file
-const PLAN_FEATURES = {
-  free: { maxProjects: 3, maxFlights: 10 },
-  pro: { maxProjects: 25, maxFlights: 100 },
-  enterprise: { maxProjects: 999, maxFlights: 999 },
-};
-import { PLAN_LIMITS } from "./planLimits";
+import { PLAN_LIMITS, PLAN_FEATURES } from "../shared/planLimits";
 import { getDb } from "./db";
 import { media, clientUsers, clients, projectOverlays, users, projectCollaborators, projects, referrals, organizations } from "../drizzle/schema";
 import { getSessionCookieOptions } from "./_core/cookies";
