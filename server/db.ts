@@ -461,7 +461,7 @@ export async function updateMediaGPS(
       altitude: gpsData.altitude,
       updatedAt: new Date(),
     })
-    // PATCH: If you are comparing mediaType to 'image', change to 'photo'
+    .where(eq(media.id, mediaId));
 
   // Return the updated media item
   const [updated] = await db

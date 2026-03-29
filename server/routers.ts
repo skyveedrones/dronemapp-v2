@@ -4,6 +4,7 @@ import { and, desc, eq, inArray } from "drizzle-orm";
 import ExifParser from "exif-parser";
 import { nanoid } from "nanoid";
 import { z } from "zod";
+import { PLAN_FEATURES } from "../shared/planFeatures";
 import { PLAN_LIMITS } from "../shared/planLimits";
 import { getDb } from "./db";
 import { media, clientUsers, clients, projectOverlays, users, projectCollaborators, projects, referrals, organizations } from "../drizzle/schema";
@@ -1350,13 +1351,15 @@ export const appRouter = router({
         // Generate thumbnail for images
         if (isPhoto) {
           try {
+            const response = await fetch(fileKey);
+            const arrayBuffer = await response.arrayBuffer();
             const thumbBuffer = await generateThumbnail(buffer, 250);
             const thumbKey = `projects/${input.projectId}/thumbnails/${uniqueId}-thumb.jpg`;
             const thumbResult = await storagePut(thumbKey, thumbBuffer, "photo/jpeg");
             thumbnailUrl = thumbResult.url;
           } catch (error) {
-            console.error("Failed to generate thumbnail:", error);
-            thumbnailUrl = url; // Fall back to original photo
+            console.error("[Photo Upload] Failed to generate thumbnail:", error);
+            thumbnailUrl = fileKey; // Fall back to original
           }
         }
 
@@ -3110,9 +3113,9 @@ export const appRouter = router({
         const html = generateReportHtml(
           project,
           mediaImages,
-          mapImageDataUrl,
+          mapImageDataUrl || null,
           new Date(),
-          logoUrl,
+          logoUrl || undefined,
           skyVeeLogoDataUrl
         );
 
@@ -4698,6 +4701,7 @@ export const appRouter = router({
           message: z.string().optional(),
         })
       )
+
       .mutation(async ({ input }) => {
         const { notifyOwner } = await import('./_core/notification');
         const { sendEmail } = await import('./_core/email');
@@ -4735,8 +4739,8 @@ export const appRouter = router({
         <table role="presentation" style="max-width:600px;width:100%;background-color:#111b2e;border-radius:12px;overflow:hidden;">
           <tr>
             <td style="background:linear-gradient(135deg,#1e40af 0%,#0891b2 100%);padding:30px;text-align:center;">
-              <h1 style="margin:0;color:#fff;font-size:24px;">New Municipal Lead</h1>
-              <p style="margin:8px 0 0;color:#bfdbfe;font-size:14px;">from ${input.city}</p>
+              <h1 style="margin:0;color:#fff;font-size:24px;font-weight:700;letter-spacing:2px;">New Municipal Lead</h1>
+              <p style="margin:8px 0 0;color:#bfdbfe;font-size:14px;text-transform:uppercase;letter-spacing:1px;">from ${input.city}</p>
             </td>
           </tr>
           <tr>
@@ -4793,20 +4797,61 @@ export const appRouter = router({
           </tr>
           <tr>
             <td style="padding:35px 30px;color:#334155;">
-              <h2 style="margin:0 0 16px;color:#1e40af;font-size:22px;">Thank You, ${input.name}</h2>
-              <p style="margin:0 0 16px;line-height:1.7;font-size:15px;color:#475569;">Thank you for requesting a Municipal Briefing for <strong style="color:#1e293b;">${input.city}</strong>. Our team is reviewing your project details and will reach out within 24 hours to schedule a demonstration.</p>
-              <p style="margin:0 0 16px;line-height:1.7;font-size:15px;color:#475569;">In the meantime, here's what you can expect:</p>
-              <ul style="margin:0 0 24px;padding-left:20px;line-height:2;font-size:14px;color:#475569;">
-                <li>A personalized walkthrough of MAPIT's municipal capabilities</li>
-                <li>A discussion of your specific infrastructure challenges</li>
-                <li>Information about our Municipal Pilot Program</li>
+              <h2 style="margin:0 0 16px;color:#1e40af;font-size:22px;font-weight:600;">
+                Hey ${input.name}!
+              </h2>
+              
+              <p style="margin:0 0 20px 0; line-height: 1.6; font-size: 16px; color: #b0b0b0;">
+                <strong style="color: #ffffff;">${input.name}</strong> thinks you'd love Mapit &mdash; the drone mapping platform that turns aerial footage into powerful, interactive maps and project data.
+              </p>
+              
+              <p style="margin:0 0 10px 0; line-height: 1.6; font-size: 16px; color: #b0b0b0;">
+                <strong style="color: #04B16F;">Here's the deal:</strong>
+              </p>
+              
+              <div style="background-color: #051419; border: 1px solid #117660; border-radius: 8px; padding: 20px; margin: 0 0 30px 0;">
+                <p style="margin: 0; line-height: 1.6; font-size: 15px; color: #b0b0b0;">
+                  Sign up and upgrade to a Pro plan, and <strong style="color: #ffffff;">both you and ${input.name} get 1 month free</strong>. That's GPS tagging, interactive maps, flight path tracking, PDF overlays, and more &mdash; on the house.
+                </p>
+              </div>
+              
+              <p style="margin: 0 0 8px 0; line-height: 1.6; font-size: 14px; color: #808080;">
+                What you get with Mapit:
+              </p>
+              <ul style="margin: 0 0 30px 0; padding-left: 20px; line-height: 1.8; font-size: 15px; color: #b0b0b0;">
+                <li>Upload drone photos &amp; videos with automatic GPS extraction</li>
+                <li>Interactive maps with markers, popups, and flight paths</li>
+                <li>Export GPS data in KML, CSV, GeoJSON, and GPX</li>
+                <li>Overlay construction plans on satellite maps</li>
+                <li>Generate professional PDF reports</li>
               </ul>
-              <p style="margin:0;line-height:1.7;font-size:14px;color:#64748b;">If you have immediate questions, reply directly to this email.</p>
+              
+              <!-- CTA Button -->
+              <table role="presentation" style="margin: 0 auto;">
+                <tr>
+                  <td style="border-radius: 8px; background: linear-gradient(135deg, #04B16F 0%, #14E114 100%);">
+                    <a href="${input.inviteUrl}" style="display: inline-block; padding: 16px 40px; color: #09323B; text-decoration: none; font-weight: 600; font-size: 16px; letter-spacing: 0.5px;">
+                      Get Started Free &rarr;
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              
+              <p style="margin: 30px 0 0 0; line-height: 1.6; font-size: 13px; color: #606060; text-align: center;">
+                Or copy this link: <a href="${input.inviteUrl}" style="color: #04B16F; text-decoration: none; word-break: break-all;">${input.inviteUrl}</a>
+              </p>
             </td>
           </tr>
+          
+          <!-- Footer -->
           <tr>
-            <td style="padding:20px 30px;background-color:#f1f5f9;text-align:center;border-top:1px solid #e2e8f0;">
-              <p style="margin:0;font-size:12px;color:#94a3b8;">MAPIT by SkyVee Drones &mdash; Infrastructure Intelligence</p>
+            <td style="padding: 30px; background-color: #051419; text-align: center; border-top: 1px solid #117660;">
+              <p style="margin: 0 0 10px 0; font-size: 14px; color: #808080;">
+                &copy; 2026 Mapit by SkyVee Drones. All rights reserved.
+              </p>
+              <p style="margin: 0; font-size: 12px; color: #606060;">
+                Precision drone mapping &amp; geospatial data solutions
+              </p>
             </td>
           </tr>
         </table>
@@ -5141,7 +5186,7 @@ function buildReferralEmailHtml(params: {
               <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 700; letter-spacing: 2px;">
                 MAP<span style="color: #14E114;">i</span>T
               </h1>
-              <p style="margin: 10px 0 0 0; color: #e0f2f1; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">
+              <p style="margin: 10px 0 0; color: #e0f2f1; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">
                 Elevate Your Vision
               </p>
             </td>
@@ -5164,7 +5209,7 @@ function buildReferralEmailHtml(params: {
               
               <div style="background-color: #051419; border: 1px solid #117660; border-radius: 8px; padding: 20px; margin: 0 0 30px 0;">
                 <p style="margin: 0; line-height: 1.6; font-size: 15px; color: #b0b0b0;">
-                  Sign up and upgrade to a Pro plan, and <strong style="color: #ffffff;">both you and ${referrerName} get 1 month free</strong>. That's GPS tagging, interactive maps, flight path tracking, PDF overlays, and more &mdash; on the house.
+                  Sign up and upgrade to a Pro plan, and <strong style="color: #ffffff;">both you and ${refereeName} get 1 month free</strong>. That's GPS tagging, interactive maps, flight path tracking, PDF overlays, and more &mdash; on the house.
                 </p>
               </div>
               

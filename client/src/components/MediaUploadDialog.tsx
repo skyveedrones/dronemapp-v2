@@ -6,26 +6,7 @@
  */
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Progress } from "@/components/ui/progress";
-import { trpc } from "@/lib/trpc";
-import { 
-  CheckCircle, 
-  FileImage, 
-  FileVideo, 
-  Upload, 
-  X, 
-  AlertCircle,
-  Loader2,
-  Clock,
-  ArrowUpRight,
-  RefreshCw,
+// ...existing imports...
   Trash2
 } from "lucide-react";
 import { useCallback, useState, useRef, useEffect } from "react";
@@ -178,30 +159,62 @@ async function extractVideoThumbnail(file: File): Promise<string | null> {
     const cleanup = () => {
       if (!resolved) {
         resolved = true;
-        try {
-          URL.revokeObjectURL(video.src);
-        } catch (e) {
-          // Ignore cleanup errors
-        }
-      }
-    };
-    
-    video.preload = "metadata";
-    video.muted = true;
-    video.playsInline = true;
-    // Allow cross-origin for some video sources
-    video.crossOrigin = "anonymous";
-    
-    video.onloadedmetadata = () => {
-      console.log(`[Thumbnail] Video metadata loaded: ${video.videoWidth}x${video.videoHeight}, duration: ${video.duration}s`);
-    };
-    
-    video.onloadeddata = () => {
-      // Seek to 1 second or 10% of video, whichever is smaller
-      const seekTime = Math.min(1, video.duration * 0.1);
-      console.log(`[Thumbnail] Seeking to ${seekTime}s`);
-      video.currentTime = seekTime;
-    };
+          /**
+           * Media Upload Dialog
+           * Allows users to upload drone photos and videos with drag-and-drop support
+           * Features: detailed progress with speed/ETA, chunked uploads for large files, 
+           * auto thumbnail extraction, resumable uploads with localStorage persistence
+           */
+
+          import { Button } from "@/components/ui/button";
+          /**
+           * Media Upload Dialog
+           * Allows users to upload drone photos and videos with drag-and-drop support
+           * Features: detailed progress with speed/ETA, chunked uploads for large files, 
+           * auto thumbnail extraction, resumable uploads with localStorage persistence
+           */
+
+          import { Button } from "@/components/ui/button";
+          import {
+            Dialog,
+            DialogContent,
+            DialogDescription,
+            DialogHeader,
+            DialogTitle,
+          } from "@/components/ui/dialog";
+          import { Progress } from "@/components/ui/progress";
+          import { trpc } from "@/lib/trpc";
+          import { 
+            CheckCircle, 
+            FileImage, 
+            FileVideo, 
+            Upload, 
+            X, 
+            AlertCircle,
+            Loader2,
+            Clock,
+            ArrowUpRight,
+            RefreshCw,
+            Trash2
+          } from "lucide-react";
+          import { useCallback, useState, useRef, useEffect } from "react";
+          import { toast } from "sonner";
+          import * as tus from "tus-js-client";
+          import axios from "axios";
+          import { compressImage, needsCompression, exceedsLimit, CLOUDINARY_MAX_SIZE } from "@/lib/compression";
+          import { uploadPhotoToS3, UploadProgress } from "@/lib/photoUpload";
+          import { extractDroneTelemetry, DroneTelementry } from "@/lib/exifExtraction";
+          import { getGlobalUploadQueue, UploadTask } from "@/lib/uploadQueue";
+
+          // ...rest of the file remains unchanged...
+
+          export default MediaUploadDialog;
+          import { compressImage, needsCompression, exceedsLimit, CLOUDINARY_MAX_SIZE } from "@/lib/compression";
+          import { uploadPhotoToS3, UploadProgress } from "@/lib/photoUpload";
+          import { extractDroneTelemetry, DroneTelementry } from "@/lib/exifExtraction";
+          import { getGlobalUploadQueue, UploadTask } from "@/lib/uploadQueue";
+
+          // ...rest of the file remains unchanged...
     
     video.onseeked = () => {
       if (resolved) return;
@@ -251,7 +264,7 @@ async function extractVideoThumbnail(file: File): Promise<string | null> {
   });
 }
 
-export function MediaUploadDialog({
+function MediaUploadDialog({
   open,
   onOpenChange,
   projectId,
@@ -267,9 +280,9 @@ export function MediaUploadDialog({
   const [uploadMode, setUploadMode] = useState<'standard' | 'highres'>('standard');
   const [selectedMediaForHighRes, setSelectedMediaForHighRes] = useState<number | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+}
 
-  const uploadMutation = trpc.media.upload.useMutation();
-  const finalizeChunkedUploadMutation = trpc.media.finalizeChunkedUpload.useMutation();
+export default MediaUploadDialog;
   const finalizePhotoUploadMutation = trpc.media.finalizePhotoUpload.useMutation();
   const uploadHighResMutation = trpc.media.uploadHighResolution.useMutation();
   const createMediaMutation = trpc.media.createFromUrl.useMutation();
@@ -469,24 +482,7 @@ export function MediaUploadDialog({
                       ...f,
                       progress,
                       uploadSpeed: speed,
-                      eta,
-                      bytesUploaded: loaded,
-                    }
-                  : f
-              )
-            );
-          },
-        }
-      );
-
-      const data = response.data;
-
-      setFiles((prev) =>
-        prev.map((f, idx) =>
-          idx === index ? { ...f, progress: 95 } : f
-        )
-      );
-
+                    // ...imports and function definition only; removed stray return/export at top...
       await createMediaMutation.mutateAsync({
         projectId: projectId,
         filename: file.name,
@@ -1044,13 +1040,13 @@ export function MediaUploadDialog({
                   {files.map((file, idx) => (
                     <div key={idx} className="flex items-center justify-between bg-muted/50 rounded-md p-2 text-xs">
                       <div className="flex items-center gap-2 truncate mr-2">
-                        {file.type.startsWith('image/') ? (
-                          <ImageIcon className="h-3.5 w-3.5 text-blue-400 shrink-0" />
+                        {file.file.type.startsWith('image/') ? (
+                          <FileImage className="h-3.5 w-3.5 text-blue-400 shrink-0" />
                         ) : (
-                          <VideoIcon className="h-3.5 w-3.5 text-purple-400 shrink-0" />
+                          <FileVideo className="h-3.5 w-3.5 text-purple-400 shrink-0" />
                         )}
-                        <span className="truncate" title={file.name}>{file.name}</span>
-                        <span className="text-muted-foreground shrink-0">({(file.size / (1024 * 1024)).toFixed(1)}MB)</span>
+                        <span className="truncate" title={file.file.name}>{file.file.name}</span>
+                        <span className="text-muted-foreground shrink-0">({(file.file.size / (1024 * 1024)).toFixed(1)}MB)</span>
                       </div>
                       <Button
                         variant="ghost"
