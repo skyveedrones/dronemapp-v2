@@ -2,80 +2,189 @@
  * Plan limits for different subscription tiers
  */
 
-// Simple project count limits for feature-gating
-export const PLAN_LIMITS = {
-  FREE: 1,        // Just for testing
-  PILOT: 5,       // 5 Projects
-  MUNICIPAL: 25,  // 25 Projects
-  ENTERPRISE: Infinity
-} as const;
-
 export type SubscriptionTier = "free" | "starter" | "professional" | "business" | "enterprise";
 
 export interface PlanLimits {
-  maxProjects: number;
-  maxMediaFiles: number;
-  maxTeamMembers: number;
-  maxStorageGB: number;
-  features: string[];
+  maxProjects: number; // -1 for unlimited
+  maxMediaPerProject: number; // -1 for unlimited
+  maxTotalMedia: number; // -1 for unlimited
+  maxStoragePerProjectGB: number;
+  maxStorageTotalGB: number; // -1 for unlimited
+  maxTeamMembers: number; // -1 for unlimited
+  dataRequestsPerHour: number; // -1 for unlimited
+  fileUploadsPerDay: number; // -1 for unlimited
+  pdfExportsPerDay: number; // -1 for unlimited
+  concurrentRequests: number; // -1 for unlimited
+  features: {
+    unlimitedUploads: boolean;
+    gpsTagging: boolean;
+    basicReports: boolean;
+    advancedMapControls: boolean;
+    markerClustering: boolean;
+    allExportFormats: boolean;
+    whiteLabeling: boolean;
+    clientSharing: boolean;
+    prioritySupport: boolean;
+    apiAccess: boolean;
+    customReports: boolean;
+    roleBasedAccess: boolean;
+    dedicatedSupport: boolean;
+    customIntegrations: boolean;
+    sso: boolean;
+    onPremise: boolean;
+  };
 }
 
 export const PLAN_FEATURES: Record<SubscriptionTier, PlanLimits> = {
   free: {
-    maxProjects: 5,
-    maxMediaFiles: 100,
+    maxProjects: 3,
+    maxMediaPerProject: 100,
+    maxTotalMedia: 100,
+    maxStoragePerProjectGB: 1,
+    maxStorageTotalGB: 1,
     maxTeamMembers: 1,
-    maxStorageGB: 1,
-    features: [
-      "Basic GPS export",
-      "Community support",
-    ],
+    dataRequestsPerHour: 100,
+    fileUploadsPerDay: 10,
+    pdfExportsPerDay: 5,
+    concurrentRequests: 5,
+    features: {
+      unlimitedUploads: false,
+      gpsTagging: true,
+      basicReports: false,
+      advancedMapControls: false,
+      markerClustering: false,
+      allExportFormats: false,
+      whiteLabeling: false,
+      clientSharing: false,
+      prioritySupport: false,
+      apiAccess: false,
+      customReports: false,
+      roleBasedAccess: false,
+      dedicatedSupport: false,
+      customIntegrations: false,
+      sso: false,
+      onPremise: false,
+    },
   },
   starter: {
-    maxProjects: 25,
-    maxMediaFiles: 1000,
-    maxTeamMembers: 2,
-    maxStorageGB: 50,
-    features: [
-      "Advanced GPS export",
-      "PDF map overlay",
-      "Email support",
-    ],
+    maxProjects: 10,
+    maxMediaPerProject: 1000,
+    maxTotalMedia: 10000,
+    maxStoragePerProjectGB: 10,
+    maxStorageTotalGB: 10,
+    maxTeamMembers: 1,
+    dataRequestsPerHour: 500,
+    fileUploadsPerDay: 50,
+    pdfExportsPerDay: 20,
+    concurrentRequests: 10,
+    features: {
+      unlimitedUploads: true,
+      gpsTagging: true,
+      basicReports: true,
+      advancedMapControls: false,
+      markerClustering: false,
+      allExportFormats: false,
+      whiteLabeling: false,
+      clientSharing: false,
+      prioritySupport: false,
+      apiAccess: false,
+      customReports: false,
+      roleBasedAccess: false,
+      dedicatedSupport: false,
+      customIntegrations: false,
+      sso: false,
+      onPremise: false,
+    },
   },
   professional: {
-    maxProjects: 999999,
-    maxMediaFiles: 10000,
+    maxProjects: 50,
+    maxMediaPerProject: 10000,
+    maxTotalMedia: 100000,
+    maxStoragePerProjectGB: 100,
+    maxStorageTotalGB: 500,
     maxTeamMembers: 5,
-    maxStorageGB: 500,
-    features: [
-      "All Starter features",
-      "Team collaboration",
-      "Priority support",
-      "Custom watermarks",
-    ],
+    dataRequestsPerHour: 2000,
+    fileUploadsPerDay: 500,
+    pdfExportsPerDay: 100,
+    concurrentRequests: 50,
+    features: {
+      unlimitedUploads: true,
+      gpsTagging: true,
+      basicReports: true,
+      advancedMapControls: true,
+      markerClustering: true,
+      allExportFormats: true,
+      whiteLabeling: true,
+      clientSharing: true,
+      prioritySupport: true,
+      apiAccess: false,
+      customReports: false,
+      roleBasedAccess: false,
+      dedicatedSupport: false,
+      customIntegrations: false,
+      sso: false,
+      onPremise: false,
+    },
   },
   business: {
-    maxProjects: 999999,
-    maxMediaFiles: 999999,
-    maxTeamMembers: 999999,
-    maxStorageGB: 5000,
-    features: [
-      "All Professional features",
-      "Unlimited team members",
-      "Dedicated support",
-      "API access",
-    ],
+    maxProjects: 200,
+    maxMediaPerProject: 50000,
+    maxTotalMedia: 500000,
+    maxStoragePerProjectGB: 500,
+    maxStorageTotalGB: 1536,
+    maxTeamMembers: -1,
+    dataRequestsPerHour: 10000,
+    fileUploadsPerDay: 5000,
+    pdfExportsPerDay: 500,
+    concurrentRequests: 100,
+    features: {
+      unlimitedUploads: true,
+      gpsTagging: true,
+      basicReports: true,
+      advancedMapControls: true,
+      markerClustering: true,
+      allExportFormats: true,
+      whiteLabeling: true,
+      clientSharing: true,
+      prioritySupport: true,
+      apiAccess: true,
+      customReports: true,
+      roleBasedAccess: true,
+      dedicatedSupport: true,
+      customIntegrations: false,
+      sso: false,
+      onPremise: false,
+    },
   },
   enterprise: {
-    maxProjects: 999999,
-    maxMediaFiles: 999999,
-    maxTeamMembers: 999999,
-    maxStorageGB: 999999,
-    features: [
-      "Everything in Business",
-      "Custom integrations",
-      "SLA guarantee",
-    ],
+    maxProjects: -1,
+    maxMediaPerProject: -1,
+    maxTotalMedia: -1,
+    maxStoragePerProjectGB: -1,
+    maxStorageTotalGB: -1,
+    maxTeamMembers: -1,
+    dataRequestsPerHour: -1,
+    fileUploadsPerDay: -1,
+    pdfExportsPerDay: -1,
+    concurrentRequests: -1,
+    features: {
+      unlimitedUploads: true,
+      gpsTagging: true,
+      basicReports: true,
+      advancedMapControls: true,
+      markerClustering: true,
+      allExportFormats: true,
+      whiteLabeling: true,
+      clientSharing: true,
+      prioritySupport: true,
+      apiAccess: true,
+      customReports: true,
+      roleBasedAccess: true,
+      dedicatedSupport: true,
+      customIntegrations: true,
+      sso: true,
+      onPremise: true,
+    },
   },
 };
 
