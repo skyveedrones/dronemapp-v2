@@ -14,7 +14,7 @@ import { EditProjectDialog } from "@/components/EditProjectDialog";
 import { ExportDataDialog } from "@/components/ExportDataDialog";
 import { FlightCard } from "@/components/FlightCard";
 import { MediaGallery } from "@/components/MediaGallery";
-import { MediaUploadDialog } from "@/components/MediaUploadDialog";
+import MediaUploadDialog from "@/components/MediaUploadDialog";
 import { NewFlightDialog } from "@/components/NewFlightDialog";
 import { ReportGeneratorDialog } from "@/components/ReportGeneratorDialog";
 import { ShareProjectDialog } from "@/components/ShareProjectDialog";
