@@ -4,7 +4,7 @@ import { Check, X } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { getLoginUrl } from "@/const";
-import { SUBSCRIPTION_PLANS, PLAN_LIMITS } from "../../../server/products";
+import { SUBSCRIPTION_PLANS, PLAN_LIMITS, PLAN_FEATURES } from "../../../server/products";
 
 export default function Pricing() {
   const [, setLocation] = useLocation();
@@ -23,9 +23,7 @@ export default function Pricing() {
   // Build feature list for each tier
   const buildFeatures = (tier: string) => {
     const limits = PLAN_FEATURES[tier as keyof typeof PLAN_FEATURES];
-    
     return [
-      // Storage features
       { 
         text: limits.maxStoragePerProjectGB === -1 
           ? "Unlimited storage per project" 
@@ -38,16 +36,12 @@ export default function Pricing() {
           : `${limits.maxStorageTotalGB} GB total storage`,
         included: true 
       },
-      
-      // Project features
       { 
         text: limits.maxProjects === -1 
           ? "Unlimited projects" 
           : `Up to ${limits.maxProjects} projects`,
         included: true 
       },
-      
-      // Team features
       { 
         text: limits.maxTeamMembers === -1 
           ? "Unlimited team members" 
@@ -56,32 +50,24 @@ export default function Pricing() {
           : `Up to ${limits.maxTeamMembers} team members`,
         included: true 
       },
-      
-      // Data Request features
       { 
         text: limits.dataRequestsPerHour === -1 
           ? "Unlimited data requests" 
           : `${limits.dataRequestsPerHour} data requests/hour`,
         included: true 
       },
-      
-      // Upload features
       { 
         text: limits.fileUploadsPerDay === -1 
           ? "Unlimited daily uploads" 
           : `${limits.fileUploadsPerDay} uploads/day`,
         included: true 
       },
-      
-      // Export features
       { 
         text: limits.pdfExportsPerDay === -1 
           ? "Unlimited PDF exports" 
           : `${limits.pdfExportsPerDay} PDF exports/day`,
         included: true 
       },
-      
-      // Feature toggles
       { text: "GPS tagging and flight paths", included: limits.features.gpsTagging },
       { text: "Basic PDF reports", included: limits.features.basicReports },
       { text: "Advanced map controls", included: limits.features.advancedMapControls },
