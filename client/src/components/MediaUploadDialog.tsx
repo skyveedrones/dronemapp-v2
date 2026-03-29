@@ -5,6 +5,411 @@
  * auto thumbnail extraction, resumable uploads with localStorage persistence
  */
 
+import { useCallback, useState, useEffect } from "react";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogFooter 
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { toast } from "sonner";
+import { 
+  Upload, 
+  X, 
+  FileIcon, 
+  CheckCircle2, 
+  AlertCircle, 
+  Loader2, 
+  Trash2, 
+  Play, 
+  Pause 
+} from "lucide-react";
+import { trpc } from "@/lib/trpc";
+import { PLAN_LIMITS } from "../planLimits";
+
+// --- Constants & Types ---
+const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB chunks
+
+interface FileToUpload {
+  file: File;
+  id: string;
+  progress: number;
+  status: 'pending' | 'uploading' | 'completed' | 'error' | 'paused';
+  error?: string;
+  uploadId?: string;
+  chunksUploaded: number;
+  thumbnail?: string;
+  uploadSpeed?: number;
+  eta?: number;
+  bytesUploaded?: number;
+}
+
+interface PersistedUpload {
+  uploadId: string;
+  projectId: number;
+  filename: string;
+  fileSize: number;
+  mimeType: string;
+  totalChunks: number;
+  chunksUploaded: number;
+  thumbnailData?: string;
+  createdAt: number;
+  lastUpdated: number;
+}
+
+// --- Persistence Helpers ---
+const savePersistedUpload = (upload: PersistedUpload) => {
+  const uploads = getPersistedUploads();
+  const index = uploads.findIndex(u => u.uploadId === upload.uploadId);
+  if (index >= 0) uploads[index] = upload;
+  else uploads.push(upload);
+  localStorage.setItem('drone_uploads_pending', JSON.stringify(uploads));
+};
+
+const getPersistedUploads = (): PersistedUpload[] => {
+  try {
+    return JSON.parse(localStorage.getItem('drone_uploads_pending') || '[]');
+  } catch { return []; }
+};
+
+const removePersistedUpload = (uploadId: string) => {
+  const uploads = getPersistedUploads().filter(u => u.uploadId !== uploadId);
+  localStorage.setItem('drone_uploads_pending', JSON.stringify(uploads));
+};
+
+// --- Logic Helpers ---
+const readChunkAsBase64 = (file: File, start: number, end: number): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = (reader.result as string).split(',')[1];
+      resolve(base64);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file.slice(start, end));
+  });
+};
+
+// --- Main Component ---
+interface MediaUploadDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  projectId: number;
+  flightId?: number;
+  uploadMode?: 'highres' | 'ortho';
+}
+
+export function MediaUploadDialog({
+  open,
+  onOpenChange,
+  projectId,
+  flightId,
+  uploadMode = 'highres'
+}: MediaUploadDialogProps) {
+  const [files, setFiles] = useState<FileToUpload[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [pendingResumable, setPendingResumable] = useState<PersistedUpload[]>([]);
+
+  const utils = trpc.useContext();
+  const uploadChunkMutation = trpc.media.uploadChunk.useMutation();
+
+  // FIX: Resolved circular reference (mediaList = [])
+  const { data: mediaList = [] } = trpc.media.list.useQuery(
+    { projectId, flightId },
+    { enabled: open && !!projectId }
+  );
+
+  useEffect(() => {
+    if (open) {
+      const active = getPersistedUploads().filter(u => u.projectId === projectId);
+      setPendingResumable(active);
+    }
+  }, [open, projectId]);
+
+  const onDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    const droppedFiles = Array.from(e.dataTransfer.files);
+    addFiles(droppedFiles);
+  }, []);
+
+  const addFiles = (newFiles: File[]) => {
+    const formatted = newFiles.map(file => ({
+      file,
+      id: Math.random().toString(36).substr(2, 9),
+      progress: 0,
+      status: 'pending' as const,
+      chunksUploaded: 0
+    }));
+    setFiles(prev => [...prev, ...formatted]);
+  };
+
+  const uploadFile = async (
+    fileItem: FileToUpload,
+    index: number,
+    startTime: number,
+    resumeFrom?: { uploadId: string; startChunk: number }
+      ): Promise<void> => {
+        const file = fileItem.file;
+        const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+        const uploadId = resumeFrom?.uploadId || `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        const startChunk = resumeFrom?.startChunk || 0;
+        
+        let uploadedBytes = startChunk * CHUNK_SIZE;
+        const maxRetries = 3;
+        
+        const persistedState: PersistedUpload = {
+          uploadId,
+          projectId,
+          filename: file.name,
+          fileSize: file.size,
+          mimeType: file.type,
+          totalChunks,
+          chunksUploaded: startChunk,
+          createdAt: Date.now(),
+          lastUpdated: Date.now(),
+        };
+        savePersistedUpload(persistedState);
+        
+        setFiles((prev) =>
+          prev.map((f, idx) =>
+            idx === index ? { ...f, status: 'uploading', uploadId, chunksUploaded: startChunk } : f
+          )
+        );
+        
+        for (let chunkIndex = startChunk; chunkIndex < totalChunks; chunkIndex++) {
+          const start = chunkIndex * CHUNK_SIZE;
+          const end = Math.min(start + CHUNK_SIZE, file.size);
+          const chunkData = await readChunkAsBase64(file, start, end);
+          
+          let lastError: Error | null = null;
+          for (let attempt = 0; attempt < maxRetries; attempt++) {
+            try {
+              await uploadChunkMutation.mutateAsync({
+                uploadId,
+                chunkIndex,
+                totalChunks,
+                chunkData,
+                projectId,
+                filename: file.name,
+                mimeType: file.type,
+              });
+              lastError = null;
+              break;
+            } catch (err) {
+              lastError = err as Error;
+              if (attempt < maxRetries - 1) {
+                await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+              }
+            }
+          }
+          
+          if (lastError) {
+            persistedState.chunksUploaded = chunkIndex;
+            savePersistedUpload(persistedState);
+            setFiles(prev => prev.map((f, i) => i === index ? { ...f, status: 'paused', error: lastError?.message } : f));
+            throw lastError;
+          }
+          
+          persistedState.chunksUploaded = chunkIndex + 1;
+          savePersistedUpload(persistedState);
+          
+          uploadedBytes = end;
+          const elapsed = (Date.now() - startTime) / 1000;
+          const speed = (uploadedBytes - (startChunk * CHUNK_SIZE)) / elapsed;
+          const eta = (file.size - uploadedBytes) / speed;
+          const progress = (uploadedBytes / file.size) * 100; // 100% for upload
+          
+          setFiles((prev) =>
+            prev.map((f, idx) =>
+              idx === index ? { 
+                ...f, 
+                progress,
+                uploadSpeed: speed,
+                eta,
+                bytesUploaded: uploadedBytes,
+                chunksUploaded: chunkIndex + 1
+              } : f
+            )
+          );
+        }
+        
+        removePersistedUpload(uploadId);
+        setFiles(prev => prev.map((f, i) => i === index ? { ...f, status: 'completed', progress: 100 } : f));
+      };
+    const file = fileItem.file;
+    const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+    const uploadId = resumeFrom?.uploadId || `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const startChunk = resumeFrom?.startChunk || 0;
+    
+    let uploadedBytes = startChunk * CHUNK_SIZE;
+    const maxRetries = 3;
+    
+    const persistedState: PersistedUpload = {
+      uploadId,
+      projectId,
+      filename: file.name,
+      fileSize: file.size,
+      mimeType: file.type,
+      totalChunks,
+      chunksUploaded: startChunk,
+      createdAt: Date.now(),
+      lastUpdated: Date.now(),
+    };
+    savePersistedUpload(persistedState);
+    
+    setFiles((prev) =>
+      prev.map((f, idx) =>
+        idx === index ? { ...f, status: 'uploading', uploadId, chunksUploaded: startChunk } : f
+      )
+    );
+    
+    for (let chunkIndex = startChunk; chunkIndex < totalChunks; chunkIndex++) {
+      const start = chunkIndex * CHUNK_SIZE;
+      const end = Math.min(start + CHUNK_SIZE, file.size);
+      const chunkData = await readChunkAsBase64(file, start, end);
+      
+      let lastError: Error | null = null;
+      for (let attempt = 0; attempt < maxRetries; attempt++) {
+        try {
+          await uploadChunkMutation.mutateAsync({
+            uploadId,
+            chunkIndex,
+            totalChunks,
+            chunkData,
+            projectId,
+            filename: file.name,
+            mimeType: file.type,
+          });
+          lastError = null;
+          break;
+        } catch (err) {
+          lastError = err as Error;
+          if (attempt < maxRetries - 1) {
+            await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+          }
+        }
+      }
+      
+      if (lastError) {
+        persistedState.chunksUploaded = chunkIndex;
+        savePersistedUpload(persistedState);
+        setFiles(prev => prev.map((f, i) => i === index ? { ...f, status: 'paused', error: lastError?.message } : f));
+        throw lastError;
+      }
+      
+      persistedState.chunksUploaded = chunkIndex + 1;
+      savePersistedUpload(persistedState);
+      
+      uploadedBytes = end;
+      const elapsed = (Date.now() - startTime) / 1000;
+      const speed = (uploadedBytes - (startChunk * CHUNK_SIZE)) / elapsed;
+      const eta = (file.size - uploadedBytes) / speed;
+      const progress = (uploadedBytes / file.size) * 100;
+      
+      // FIX: Cleaned up props and fixed missing commas at Line 483 area
+      setFiles((prev) =>
+        prev.map((f, idx) =>
+          idx === index ? { 
+            ...f, 
+            progress,
+            uploadSpeed: speed,
+            eta,
+            bytesUploaded: uploadedBytes,
+            chunksUploaded: chunkIndex + 1
+          } : f
+        )
+      );
+    }
+    
+    removePersistedUpload(uploadId);
+    setFiles(prev => prev.map((f, i) => i === index ? { ...f, status: 'completed', progress: 100 } : f));
+  };
+
+  const handleStartUpload = async () => {
+    setUploading(true);
+    const pending = files.filter(f => f.status === 'pending' || f.status === 'paused');
+    
+    for (const fileItem of pending) {
+      const idx = files.findIndex(f => f.id === fileItem.id);
+      try {
+        await uploadFile(fileItem, idx, Date.now());
+      } catch (e) {
+        console.error("Upload failed", e);
+      }
+    }
+    setUploading(false);
+    utils.media.list.invalidate();
+    toast.success("Upload session complete");
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[600px]">
+        <DialogHeader>
+          <DialogTitle>Upload Drone Media</DialogTitle>
+        </DialogHeader>
+
+        <div 
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={onDrop}
+          className="border-2 border-dashed rounded-lg p-8 text-center hover:bg-muted/50 transition-colors"
+        >
+          <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+          <p className="text-sm text-muted-foreground">Drag and drop photos or videos here</p>
+          <input 
+            type="file" 
+            multiple 
+            className="hidden" 
+            id="file-upload" 
+            onChange={(e) => addFiles(Array.from(e.target.files || []))}
+          />
+          <Button variant="outline" className="mt-4" onClick={() => document.getElementById('file-upload')?.click()}>
+            Select Files
+          </Button>
+        </div>
+
+        <ScrollArea className="h-[300px] mt-4 pr-4">
+          {files.map((file) => (
+            <div key={file.id} className="flex flex-col gap-2 mb-4 p-3 border rounded-md">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 overflow-hidden">
+                  <FileIcon className="h-4 w-4 shrink-0" />
+                  <span className="text-sm font-medium truncate">{file.file.name}</span>
+                </div>
+                {file.status === 'completed' && <CheckCircle2 className="h-4 w-4 text-green-500" />}
+              </div>
+              <Progress value={file.progress} className="h-2" />
+              <div className="flex justify-between text-[10px] text-muted-foreground">
+                <span>{Math.round(file.progress)}%</span>
+                {file.uploadSpeed && <span>{(file.uploadSpeed / 1024 / 1024).toFixed(2)} MB/s</span>}
+              </div>
+            </div>
+          ))}
+        </ScrollArea>
+
+        <DialogFooter>
+          <Button variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
+          <Button onClick={handleStartUpload} disabled={uploading || files.length === 0}>
+            {uploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Start Upload"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export default MediaUploadDialog;
+/**
+ * Media Upload Dialog
+ * Allows users to upload drone photos and videos with drag-and-drop support
+ * Features: detailed progress with speed/ETA, chunked uploads for large files, 
+ * auto thumbnail extraction, resumable uploads with localStorage persistence
+ */
+
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { useCallback, useState, useRef, useEffect } from "react";
