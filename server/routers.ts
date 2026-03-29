@@ -4,7 +4,7 @@ import { and, desc, eq, inArray } from "drizzle-orm";
 import ExifParser from "exif-parser";
 import { nanoid } from "nanoid";
 import { z } from "zod";
-import { PLAN_LIMITS, PLAN_FEATURES } from "../shared/planLimits";
+import { PLAN_FEATURES } from "../shared/planFeatures";
 import { getDb } from "./db";
 import { media, clientUsers, clients, projectOverlays, users, projectCollaborators, projects, referrals, organizations } from "../drizzle/schema";
 import { getSessionCookieOptions } from "./_core/cookies";
