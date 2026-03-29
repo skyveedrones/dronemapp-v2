@@ -6,9 +6,7 @@
  */
 
 import { Button } from "@/components/ui/button";
-// ...existing imports...
-  Trash2
-} from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { useCallback, useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import * as tus from "tus-js-client";
@@ -261,8 +259,7 @@ async function extractVideoThumbnail(file: File): Promise<string | null> {
     }, 15000);
     
     video.src = URL.createObjectURL(file);
-  });
-}
+  }
 
 function MediaUploadDialog({
   open,
