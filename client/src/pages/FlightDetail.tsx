@@ -7,7 +7,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { BackToDashboard } from "@/components/BackToDashboard";
 
 import { MediaGallery } from "@/components/MediaGallery";
-import { MediaUploadDialog } from "@/components/MediaUploadDialog";
+import MediaUploadDialog from "@/components/MediaUploadDialog";
 import { FlightReportDialog } from "@/components/FlightReportDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -137,7 +137,8 @@ export default function FlightDetail() {
       toast.error("Failed to update flight", {
         description: error.message,
       });
-
+    },
+  });
 
   const deleteFlight = trpc.flight.delete.useMutation({
     onSuccess: () => {
@@ -493,7 +494,6 @@ export default function FlightDetail() {
             <motion.div variants={fadeInUp} className="mb-8">
               <LazyMapWrapper height="500px" rootMargin="300px">
                 {/* MapboxProjectMap removed */}
-                  // MapboxProjectMap removed
               </LazyMapWrapper>
             </motion.div>
 
@@ -714,3 +714,4 @@ export default function FlightDetail() {
     </div>
   );
 }
+export default FlightDetail;
