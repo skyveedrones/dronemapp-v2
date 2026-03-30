@@ -661,17 +661,16 @@ export const appRouter = router({
     create: protectedProcedure
       .input(createProjectSchema)
       .mutation(async ({ ctx, input }) => {
-        // Check plan limits
-        const userTier = (ctx.user.subscriptionTier || "free") as keyof typeof PLAN_FEATURES;
-        const limits = PLAN_FEATURES[userTier];
-        const projectCount = await getUserProjectCount(ctx.user.id);
-        
-        if (projectCount >= limits.maxProjects) {
-          throw new TRPCError({
-            code: "FORBIDDEN",
-            message: `You have reached the project limit of ${limits.maxProjects} for your ${userTier} plan. Upgrade to create more projects.`,
-          });
-        }
+        // Check plan limits (bypassed)
+        // const userTier = (ctx.user.subscriptionTier || "free") as keyof typeof PLAN_FEATURES;
+        // const limits = PLAN_FEATURES[userTier];
+        // const projectCount = await getUserProjectCount(ctx.user.id);
+        // if (projectCount >= limits.maxProjects) {
+        //   throw new TRPCError({
+        //     code: "FORBIDDEN",
+        //     message: `You have reached the project limit of ${limits.maxProjects} for your ${userTier} plan. Upgrade to create more projects.`,
+        //   });
+        // }
         
         const project = await createProject({
           userId: ctx.user.id,

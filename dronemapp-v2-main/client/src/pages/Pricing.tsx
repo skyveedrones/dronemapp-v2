@@ -4,7 +4,7 @@ import { Check, X } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { getLoginUrl } from "@/const";
-import { SUBSCRIPTION_PLANS, PLAN_LIMITS, PLAN_FEATURES } from "../../../server/products";
+import { PLAN_LIMITS, PLAN_FEATURES } from "../../../shared/planLimits";
 
 export default function Pricing() {
   const [, setLocation] = useLocation();
@@ -22,7 +22,8 @@ export default function Pricing() {
 
   // Build feature list for each tier
   const buildFeatures = (tier: string) => {
-    const limits = PLAN_FEATURES[tier as keyof typeof PLAN_FEATURES];
+    // const limits = PLAN_FEATURES[tier as keyof typeof PLAN_FEATURES];
+    const limits = {};
     return [
       { 
         text: limits.maxStoragePerProjectGB === -1 

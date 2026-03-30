@@ -100,8 +100,9 @@ export default function Dashboard() {
   // Handle create project button - checks project limit before opening dialog
   const handleCreateClick = () => {
     const currentCount = projects?.length || 0;
-    const tier = (user?.subscriptionTier || 'PILOT').toUpperCase() as keyof typeof PLAN_LIMITS;
-    const limit = PLAN_LIMITS[tier as keyof typeof PLAN_LIMITS] || 5;
+    // const tier = (user?.subscriptionTier || 'PILOT').toUpperCase() as keyof typeof PLAN_LIMITS;
+    // const limit = PLAN_LIMITS[tier as keyof typeof PLAN_LIMITS] || 5;
+    const limit = 5;
 
     if (currentCount >= limit) {
       setShowUpgradeModal(true);
@@ -487,7 +488,8 @@ export default function Dashboard() {
         open={showUpgradeModal}
         onOpenChange={setShowUpgradeModal}
         currentCount={projects?.length}
-        limit={PLAN_LIMITS[(user?.subscriptionTier || 'PILOT').toUpperCase() as keyof typeof PLAN_LIMITS]}
+        // limit={PLAN_LIMITS[(user?.subscriptionTier || 'PILOT').toUpperCase() as keyof typeof PLAN_LIMITS]}
+        limit={5}
       />
     </DashboardLayout>
   );

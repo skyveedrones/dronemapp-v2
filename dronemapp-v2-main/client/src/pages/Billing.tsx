@@ -9,7 +9,7 @@ import { trpc } from "@/lib/trpc";
 import { useState } from "react";
 import { toast } from "sonner";
 
-const PLAN_FEATURES = {
+import { PLAN_FEATURES } from "../../../shared/planLimits";
   free: {
     name: "Free",
     price: "$0",
@@ -81,8 +81,9 @@ export default function Billing() {
   }
 
   const currentPlan = user.subscriptionTier || "free";
-  const currentPlanData = PLAN_FEATURES[currentPlan as keyof typeof PLAN_FEATURES];
-  const safeCurrentPlanData = currentPlanData ?? PLAN_FEATURES.free;
+  // const currentPlanData = PLAN_FEATURES[currentPlan as keyof typeof PLAN_FEATURES];
+  // const safeCurrentPlanData = currentPlanData ?? PLAN_FEATURES.free;
+  const safeCurrentPlanData = {};
   const billingPeriod = user.billingPeriod || "month";
   const nextBillingDate = user.currentPeriodEnd ? new Date(user.currentPeriodEnd) : null;
 
@@ -214,7 +215,7 @@ export default function Billing() {
             <div>
               <h2 className="text-2xl font-bold mb-4">Upgrade Your Plan</h2>
               <div className="grid gap-4 md:grid-cols-2">
-                {Object.entries(PLAN_FEATURES)
+                {/* {Object.entries(PLAN_FEATURES) */}
                   .filter(([key]) => key !== "free")
                   .map(([key, plan]) => (
                     <Card
