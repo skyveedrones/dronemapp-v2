@@ -133,11 +133,12 @@ export default function FlightDetail() {
       utils.flight.list.invalidate({ projectId });
       setEditDialogOpen(false);
     },
-    onError: (error) => {
+   onError: (error) => {
       toast.error("Failed to update flight", {
         description: error.message,
       });
-
+    },
+  });
 
   const deleteFlight = trpc.flight.delete.useMutation({
     onSuccess: () => {
