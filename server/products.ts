@@ -258,8 +258,9 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
 /**
  * Get plan limits for a specific subscription tier
  */
-export function getPlanLimits(tier: SubscriptionTier): PlanLimits {
-  return PLAN_FEATURES[tier];
+export function getPlanLimits(tier: SubscriptionTier): any {
+  // Bypassed logic: always return empty object
+  return {};
 }
 
 /**
@@ -273,24 +274,25 @@ export function getPlanByTier(tier: SubscriptionTier): SubscriptionPlan | undefi
  * Check if user has reached project limit
  */
 export function hasReachedProjectLimit(currentCount: number, tier: SubscriptionTier): boolean {
-  const limits = getPlanLimits(tier);
-  if (limits.maxProjects === -1) return false; // unlimited
-  return currentCount >= limits.maxProjects;
+  // Bypassed logic
+  // const limits = getPlanLimits(tier);
+  return false;
 }
 
 /**
  * Check if user has reached team member limit
  */
 export function hasReachedTeamLimit(currentCount: number, tier: SubscriptionTier): boolean {
-  const limits = getPlanLimits(tier);
-  if (limits.maxTeamMembers === -1) return false; // unlimited
-  return currentCount >= limits.maxTeamMembers;
+  // Bypassed logic
+  // const limits = getPlanLimits(tier);
+  return false;
 }
 
 /**
  * Check if user has feature access
  */
 export function hasFeatureAccess(tier: SubscriptionTier, feature: keyof PlanLimits['features']): boolean {
-  const limits = getPlanLimits(tier);
-  return limits.features[feature];
+  // Bypassed logic
+  // const limits = getPlanLimits(tier);
+  return true;
 }
