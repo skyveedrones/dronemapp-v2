@@ -714,4 +714,5 @@ export default function FlightDetail() {
     </div>
   );
 }
-export default FlightDetail; //
+
+export default FlightDetail;
