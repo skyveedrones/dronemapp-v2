@@ -5,8 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx watch server/_core/index.ts",
-    "build": "node scripts/ensure-version.mjs && vite build --outDir dist/public && esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist && (cp -r client/dist/public/* dist/public/ 2"build": "node scripts/ensure-version.mjs && vite build --outDir dist/public --emptyOutDir && esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",>/dev/null || echo 'Root build detected') && echo Build Complete",
-    "build:server": "tsc -p tsconfig.json",
+"build": "node scripts/ensure-version.mjs && vite build --outDir dist/public --emptyOutDir && esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",    "build:server": "tsc -p tsconfig.json",
     "start": "cross-env NODE_ENV=production node dist/index.js",
     "check": "tsc --noEmit",
     "format": "prettier --write .",
