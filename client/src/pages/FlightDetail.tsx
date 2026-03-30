@@ -4,10 +4,10 @@
  */
 
 import { useAuth } from "@/_core/hooks/useAuth";
-import BackToDashboard from "@/components/BackToDashboard";
-import MediaGallery from "@/components/MediaGallery";
+import { BackToDashboard } from "@/components/BackToDashboard";
+import { MediaGallery } from "@/components/MediaGallery";
 import MediaUploadDialog from "@/components/MediaUploadDialog";
-import FlightReportDialog from "@/components/FlightReportDialog";
+import { FlightReportDialog } from "@/components/FlightReportDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -92,7 +92,6 @@ export default function FlightDetail() {
 
   const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
-  const [editFlightDate, setEditFlightDate] = useState("");
 
   const utils = trpc.useUtils();
 
@@ -164,7 +163,7 @@ export default function FlightDetail() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b p-4">
-        <div className="container flex items-center justify-between">
+        <div className="container flex items-center justify-between mx-auto">
           <Link href="/" className="font-bold text-xl">MAPIT</Link>
           <div className="flex items-center gap-4">
             <span className="text-sm hidden sm:inline">{user?.email}</span>
