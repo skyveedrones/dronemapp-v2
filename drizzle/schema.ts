@@ -540,6 +540,28 @@ export const projectOverlays = mysqlTable("project_overlays", {
 export type ProjectOverlay = typeof projectOverlays.$inferSelect;
 export type InsertProjectOverlay = typeof projectOverlays.$inferInsert;
 
+/**
+ * Project documents table - stores uploaded documents associated with a project.
+ */
+export const projectDocuments = mysqlTable("project_documents", {
+  id: int("id").autoincrement().primaryKey(),
+  /** Foreign key to projects table */
+  projectId: int("projectId").notNull(),
+  /** Original uploaded filename */
+  fileName: varchar("fileName", { length: 255 }).notNull(),
+  /** Storage key for the uploaded document */
+  fileKey: varchar("fileKey", { length: 512 }).notNull(),
+  /** Document type or MIME family */
+  fileType: varchar("fileType", { length: 50 }).notNull(),
+  /** Upload/processing state */
+  status: varchar("status", { length: 50 }).default("uploaded"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProjectDocument = typeof projectDocuments.$inferSelect;
+export type InsertProjectDocument = typeof projectDocuments.$inferInsert;
+
 
 /**
  * Audit log table for tracking significant actions across the system.
